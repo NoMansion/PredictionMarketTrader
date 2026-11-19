@@ -27,7 +27,10 @@ session ran continues on the PC without waiting for the user. What that does and
     a day before the Sunday reset. Only the user changes this schedule. Each run is a new session
     that knows only its prompt and this file: keep this file current. It runs while the app is open; a run
     missed while the app was closed happens at the next launch. The user manages it under "Scheduled" in
-    the app. Its runs do not report into another session: read their results there.
+    the app. Since 11:10 am CST 2026-11-19 (the user: "can you send an update message every check in") each
+    finished run notifies the user's main session, which passes a short update on to the user; that works
+    only while that session exists. So END EVERY RUN with the three or four plain lines the prompt asks for:
+    they are what the user is sent.
   - The Windows task "PredictionMarketTrader Jobs" runs `scripts\start_jobs_hidden.vbs` when the user logs
     on: two minutes later it starts the history download and the paper loop if they are not running.
     Remove it with: `Unregister-ScheduledTask -TaskName "PredictionMarketTrader Jobs"`.
