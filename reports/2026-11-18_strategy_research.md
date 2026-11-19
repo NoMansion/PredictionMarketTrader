@@ -1161,3 +1161,56 @@ filled positions, 3 resting orders, $998.30. Variant paper accounts (12 accounts
 Claude under other rules, 2 controls): no market has settled, so no standings; figures as in 3.25 (takers
 $995.46 and $995.81, wide accounts $997.06 to $997.36, both controls $1,000.00 with nothing filled).
 Observation log of the 5-cent rule: 13 markets seen, none settled; 5 resting bids decided, all 5 filled.
+
+### 3.27 Round r25: Climate and Weather's busy markets, the last category (12:25 pm CST, November 19)
+
+**Data.** The Climate and Weather census finished at 10:28 am: 7,319 markets in 3,239 events, but only 17,722
+daily bars (about 2.4 a market: most are one-day temperature and rain questions), closes August 2021 to
+September 2026, 2,818 markets out of sample. With this round the mechanical backtest has seen every category.
+The download has gone on to extend the random samples beyond the first 2,500 markets per category (same fixed
+shuffle, so the samples stay valid; they only get larger).
+
+**Round r25** (`r25_liquid_climate`, 2,816 rules): 0 pass, 0 leads, 0 reliably losing; 2,812 thin, 4 "no". As
+with Crypto, too few bars per market for the round's bar of 100 events a half. The price-band table has the
+familiar shape (cheap YES loses heavily, NO against it earns a little), on 6 to 100 events a cell.
+
+**The 5-cent rule** (NO at mid <= 5c, <= 30 days, spread <= 5c):
+- Taker: 204 bets in 164 events, +1.57% a bet, one losing event (2025). In sample 1 loss in 98 events against
+  a break-even of 2.7% (upper bound 4.8%); out of sample 0 in 66 against 2.2% (upper bound 4.4%). **Tail test
+  not passed in either half**: the loss rate looks low, but there are too few events to bound it.
+- Resting: 154 bets in 127 events, +3.44% a bet, the same one loss. Not passed in either half (bounds 6.0%
+  against 5.1%, 5.8% against 4.3%); passed only on all 127 events together (3.7% against 4.8%), which is not
+  the test.
+- Replay at 0.5% stake: +0.2% / +1.4% a year (taker), +0.4% / +2.2% (resting): almost no capital is ever at
+  work. Capacity: a median of about $900 traded in the 7 days before entry.
+- Read with the random sample (3.26, where it failed with 3 losses in 2026): **not confirmed in Climate and
+  Weather.** It stays out of the rule's categories.
+
+**The Entertainment lead as a pre-stated test** (NO where YES is at 5 to 35c; stated in STATE.md before r25):
+- Taker: 236 bets in 186 events, +4.35% a bet. Tail test fails both halves (in sample 12.6% losing events
+  against a break-even of 17.7%, upper bound 18.7%; out of sample 10.4% against 13.3%, upper bound 18.7%).
+  Replay at 0.5% stake +0.9% / +2.1% a year, drawdown 2.0% / 1.2%.
+- Resting: 211 bets in 173 events, +9.19% a bet. Tail test passes in sample (13.8% against 22.7%, upper
+  bound 20.4%) and narrowly fails out of sample (6 losing of 64 = 9.4% against 16.9%, upper bound 17.7%).
+  Replay at 0.5% stake +1.5% / +5.6% a year, drawdown 1.9% / 0.6%.
+- Losses cluster: New York monthly snow (5 losing bets in 4 events) and 2024 as a losing year. Capacity is
+  better than for the 5-cent rule: a median of about $4,300 traded in the 7 days before entry.
+- **Verdict: same sign as Entertainment, not a confirmation.** 64 to 67 events out of sample cannot carry the
+  test, and the resting figure rests on the fill model. The 3.24 lead stays a lead in one category.
+
+**Calibration** (busy sample, per event): YES under 35c resolves yes less often than its price in every band
+and both halves (gaps of 2 to 12 points), but only the bands under 10c reach t of 2 (the out-of-sample t of
+-24 at 0-5c is an artefact of zero yes outcomes in 72 events). Above 35c nothing is stable.
+
+**Where the backtest stands, all categories seen.** One rule passes its tests pooled over the nine categories
+(the 5-cent rule as a RESTING order, 3.22; its taker version fails); it fails or is unconfirmed in
+Entertainment, Mentions, Financials alone, and Climate and Weather. The wider NO rules are a lead in
+Entertainment with a same-signed, unconfirmed echo here. No new rounds are left to run; what remains is exits
+before settlement, a combined-portfolio replay, and the forward logs.
+
+**Forward logs.** Sixth PC cycle running since 11:53 am (five before it all ended ok); 49 forecasts on 49
+markets, none resolved. Main account $998.02, 2 positions, 3 resting orders. Variant paper accounts (12: the
+main one, 9 that follow Claude under other rules, 2 controls): nothing has settled, so there are no standings;
+equity $995.46 to $999.73 for the accounts that follow Claude, both controls $1,000.00 with nothing filled.
+Observation log of the 5-cent rule: 13 markets seen, none settled; 6 resting bids decided, all 6 filled
+(the backtest's model assumes 55% to 60%).

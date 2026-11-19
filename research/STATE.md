@@ -475,6 +475,18 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   orders a day; variants $995 to $1,000. MEASURED: a cycle with 8 questions takes 60 to 65 minutes, not the
   40 written at 4:35 am. Usage: 5-hour 15%, weekly all models 44%, weekly Fable 69%, 54% of the week past.
 
+- 12:25 pm CST Nov 19 (check-in, first on the 3-hour schedule): both jobs alive; sixth PC cycle running since
+  11:53 am (five before it ok); 49 forecasts, none resolved; main account $998.02. Climate and Weather census
+  finished 10:28 am: THE BACKTEST HAS NOW SEEN EVERY CATEGORY. Report 3.27: r25 (Climate and Weather busy:
+  7,319 markets but 2.4 daily bars each, 0 pass, all thin). 5-cent rule there: one loss in 164 events, but
+  the tail test is not passed in either half, either entry (too few events): not confirmed, stays out of the
+  rule's categories. Entertainment lead as a pre-stated test (NO where YES is 5-35c): same sign (+4.4% taker,
+  +9.2% resting per bet, replay positive both halves), tail test passes only in sample for resting, fails
+  out of sample (64 events): NOT a confirmation. The download now extends the random samples past 2,500 per
+  category (same shuffle, still valid). Usage: 5-hour 20%, weekly all models 44%, weekly Fable 70%, with 55%
+  of the week past: `cycle_every_hours` left at 2 (all-models 11 points behind; 2 is the floor). E: 49.3 GB
+  free, C: 29.6 GB.
+
 ## How to run a round
 
 ```
@@ -536,7 +548,17 @@ Forward-only (cannot be backtested):
    the last two days; exits before settlement (sell the NO at 99c instead of waiting); a combined-portfolio
    replay of several passing rules; sports and crypto samples last.
 6. Open for the user: trade the 5-cent rule in a second paper account? Which Claude model for the forecaster?
-7. **Waiting on the download (as of 10:20 am CST Nov 19):** Climate and Weather census (started 9:38 am; it
+7. **AS OF 12:25 pm CST Nov 19: NOTHING IS WAITING ON THE DOWNLOAD.** r25 is done (report 3.27) and every
+   category has had both samples. The download is only enlarging the random samples (same shuffle): that is
+   NOT a reason for a new round at each check-in. Re-run the random rounds once, when the download log shows
+   the random-order pass finished for all categories, and only report what changes. Until then a check-in is:
+   part A, the forward logs (variants, observation log) once markets have settled, and otherwise one line
+   and stop. Left to code, none urgent, one per check-in at most: exits before settlement; a
+   combined-portfolio replay; the after-the-fact replay tool for the wide variant accounts (once a few dozen
+   markets have settled). Open for the user: second paper account for the 5-cent resting rule; a forward
+   observation band for the wide NO rule (YES 5-35c, no orders) in Entertainment and Climate and Weather.
+   The text below is the record of what was waited for.
+   **Was waiting on the download (as of 10:20 am CST Nov 19):** Climate and Weather census (started 9:38 am; it
    is the LAST category in the download order). It is finished when the download log shows "finished this
    pass" after the 9:38 am "census ... ['Climate and Weather']" line. Then:
    `run_sweep.py --round r25_liquid_climate --categories "Climate and Weather" --sample liquid`, the 5-cent
