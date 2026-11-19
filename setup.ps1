@@ -5,6 +5,13 @@
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
+# Keep everything this project downloads on its own drive: pip's temporary files go under data\tmp and
+# nothing is kept in pip's cache on C:.
+New-Item -ItemType Directory -Force "data\tmp" | Out-Null
+$env:TEMP = Join-Path $PSScriptRoot "data\tmp"
+$env:TMP = $env:TEMP
+$env:PIP_NO_CACHE_DIR = "1"
+
 Write-Host "`n[1/4] Python virtual environment" -ForegroundColor Cyan
 # The bare "python" on this PC is 3.7; the SDK needs 3.10+. Use the py launcher, as the stock trader does.
 $pyVersion = "3.12"
@@ -16,7 +23,7 @@ Write-Host "`n[2/4] Installing requirements" -ForegroundColor Cyan
 & $py -m pip install --quiet -r requirements.txt
 if ($LASTEXITCODE -ne 0) { throw "pip install failed" }
 
-Write-Host "`n[3/4] Running tests (149 should pass)" -ForegroundColor Cyan
+Write-Host "`n[3/4] Running tests (all should pass)" -ForegroundColor Cyan
 & $py -m pytest -q
 if ($LASTEXITCODE -ne 0) { throw "tests failed: do not go further until they pass" }
 

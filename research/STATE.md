@@ -50,7 +50,25 @@ reads first. Keep it short and current. Findings go in the report; this is the c
 
 ## Background jobs
 
-Start whatever is not running, at any time: **`bash research/start_jobs.sh`** (from `PolymarketTrader/`). It
+**MOVED TO THE USER'S PC on 2026-11-18, about 7:00 pm CST.** The project now lives at
+`E:\Coding\PredictionMarketTrader` in its own repository (github.com/NoMansion/PredictionMarketTrader); the
+branch on the stock trader's repository is no longer used. The cloud container's `data/` did not come along
+(it is not committed), so on the PC:
+
+- The Kalshi history is being downloaded again into `data\kalshi_hist.db`. The order is the same fixed shuffle,
+  so a finished category gives the same random sample as before. Until a category's pass is complete locally,
+  the rounds in `research/results/` cannot be re-run on it.
+- The paper ledger `data\pmt.db` starts empty: the first local cycle opens a NEW paper account.
+  `reports/forward_log.csv` keeps the cloud account's rows (append, never overwrite).
+- Start what is not running: **`research\start_jobs.ps1`** (history download; add `-PaperLoop` for the paper
+  loop, `-Stop` to stop both). Python is `.venv\Scripts\python.exe`, not `python3`.
+- The paper loop is NOT running locally yet: it needs the `claude` command installed for this Windows user,
+  and the user's yes (it spends Claude usage). The local config is `config.yaml` itself (quiet window around
+  the stock trader's evening job, 3 runs, high effort); `data/cloud_config.yaml` was for the cloud only.
+- The keep-awake task and the container notes below applied to the cloud machine only.
+
+What follows was written for the cloud container (Linux). Start whatever is not running, at any time:
+**`bash research/start_jobs.sh`** (from `PolymarketTrader/`). It
 starts the Kalshi history download (resumable; log `data/kalshi_download.log`) and the paper loop
 (`scripts/paper_loop.py`, one cycle every 3 h by the ledger's clock; log `data/run_cycle.log`). After each cycle
 the loop also runs `scripts/shadow_longshot.py`: the forward observation log of the longshot rule (no orders; its

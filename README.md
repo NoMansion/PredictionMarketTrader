@@ -5,6 +5,13 @@ small bet. It runs on **paper only** for now, against live prices from Polymarke
 to US residents). No keys, no wallet and no money are involved until the paper record passes the gates in
 `docs/GO_LIVE.md`.
 
+**Where it lives (since 2026-11-18, evening):** `E:\Coding\PredictionMarketTrader`, its own git repository
+(github.com/NoMansion/PredictionMarketTrader). It began the same day as a `PolymarketTrader/` folder on a branch
+of the stock trader's repository, built in a cloud session; that history was carried over, the stock trader's
+was not. The default venue is now Kalshi (`research/STATE.md` says why), the research code under `research/`
+was added after this page was written, and the test count below has grown to 170. Everything the project
+downloads or writes (the virtual environment, `data/`) stays in this folder on E:.
+
 Status, 2026-11-18: built, unit-tested (149 tests) and run twice against the live exchange on a throwaway
 ledger: 5,548 markets scanned, four forecast by Claude, no trades (none of Claude's numbers was far enough from
 the market's). What that first contact showed is in `reports/2026-11-18_live_exchange_check.md`. The short
@@ -92,7 +99,7 @@ One cycle every 8 hours is plenty: these markets resolve over days and weeks, an
 18:20 local time, `runtime.quiet_windows`):
 
 ```
-schtasks /create /tn "PolymarketTrader Cycle" /sc hourly /mo 8 /st 07:40 /f /tr "wscript.exe //B \"E:\Coding\PolymarketTrader\scripts\run_cycle_hidden.vbs\""
+schtasks /create /tn "PolymarketTrader Cycle" /sc hourly /mo 8 /st 07:40 /f /tr "wscript.exe //B \"E:\Coding\PredictionMarketTrader\scripts\run_cycle_hidden.vbs\""
 ```
 
 That runs at 07:40, 15:40 and 23:40, hidden, logging to `data\run_cycle.log` and refreshing `data\status.md`.
