@@ -493,6 +493,13 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   their own one-line notification (part E of the prompt), because the completion notice to the main session
   never arrived.
 
+- 3:12 pm CST Nov 19 (check-in): both jobs alive (restarted 2:41 pm); seventh PC cycle running since 2:41 pm,
+  six before it ok; 59 forecasts, none resolved; main account $998.29, 2 positions, 2 resting. Nothing new
+  for a round: the download is only enlarging the random samples (115,737 markets with bars, no rate
+  limits). Observation log: 13 markets seen, none settled; resting NO bids 6 of 6 filled. Usage: 5-hour 2%,
+  weekly all models 48%, weekly Fable 76% (70% at 12:25 pm), with 57% of the week past:
+  `cycle_every_hours` left at 2 (all-models 9 points behind; 2 is the floor). E: 49.2 GB free, C: 29.4 GB.
+
 ## How to run a round
 
 ```
