@@ -1100,3 +1100,64 @@ $995.46 and `blend30_taker` $995.81 (the spread on 5 and 2 positions), the three
 $997.36, the four other Claude accounts $999.73, both controls (`control_fade`, `control_coinflip`) $1,000.00
 with 5 resting orders and nothing filled. Observation log of the 5-cent rule: 13 markets seen, none settled;
 5 resting bids decided, all 5 filled.
+
+### 3.26 Rounds r23 and r24: Crypto's busy markets (thin, as expected), Social (too small), Climate and Weather random (10:20 am CST, November 19)
+
+**Data.** Crypto's census finished at 9:18 am CST (7,000 markets downloaded). Social was listed and downloaded
+in a minute: 68 markets, none with 5,000+ contracts. Climate and Weather's random pass finished at 9:38 am
+(2,520 markets); its census is in progress.
+
+**r23, Crypto, busy sample: 133 markets, 104 events, 2,447 daily bars (closes 2024-11-30 to 2026-09-19, 101 out
+of sample).**
+
+- **All 2,792 rules thin. 0 pass, 0 leads, 0 reliably losing.** As 3.25 expected: the census is mostly
+  15-minute and hourly markets with no usable daily bars.
+- **The two pre-stated tests, on what little there is** (year-end and "will Bitcoin reach X" questions):
+  - 5-cent rule: 8 events, none losing, taker +2% to +3% a bet, resting +4% to +5%. Eight events cannot
+    bound the loss rate (95% upper bound 31% against a break-even of 7% to 9%): **tail test not passed, no
+    evidence either way.**
+  - NO where YES is at 5-35c: 10 events, 3 losing (taker and resting alike; break-even 46% to 51%, upper
+    bound 61%): **not passed.** The replay is about +1% a year at 0.5% to 1% stake, and negative in sample at
+    2% stake (drawdown 7.8%). The Entertainment lead of 3.24 is neither confirmed nor contradicted here.
+  - Capacity is real where the markets exist (median $7,200 traded in the 7 days before a 5-cent entry,
+    $55,000 for the 5-35c band), but there are about ten events in two years.
+- **Crypto is closed for the daily-bar engine.** Do not pool it. The minute-bar question stays on the backlog.
+
+**Social: no round.** 66 markets in 36 events in the panel, one of them out of sample, no busy sample at all.
+
+**r24, Climate and Weather, random sample: 1,305 markets, 1,080 events, 5,063 daily bars (closes 2021-08-13 to
+2026-09-18, 647 out of sample). 2,794 rules: 0 pass, 2 leads, 6 reliably losing, 180 no, 2,606 thin.** Almost all
+of it is the daily "highest temperature in a city" series: held a median of 1.1 days.
+
+| YES price | YES taker in / out | NO taker in / out | YES resting in / out | NO resting in / out | Events in / out |
+|---|---|---|---|---|---|
+| 0-5c | −100.0% / −55.1% | +1.8% / +0.0% | −100.0% / −50.1% | +4.1% / +0.8% | 101 / 162 |
+| 5-10c | −34.7% / −25.0% | −2.5% / −1.3% | +58.5% / +33.7% | −1.2% / −0.5% | 80 / 76 |
+| 10-20c | −40.2% / −42.3% | +1.1% / +3.0% | −28.3% / −40.5% | +4.4% / +6.2% | 93 / 81 |
+| 20-35c | −19.4% / −1.7% | −1.4% / −7.1% | −10.8% / +0.3% | +3.1% / −6.2% | 121 / 86 |
+| 35-50c | −11.4% / −24.6% | −7.0% / +8.2% | −9.9% / −19.2% | −3.3% / +14.8% | 91 / 64 |
+
+- **Reliably losing: buying cheap YES as a taker.** YES at 0-50c, 3 to 60 days before the close: −39% to −42%
+  a bet in sample, −40% to −47% out (t −3.7 to −5.3, about 360 / 390 events); the favourite of a 5-10 market
+  event: −44% / −40%. The same shape as Mentions and Entertainment.
+- **NO does not collect it.** NO as a taker is between −7% and +8% with no pattern across the bands.
+- **The two leads are one rule** (resting NO where YES is at 20c or less, spread 5c or less, within 14 or 30
+  days): +0.3% a bet in sample (t 0.1), +4.0% out (t 2.3, by event 2.5), 142 / 190 events, fill 68%. Tail test:
+  in sample 13 losing events of 142 (9.2% against a break-even of 9.4%, upper bound 14.2%): fails; out of
+  sample 10 of 190 (upper bound 8.8% against 9.2%): passes; all together fails. Replay at 0.5% stake: +0.0% a
+  year in sample, +7.7% a year out. Two leads among 2,794 rules, flat in sample: what chance gives. Capacity:
+  a median of $39 traded in the 7 days before entry. **Not a result.**
+- **The 5-cent rule fails here.** Taker: 270 bets in 258 events, +0.69% a bet, 3 losing events, all in 2026
+  (out of sample 3 of 159 = 1.9% against a break-even of 1.9%; upper bound 4.8%). Resting: 159 bets, +2.16% a
+  bet, the same 3 losses (out of sample 3 of 93 = 3.2% against 4.0%; upper bound 8.1%). In sample there is no
+  loss but too few events to bound the rate. **Tail test not passed in either half, either entry.** Replay at
+  0.5% stake: +0.2% / +0.0% a year (taker), +0.6% / +0.7% (resting). Capacity in this sample: a median of $8
+  to $12 traded in the 7 days before entry. Do not pool Climate and Weather into the rule's categories unless
+  the busy sample says otherwise.
+- The busy sample (census in progress) is the one that matters here, as for every category: r25 when it lands.
+
+**Forward logs.** Fifth PC cycle running since 9:51 am; 40 forecasts, none resolved. Main account unchanged: 2
+filled positions, 3 resting orders, $998.30. Variant paper accounts (12 accounts: the main one, 9 that follow
+Claude under other rules, 2 controls): no market has settled, so no standings; figures as in 3.25 (takers
+$995.46 and $995.81, wide accounts $997.06 to $997.36, both controls $1,000.00 with nothing filled).
+Observation log of the 5-cent rule: 13 markets seen, none settled; 5 resting bids decided, all 5 filled.

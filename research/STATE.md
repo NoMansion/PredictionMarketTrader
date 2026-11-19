@@ -449,6 +449,16 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   models 42%, weekly Fable 68%, with 53% of the week past: `cycle_every_hours` left at 2, same reason as
   5:15 am. E: 49.4 GB free, C: 29.8 GB.
 
+- 10:20 am CST Nov 19 (check-in): both jobs alive; fifth PC cycle running since 9:51 am; 40 forecasts, none
+  resolved. Crypto census finished 9:18 am, Social done in a minute (68 markets, no busy ones), Climate and
+  Weather random pass finished 9:38 am, its census in progress. Report 3.26: r23 (Crypto busy: 133 markets,
+  104 events, all thin; 5-cent rule 8 events and NO at 5-35c 10 events, neither can pass the tail test:
+  Crypto is closed for the daily-bar engine), Social no round (36 events), r24 (Climate and Weather random:
+  0 pass, 2 leads that are one rule and flat in sample, 6 lose, all cheap YES as a taker; the 5-cent rule
+  FAILS the tail test there in both halves, 3 losses in 2026, capacity $8 to $12 a week). Usage: 5-hour 2%,
+  weekly all models 43%, weekly Fable 69%, with 54% of the week past: `cycle_every_hours` left at 2, same
+  reason as 5:15 am. E: 49.4 GB free, C: 29.6 GB.
+
 ## How to run a round
 
 ```
@@ -510,17 +520,21 @@ Forward-only (cannot be backtested):
    the last two days; exits before settlement (sell the NO at 99c instead of waiting); a combined-portfolio
    replay of several passing rules; sports and crypto samples last.
 6. Open for the user: trade the 5-cent rule in a second paper account? Which Claude model for the forecaster?
-7. **Waiting on the download (as of 9:20 am CST Nov 19):** Crypto census (started 8:31 am; r22 on its
-   random sample is done, all thin, report 3.25: 97% of Crypto markets live under a day, so expect the
-   busy sample to be thin too). When the download log's "categories with work" line names another
-   category: `run_sweep.py --round r23_liquid_crypto --categories Crypto --sample liquid`, then the
-   5-cent rule there (`analyze_rule.py --sample liquid --categories Crypto --rule "NO at mid <= 5c, <= 30d,
-   spread <= 5c" --side no --entry tk`, and `mk`), the calibration curve, AND the Entertainment lead of 3.24
-   as a pre-stated test on the new category: `--rule "NO where YES is at 5-35c"` (tk and mk). Then Social,
-   Climate and Weather the same way. Entertainment is done (r20, r21): its wide NO rules are a LEAD (3.24);
+7. **Waiting on the download (as of 10:20 am CST Nov 19):** Climate and Weather census (started 9:38 am; it
+   is the LAST category in the download order). It is finished when the download log shows "finished this
+   pass" after the 9:38 am "census ... ['Climate and Weather']" line. Then:
+   `run_sweep.py --round r25_liquid_climate --categories "Climate and Weather" --sample liquid`, the 5-cent
+   rule there (`analyze_rule.py --sample liquid --categories "Climate and Weather" --rule "NO at mid <= 5c,
+   <= 30d, spread <= 5c" --side no --entry tk`, and `mk`), the calibration curve, AND the Entertainment lead
+   of 3.24 as a pre-stated test: `--rule "NO where YES is at 5-35c"` (tk and mk). Crypto is done (r22, r23:
+   all thin, closed for the daily-bar engine, do not pool). Social is too small for a round (36 events).
+   Climate and Weather random is done (r24): 5-cent rule fails there. Entertainment is done (r20, r21): its
+   wide NO rules are a LEAD (3.24);
    its 5-cent rule fails, so do not pool Entertainment into the 5-cent rule's categories. Mentions is done
-   (r18, r19): not confirmed in busy markets; do not pool it either. Rounds done so far: up to r22. Until
-   Crypto's census finishes there is nothing new: say so in one line and stop. Open for the user: a
+   (r18, r19): not confirmed in busy markets; do not pool it either. Rounds done so far: up to r24. Until
+   the Climate and Weather census finishes there is nothing new: say so in one line and stop. AFTER r25 the
+   mechanical backtest has seen every category: what remains is item 5 above (exits before settlement, a
+   combined-portfolio replay) and the forward logs; do not invent rounds. Open for the user: a
    forward observation band for Entertainment (YES 5-35c, no orders) in `scripts/shadow_longshot.py`?
    The nine-category
    list for pooled rounds: Economics, Politics, Companies, Science and Technology, Elections, Health, World,
