@@ -870,3 +870,86 @@ decides whether this is a property of the category or of thin quotes: run it whe
 market has settled, so there are no standings. Only `claude_only_taker` has filled orders (3 positions, -$2.65
 marked at the bid, which is the spread it paid); the two controls (`control_fade`, `control_coinflip`) have 5
 resting orders each and $1,000.
+
+### 3.22 Rounds r17 and r18: Financials' busy markets, nine categories pooled, Mentions (6:30 am CST, November 19)
+
+**What was new.** Financials' census of busy markets finished at 5:21 am and Mentions' random pass at 5:41 am
+(its census is still coming down). Three rounds: `r17_liquid_financials`, `r17_liquid_nine`,
+`r18_random_mentions`.
+
+**Financials, busy sample (7,016 markets, 2,170 events, 41,375 daily bars; 2,888 rules): every rule is thin.**
+These are daily and weekly index and rate ranges that live about six bars each, so a price band holds only 24
+to 85 events on each side of April 2026. No pass, no lead, no reliable loser. What can be read, with that
+warning: paying the ask for NO lost in every band from 10 cents up, in both halves (YES at 20-35c: -10% before
+April, -17% after; 35-50c: -8% / -52%), the same direction as the random sample in 3.21. So the answer to
+3.21's question is "probably the category, not only thin quotes", but on 28 to 42 events a band it is not a
+result.
+
+The 5-cent rule on Financials' busy markets fails outright, and is the first category where it loses money:
+
+| Entry | Bets (events) | Mean per bet | Losing events in / out | Tail test | Replay at 1%, in / out, per year |
+|---|---|---|---|---|---|
+| taker | 281 (109) | -1.30% | 9 of 82 / 0 of 30 | fails both (bounds 18.4% and 9.5% against break-even 5.0% and 3.2%) | -0.8% / +1.8% |
+| resting | 172 (82) | -1.33% | 9 of 60 / 0 of 23 | fails both (bounds 24.7% and 12.2% against 8.6% and 5.6%) | -0.9% / +2.5% |
+
+Seven of the nine losses closed in 2024; five are weekly 10-year Treasury yield ranges (KXTNOTEW), two the
+Nasdaq-100. A price range on a traded index is not a longshot in the sense the rule relies on: the underlying
+can move through it in a day. Median $386 to $630 traded in the seven days before entry.
+
+**Nine categories pooled (busy sample, 26,635 markets, 8,312 events; 4,317 rules):** 18 pass, 122 leads, 284
+lose. 16 of the 18 are NO against a YES at 10 cents or less (15 resting, 1 taker in the last tenth of a
+market's life); one is a resting YES at 95c and above on "custom" questions. The picture of 3.19 and 3.21 is
+unchanged with Financials in.
+
+The 5-cent rule pooled over nine categories:
+
+| Entry | Events in / out | Mean per bet | Tail test in / out | Replay at 1%, in / out, per year | Worst drawdown in / out |
+|---|---|---|---|---|---|
+| resting | 1,086 / 607 | +1.59% | passes / passes (bounds 5.4% and 5.9% against break-even 6.9% and 7.4%) | +2.7% / +17.6% | 3.9% / 3.5% |
+| taker | 1,508 / 731 | +0.25% | fails / fails (bounds 4.2% and 4.9% against 3.5% and 4.6%) | -0.9% / -0.7% | 8.6% / 4.8% |
+
+Financials pulled the mean down (from +1.77% to +1.59% resting) but did not change either verdict. Capacity is
+as small as before: median $216 traded in the seven days before a resting entry, a quarter under $67, 22% of
+entry days under 100 contracts. If the rule is ever traded on paper, leaving out index and yield ranges is the
+obvious variant to record beside it; that is a choice made after seeing the losses, so it counts as one more
+variant tried, not as evidence.
+
+**Mentions, random sample (r18: 2,066 markets, 1,476 events, all from 2025 and 2026; 2,794 rules):** 1 pass,
+9 leads, 49 reliably losing, and the three groups say one thing: YES is overpriced in "will X say Y" markets.
+All 49 losers are buying YES (for example YES at 50c or less 30 to 60 days out: -38% before April, -45% after,
+t by event -6). By price band, paying the ask for YES between 10 and 80 cents lost 16% to 54% in both halves,
+and NO was positive in every band up to 80 cents in both halves (taker +1% to +14%, resting +4% to +35%).
+
+| Rule (buy NO) | Entry | Events in / out | In / out per bet | t out (by event) | Tail test in / out | Replay at 0.5%, in / out, per year | Worst drawdown |
+|---|---|---|---|---|---|---|---|
+| spread 6-15c, YES at 20-80c | resting | 234 / 284 | +18.9% / +26.3% | 3.2 (3.5) | passes / passes | +25% / +98% | 5.0% / 5.6% |
+| any spread, YES at 20-80c | resting | 291 / 380 | +21.6% / +13.6% | 2.2 (2.3) | passes / passes | +37% / +73% | 5.1% / 6.6% |
+| any spread, YES at 20-80c | taker | 311 / 408 | +8.8% / +4.8% | 1.0 (1.3) | passes / fails | +15% / +22% | 6.6% / 8.9% |
+
+Why this is a lead and not a result:
+
+- **One pass in 2,794 rules is what chance gives.** What is not chance-like is the consistency (every band,
+  both halves, 175 series, the largest 11% of the bets). The wide-spread rule that passed was not predicted
+  beforehand; the plain "NO at 20-80c" rule is the honest version and it is a lead resting (t 2.2) and nothing
+  as a taker (t 1.0).
+- **It is a coin-flip bet, not a longshot bet.** 46% to 48% of events lose the whole stake; the edge is that a
+  winner pays about 1.3 to 1.4 times the stake at a resting price. Returns swing: one series
+  (KXSECPRESSMENTION) carries 20% to 37% of the profit, and KXTRUMPMENTION, the second largest, loses.
+- **The capacity is tiny.** The median qualifying market traded $47 to $88 in the seven days before entry, a
+  quarter under $15, and 25% to 35% of entry days traded under 100 contracts. The replay's percentages are on
+  an account that could not be more than a few hundred dollars.
+- **The resting figure rests on the fill model** (75% to 81% filled) on daily bars of markets that live a
+  median of 2.4 days: many are decided inside one live broadcast, where a resting NO bid is filled exactly when
+  the word has just been said. The model counts those fills, but a daily bar cannot show the order of events
+  inside the day.
+- Mentions is not one of the paper bot's categories, and nothing here changes its config.
+
+The test that decides it is the busy sample (Mentions' census, downloading now): if NO at 20-80c still earns
+there as a taker, there is something with capacity; if it lives only where $50 a week trades, it is a curiosity.
+
+**Forward logs.** Observation log of the 5-cent rule: 12 qualifying markets seen, none settled; 5 resting bids
+decided, all 5 filled. Variant paper accounts (12 accounts: the main one, 9 that follow Claude under other
+rules, 2 controls): no market has settled, so no standings. Main $999.14 (one filled YES position marked 2
+cents under its price), `claude_only_taker` $997.35 (the spread on 3 positions), every other account,
+including both controls (`control_fade`, `control_coinflip`), $1,000.00 with 3 to 6 resting orders. The third
+PC cycle (8 questions) started at 5:48 am and was still running when this was written.

@@ -409,6 +409,17 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   Fable window is 15 points ahead, but the loop does not spend it and the user set 2 h at 4:35 am with the
   same figures in view. Check-ins spend Fable: stop early when nothing has landed.
 
+- 6:30 am CST Nov 19 (check-in): both jobs alive; third PC cycle (8 questions) running since 5:48 am. Report
+  3.22: r17 (Financials busy sample; nine categories pooled) and r18 (Mentions random). Financials busy: every
+  rule thin; the 5-cent rule LOSES there (-1.3% per bet both entries, 9 losing events, weekly Treasury yield
+  and Nasdaq ranges). Nine pooled: 18 pass; 5-cent RESTING still passes both halves (+1.59% per bet, replay
+  +2.7% / +17.6% a year), TAKER fails. Mentions random: YES overpriced in every band (49 losing rules, all buy
+  YES); NO at 20-80c resting is a lead (t 2.2; tail test passes both halves), taker is not (t 1.0); capacity
+  about $50 to $90 a week per market: A LEAD, the busy sample decides. Usage: 5-hour 5%, weekly all models
+  40%, weekly Fable 67%, with 51% of the week past. `cycle_every_hours` left at 2 for the reason given at
+  5:15 am (the loop spends the all-models window, which is 11 points behind; Fable is 16 ahead and is spent
+  by check-ins, so: stop early when nothing has landed).
+
 ## How to run a round
 
 ```
@@ -470,8 +481,13 @@ Forward-only (cannot be backtested):
    the last two days; exits before settlement (sell the NO at 99c instead of waiting); a combined-portfolio
    replay of several passing rules; sports and crypto samples last.
 6. Open for the user: trade the 5-cent rule in a second paper account? Which Claude model for the forecaster?
-7. **Waiting on the download (as of 5:15 am CST Nov 19):** Financials census. When the download log shows it has
-   moved past Financials: `run_sweep.py --round r17_liquid_financials --categories Financials --sample liquid`,
-   the 5-cent rule on it (tk and mk), and say whether the random sample's "taker NO loses" (report 3.21) holds
-   in busy markets. Then nine categories pooled. After Financials come Mentions, Entertainment, Crypto, Social,
-   Climate and Weather: one random and one liquid round each as they finish. Rounds done so far: up to r16.
+7. **Waiting on the download (as of 6:30 am CST Nov 19):** Mentions census (started 5:41 am). When the download
+   log shows it has moved past Mentions ("categories with work" names another category):
+   `run_sweep.py --round r19_liquid_mentions --categories Mentions --sample liquid`, then
+   `analyze_rule.py --sample liquid --categories Mentions --rule "Mentions, mid 20-80c" --side no --entry tk`
+   (and `mk`), and say whether the random sample's "YES overpriced, NO at 20-80c earns" (report 3.22) holds in
+   busy markets and with how many dollars. Do NOT pool Mentions into the 5-cent rule's categories without
+   saying so (it is a different kind of bet). After Mentions come Entertainment, Crypto, Social, Climate and
+   Weather: one random and one liquid round each as they finish. Rounds done so far: up to r18. The nine-category
+   list for pooled rounds: Economics, Politics, Companies, Science and Technology, Elections, Health, World,
+   Commodities, Financials.
