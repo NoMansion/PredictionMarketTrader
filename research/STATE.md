@@ -6,6 +6,22 @@ reads first. Keep it short and current. Findings go in the report; this is the c
 
 **Report:** `reports/2026-11-18_strategy_research.md` (create on first results; add a dated section per check-in).
 
+## Standing instruction (2026-11-19, about 3:50 am CST, on the PC)
+
+The user: "are you prepared to download data, run tests, and determine the best strategy you can to make as
+much money in a risk averse way indefinitely while i leave my pc on". Taken as: the research loop the cloud
+session ran continues on the PC without waiting for the user. What that does and does not cover:
+
+- Covered: the history download, backtest rounds on new data, the forward tests (paper loop, observation
+  log), writing every result into the report, pushing code, results and reports.
+- NOT covered, each needs the user's own yes: any change to the paper bot's config or a second paper account
+  for a mechanical rule; anything with real money (never done from here: `docs/GO_LIVE.md`); a Task Scheduler
+  entry or other standing change on the PC.
+- "Risk averse" is read as: the rules for judging below stay as they are, a rule is judged by its account
+  replay and its worst periods as well as its mean, and capacity in dollars is always reported.
+- The hourly check-in lives in the Claude session that set it up. It stops if the app closes or the PC
+  restarts, and expires after 7 days: after any of those, a new session has to set it up again from this file.
+
 ## Decisions already made
 
 - **Times for the user: US Central, 12-hour with am/pm** (asked 2026-11-18, 4:34 pm CST). Applies to every
