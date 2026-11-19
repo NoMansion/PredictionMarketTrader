@@ -96,6 +96,11 @@ branch on the stock trader's repository is no longer used. The cloud container's
   (cloud: 2 runs, medium effort) are a separate block of the record: compare the two blocks, do not pool them
   without saying so. The first PC cycle was started by hand at 3:46 am; the loop is started once it finishes
   (two writers cannot share `data\run_cycle.log`). The paragraph below is the state just before this.
+- **8 QUESTIONS PER CYCLE from the second PC cycle** (the user, 4:14 am CST 2026-11-19: "Feel free to use more
+  than 4 questions"). `universe.max_candidates_per_cycle: 8` in `config.yaml`, with the measurements behind it.
+  Not a break in the record (the forecaster is unchanged), but it reaches further down the ranking, so more
+  forecasts will be on markets too thin to trade (scored, not traded). If usage runs short, lower this
+  before touching runs or effort.
 - **VARIANT ACCOUNTS since 2026-11-19, about 4:00 am CST** (the user: can it be done "based on a claude
   analysis of the liklihood of an event occuring", then "yes add that account along with any variations of
   tests that you can"). Eight extra paper accounts in `variants.yaml` reuse the main account's forecasts (no

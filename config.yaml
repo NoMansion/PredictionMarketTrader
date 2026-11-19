@@ -42,7 +42,12 @@ universe:
   categories_deny: [sports, esports, crypto, financials, commodities, entertainment, culture, climate and weather, climate, weather, mentions]
   max_markets_per_event: 2
   max_events_scanned: 2000
-  max_candidates_per_cycle: 4     # forecasts per cycle; each is `forecaster.runs` Claude runs
+  # Forecasts per cycle; each is `forecaster.runs` Claude runs. 4 until 2026-11-19, when the user said to use
+  # more. Measured on the PC that morning: about 4 minutes and $0.60 to $0.90 of usage (list price) per forecast
+  # at 3 runs, high effort. 8 keeps a cycle under an hour. The ceiling in practice is the exchange, not this
+  # number: about 30 markets have a usable order book at any time and each is re-forecast after 48 hours, so
+  # after the first day there are roughly 15 to 20 questions a day to ask whatever is set here.
+  max_candidates_per_cycle: 8
   reforecast_after_hours: 48
 
 # ---- Claude as the forecaster (src/forecast.py) --------------------------------

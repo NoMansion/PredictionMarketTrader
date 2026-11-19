@@ -44,7 +44,7 @@ venue.py      universe.py       forecast.py           sizing.py            safet
    resting paper orders.
 2. **Safety.** Kill switch, drawdown, total loss, daily budget.
 3. **Forecast.** Filter the exchange's open markets by rule, read the order books of the survivors, and ask
-   Claude about the best few (4 per cycle by default): markets already held first, then markets deep enough to
+   Claude about the best few (8 per cycle since 2026-11-19, 4 before): markets already held first, then markets deep enough to
    trade, then markets that only have a price worth scoring a forecast against. Each market gets 3 independent
    runs with web search; the median is used. Runs that disagree by more than 15 points, low confidence, unclear
    rules or any raised flag mean no trade.
@@ -85,7 +85,7 @@ Run in PowerShell from the project folder.
 |---|---|---|
 | 1. Install, test, demo | `Set-ExecutionPolicy -Scope Process Bypass; .\setup.ps1` | All tests pass; a made-up month of trading prints a status report |
 | 2. Look at the real market list | `.venv\Scripts\python scripts\run_cycle.py --scan` | How many live markets pass the filters, and why the rest are dropped. Changes nothing, calls Claude zero times, takes under a minute |
-| 3. One real paper cycle | `.venv\Scripts\python scripts\run_cycle.py` | Up to 4 markets forecast by Claude (several minutes), any paper orders placed |
+| 3. One real paper cycle | `.venv\Scripts\python scripts\run_cycle.py` | Up to 8 markets forecast by Claude (about 4 minutes each), any paper orders placed |
 | 4. Status | `.venv\Scripts\python scripts\status.py` | Account, positions, forecast scoring, go-live gates |
 
 The forecaster needs the Claude Code command (`claude`) installed and signed in for the Windows user that runs
@@ -121,8 +121,10 @@ apart, and one Claude process at a time. It runs at below-normal priority, will 
 memory free, and a lock file stops two cycles overlapping. It holds no data in memory between cycles.
 
 **What it costs in Claude usage.** Measured on the live trial: about 100 seconds per research run at medium
-effort, and $0.13 to $0.30 of usage per run at list prices. With the defaults that is at most 4 markets × 3 runs
-× 3 cycles = 36 runs a day against the Claude subscription, about 20 to 30 minutes per cycle. Lower
+effort, and $0.13 to $0.30 of usage per run at list prices. On the PC (3 runs, high effort) a forecast took about 4 minutes and $0.60 to
+$0.90. With the settings since 2026-11-19 that is at most 8 markets × 3 runs × 4 cycles = 96 runs a day against
+the Claude subscription and under an hour per cycle; in practice fewer, because only about 30 markets have a
+usable order book at a time and each is re-forecast after 48 hours. Lower
 `forecaster.runs` or `universe.max_candidates_per_cycle` if that crowds out other work. The `api` backend does
 the same on a paid API key, at a cost per forecast that is more than a $20 bet with a 4-point edge is expected
 to earn: use it only with a reason.
