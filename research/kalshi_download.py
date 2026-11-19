@@ -17,6 +17,7 @@ The data stays on this machine (data/ is not committed): Kalshi's terms do not a
     python research/kalshi_download.py --phase candles --min-volume 200 --max-markets 50000
 """
 import argparse
+from urllib.parse import quote
 import sqlite3
 import sys
 import time
@@ -29,9 +30,10 @@ sys.path.insert(0, str(ROOT))
 
 from src.kalshi_http import KalshiError, KalshiHTTP  # noqa: E402
 
-# In the order they are downloaded: the categories the paper bot trades first, the giant ones last.
-CATEGORIES = ["Economics", "Politics", "Companies", "Commodities", "Science and Technology", "Elections", "Health",
-              "World", "Financials", "Mentions", "Entertainment", "Crypto", "Social", "Climate and Weather", "Sports"]
+# In the order they are downloaded: the categories the paper bot trades first, the giant ones last. (Commodities
+# moved back on 2026-11-18: 264,000 markets, mostly daily price ranges the bot does not trade.)
+CATEGORIES = ["Economics", "Politics", "Companies", "Science and Technology", "Elections", "Health", "World",
+              "Commodities", "Financials", "Mentions", "Entertainment", "Crypto", "Social", "Climate and Weather", "Sports"]
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS series (ticker TEXT PRIMARY KEY, category TEXT, title TEXT, fee_type TEXT, fee_multiplier REAL,
@@ -219,17 +221,19 @@ def phase_candles(db, k, categories, min_volume, max_markets, max_days, biggest_
                     status = 3
                 else:
                     start = max(o, cl - max_days * 86400)
-                    path = (f"/historical/markets/{ticker}/candlesticks" if src == "hist"
-                            else f"/series/{series}/markets/{ticker}/candlesticks")
+                    safe = quote(ticker, safe="")       # a few old tickers contain "%" or spaces
+                    path = (f"/historical/markets/{safe}/candlesticks" if src == "hist"
+                            else f"/series/{quote(series or '', safe='')}/markets/{safe}/candlesticks")
                     try:
                         cs = k.get(path, start_ts=start, end_ts=cl + 86400, period_interval=1440).get("candlesticks") or []
                         db.executemany("INSERT OR IGNORE INTO candles VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", candle_rows(ticker, cs))
                         if not cs:
                             status = 2              # no bars: never quoted
                     except KalshiError as e:
-                        # 404 and the other 4xx answers are final for this market (asking again gives the same
-                        # answer, and a market left at 0 is picked again at once: one bad ticker stalled the
-                        # whole download for a night). 5xx and 429 after the retries are left for the next run.
+                        # 404 and the other 4xx answers are final: the exchange will never answer for this
+                        # ticker. Leaving it "to do" would get it picked again at once (one bad ticker stalled
+                        # the whole download for a night) and would hold the random sample at this market for
+                        # ever (panel.py stops at the first gap). 5xx and 429 after the retries wait for the next run.
                         status = 4 if 400 <= e.status_code < 500 and e.status_code != 429 else 0
                         if e.status_code != 404:
                             log(f"candles: {ticker}: {e}")

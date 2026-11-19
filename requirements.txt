@@ -4,8 +4,5 @@ polymarket-us==2.4.1        # official SDK (github.com/Polymarket/polymarket-us-
 PyYAML==6.0.3
 python-dotenv==1.2.3
 pytest==9.1.1
-# Only for research/ (the backtests); the paper bot itself does not import them:
-numpy==2.5.5
-pandas==3.1.1
 # Only for forecaster.backend: "api" (not needed for the default Claude Code backend):
 # anthropic>=1.0

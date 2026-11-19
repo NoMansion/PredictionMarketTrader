@@ -171,6 +171,13 @@ class FakeKalshiHTTP:
             "yes_dollars": [[f"{bid - 0.01:.4f}", f"{size * 2:.2f}"], [f"{bid:.4f}", f"{size:.2f}"]],
             "no_dollars": [[f"{1 - ask - 0.01:.4f}", f"{size * 2:.2f}"], [f"{1 - ask:.4f}", f"{size:.2f}"]]}}
 
+    def trade(self, ticker: str, ts: float, yes_price: float, count: float, taker_side: str = "yes"):
+        if not hasattr(self, "trades"):
+            self.trades = {}
+        self.trades.setdefault(ticker, []).append({
+            "ticker": ticker, "ts": ts, "created_time": iso(ts), "yes_price_dollars": f"{yes_price:.4f}",
+            "no_price_dollars": f"{1 - yes_price:.4f}", "count_fp": f"{count:.2f}", "taker_side": taker_side})
+
     def settle(self, ticker: str, result: str):
         self.markets[ticker].update(status="finalized", result=result,
                                     settlement_value_dollars="1.0000" if result == "yes" else "0.0000")
@@ -193,6 +200,10 @@ class FakeKalshiHTTP:
             start = int(params.get("cursor") or 0)
             nxt = start + size
             return {"markets": live[start:nxt], "cursor": str(nxt) if nxt < len(live) else ""}
+        if path == "/markets/trades":
+            rows = [t for t in getattr(self, "trades", {}).get(params.get("ticker"), [])
+                    if params.get("min_ts", 0) <= t["ts"] <= params.get("max_ts", 9e18)]
+            return {"trades": rows, "cursor": ""}
         if path.startswith("/markets/") and path.endswith("/orderbook"):
             return self.books[path.split("/")[2]]
         if path.startswith("/markets/"):
@@ -202,7 +213,8 @@ class FakeKalshiHTTP:
             return {"market": dict(self.markets[t])}
         if path.startswith("/events/"):
             return {"event": {"event_ticker": path.split("/")[2], "title": "CPI YoY in November", "category": "Economics",
-                              "settlement_sources": [{"name": "Bureau of Labor Statistics", "url": "https://www.bls.gov/cpi/"}]}}
+                              "settlement_sources": [{"name": "Bureau of Labor Statistics", "url": "https://www.bls.gov/cpi/"}]},
+                    "markets": [dict(m) for m in self.markets.values() if m.get("event_ticker") == path.split("/")[2]]}
         raise KalshiError(404, path, "not found")
 
     def pages(self, path: str, key: str, **params):

@@ -62,11 +62,25 @@ branch on the stock trader's repository is no longer used. The cloud container's
   `reports/forward_log.csv` keeps the cloud account's rows (append, never overwrite).
 - Start what is not running: **`research\start_jobs.ps1`** (history download; add `-PaperLoop` for the paper
   loop, `-Stop` to stop both). Python is `.venv\Scripts\python.exe`, not `python3`.
-- The paper loop: the user said yes on 2026-11-19 (about 2:30 am CST). The `claude` command is installed in
-  `.tools\claude` (2.1.328; `forecaster.executable` points at it) but is NOT SIGNED IN: the user has to run
-  `claude auth login` once (README has the line). Until then `start_jobs.ps1 -PaperLoop` refuses and says so.
-  The local config is `config.yaml` itself (quiet window around the stock trader's evening job, 3 runs, high
-  effort, a cycle every 8 h); `data/cloud_config.yaml` was for the cloud only.
+- **NO PAPER CYCLES ON THE PC YET** (the user's instruction, 2026-11-19 about 3:20 am CST, arriving with the
+  cloud session's migration steps). The cloud paper loop is still the one ledger. A local loop was started at
+  3:03 am at the user's earlier request and stopped at 3:22 am, before its first cycle had forecast anything:
+  `data\pmt.db` on the PC holds only the $1,000 opening deposit and is to be REPLACED by the cloud's ledger
+  from the data bundle, not continued. Do not run `start_jobs.ps1 -PaperLoop` or `run_cycle.py` until the
+  user says so. (`run_cycle.py --scan` and `--no-forecast` ask Claude nothing, but `--no-forecast` writes to
+  the ledger: leave it too.)
+- **The data bundle** (`PredictionMarketTrader_data.zip`, 62 MB: the cloud's paper ledger, observation log
+  and history database, snapshot 3:06 am) was NOT in the user's Downloads folder (`D:\Downloads`) at 3:25 am.
+  When it is there: stop the download (`start_jobs.ps1 -Stop`), move the PC's `data\` files aside into
+  `data\_pc_before_bundle\`, unzip into a new empty folder first and look, then move its `data\` into place
+  and restart the download (it resumes on the cloud's database, which is the one the report's rounds saw).
+- The `claude` command is installed in `.tools\claude` (2.1.328; `forecaster.executable` points at it) and
+  signed in to the user's subscription since 3:00 am. The local config is `config.yaml` itself (quiet window
+  around the stock trader's evening job, 3 runs, high effort, a cycle every 8 h); the cloud cycles used
+  `data/cloud_config.yaml` (2 runs, medium effort): which one the PC continues with is the user's choice, and
+  a change is a break in the track record.
+- New cloud commits reach this repository with `scripts\sync_from_github.ps1` (a git merge). Merged so far:
+  up to the cloud's 3:08 am commit ("migration to the PC").
 - **A restart of the PC stops both jobs and nothing starts them again** (it was restarted at 10:40 pm and
   1:38 am on the first night). Run `research\start_jobs.ps1 -PaperLoop` after a restart, at every check-in.
   A Task Scheduler entry "at log on" would do it unattended: not created, it needs the user's yes.
@@ -189,7 +203,72 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   passes. Politics census still descending from 14,452 to 5,000: re-run `--sample liquid --categories Politics`
   when `research/panel.py`-level check shows it complete, then Companies.
 
-- 2:45 am CST, 2026-11-19 (first local check-in): the local download had stalled at 10:34 pm on one archive
+- 8:07 pm CST (check-in 10): Politics census complete to 5,000. Round r10 (report 3.13): at 5,150+ contracts in
+  both categories, 26 pass / 117 leads, all buy-NO, BUT paying the ask for NO is worth about zero in every band;
+  the 5-cent TAKER rule fails in Politics (+0.14% per bet) and is carried by Economics; the RESTING version
+  passes pooled (fill is modelled). Closing-window check: nothing special in the last 1-3 days; hourly bars
+  dropped. Status section of the report rewritten. Download now on Companies.
+  BUILT 8:10 pm: resting-fill tracking in `scripts/shadow_longshot.py` from Kalshi's public trades (queue-aware;
+  3-day window). `--report` prints the fill rate and, once settled, the return of the filled ones: quote it in
+  the report at each check-in once more than about 20 are decided.
+
+- 8:55 pm CST (check-in 11): Companies too small (79 events). Commodities moved behind the bot's categories;
+  download now on Science and Technology. Report 3.14: the WIDE resting rules (NO against YES up to 35-50c) have
+  positive means per bet but LOSE in the account replay (gains sit in huge multi-outcome events; event-weighted
+  t negative). Calibration gap per event: solid under 5c, gone above 10c out of sample: the "corrected starting
+  price" idea for the bot is withdrawn. Lesson for judging: always run `analyze_rule.py` (replay) and read
+  `oos_evt` before calling anything usable.
+
+- 9:55 pm CST (check-in 12): downloader bug fixed (a ticker with "%" was retried for ever and held the Science
+  and Technology random sample at 811 markets); Science and Technology still downloading (about 2,165 of 3,906
+  with bars). New family 27, `research/event_baskets.py`: NO on every outcome of an event whose YES bids add up
+  to more than 1. On the "no numeric strike" proxy it LOSES (most such events are not exclusive: "by June" and
+  "by December"). Fetching Kalshi's own `mutually_exclusive` flag for the candidate events (file `data/kalshi_events.db`) to
+  test the exclusive ones alone: result goes in the report as 3.15.
+
+- 10:06 pm CST: family 27 done (report 3.15). With Kalshi's flag (154 of 405 candidate events are exclusive):
+  bids of an exclusive event's outcomes add up to 1.00-1.02, basket locked at about -0.9% after fees; reached
+  1.05 once in five years. No arbitrage. Flags are in `data/kalshi_events.db` (not committed).
+
+- 10:53 pm CST (check-in 13): Science and Technology complete. Round r11 (report 3.16): random 0 pass; busy
+  0 pass / 11 leads (all resting NO). 5-cent rule: taker fails there too (+0.08%); pooled over three categories
+  the RESTING version passes both halves (+1.98% per bet, 1,270 events), the TAKER fails both. Fixed a crash on
+  a missing title. Download is listing Elections (2,601 series), then Health, World.
+
+- 11:56 pm CST (check-in 14): Elections still listing. FOUND AND FIXED A FLAW IN `portfolio.entries`:
+  same-day bets were ordered by return, losers first (pessimistic look-ahead). All replay figures of report 3.8
+  to 3.16 were too low; corrected table in 3.17; means, t and tail tests were never affected. New tool
+  `research/resting_variants.py`: 5 depths x 3 windows for the resting NO bid, all 15 pass the tail test in both
+  halves (report 3.17): no setting to tune.
+
+- 12:54 am CST Nov 19 (check-in 15): Elections random pass complete, census at 22,000 contracts and descending.
+  Round r12 (report 3.18): Elections shows NO longshot effect of its own (0 pass; 5-cent rule +0.07% taker, +0.91%
+  resting, few bets). Four categories pooled at 23,000+: both versions pass the tail test in both halves.
+  Next: Elections to 5,000, then Health and World (small), then pooled five/six-category rounds at 5,150.
+
+- 1:57 am CST Nov 19 (check-in 16): ALL SEVEN BOT CATEGORIES DOWNLOADED. Round r13 (report 3.19), pooled busy
+  sample 17,522 markets / 5,316 events: 17 pass (16 buy NO against cheap YES). 5-cent rule pooled: RESTING passes
+  both halves (+1.85% per bet; replay +3.6% / +14.8% a year); TAKER fails (+0.43%). The effect lives in
+  SINGLE-MARKET events (taker 5 losses in 696) and Economics; absent in Elections and inside multi-outcome
+  events. `ev_total` now counts the markets the exchange listed (was: markets in the sample).
+  Download has moved to Commodities (random 2,500 then census, capped at 8,000), then Financials etc.
+  NEXT IDEAS: (a) 5-cent rule restricted to single-market events with <= 30d and by category; (b) the same
+  breakdown for YES 5-20c; (c) forward log: add single-market flag to `scripts/shadow_longshot.py`.
+
+- 2:53 am CST Nov 19 (check-in 17): family 28 (stand-alone questions), report 3.20: strong in sample (t 4-16,
+  280-600 events), positive with no loss since April 2026, but every rule is THIN out of sample (10-87 events):
+  not a pass, and the split / 100-event bar stay where they are. `scripts/shadow_longshot.py` now records the
+  event's size (`ev_markets`). Commodities census in progress (about 2,900 of 8,000).
+
+- 3:10 am CST Nov 19: THE USER ASKED TO MIGRATE THE WORK TO THEIR PC ("under the predictionmarkettrader
+  project"). This session cannot reach the PC (no shared folder). Prepared instead: `docs/MIGRATE_TO_PC.md`
+  (three steps), `scripts/sync_from_github.ps1`, path-independent `scripts/run_cycle_hidden.vbs`,
+  `requirements-research.txt`, README updated; a data bundle (paper ledger, observation log, history database;
+  snapshot 3:06 am) handed over as a file in the conversation. The cloud jobs KEEP RUNNING until the user says
+  the PC copy is running; then stop the cloud paper loop (one ledger only) and ask whether the hourly check-ins
+  should stop too. Do not stop them unasked.
+
+- 2:45 am CST Nov 19 (ON THE PC, first local check-in): the local download had stalled at 10:34 pm on one archive
   ticker, `GPT%-23DEC31` (Kalshi answers 400 for it however the `%` is sent), retrying it every 16 s; then
   the PC was restarted. Fixed: paths are URL-escaped (`src/kalshi_http.py`) and any 4xx except 429 is final
   for a market (`candles_done = 4`). Restarted at 2:36 am. Local history so far: Economics 8,881 markets with
@@ -248,10 +327,8 @@ Forward-only (cannot be backtested):
 2. **Re-test the 5-cent rule on every new category and at the lower census level** (Economics is being extended
    to 5,000 contracts): `python3 research/analyze_rule.py --sample liquid --categories <Cat> --rule "NO at mid <= 5c,
    <= 30d, spread <= 5c" --side no --entry tk` (and `mk`). A category where it fails is a result too: write it.
-2b. **Calibration curve** (report 3.10): `python3 research/calibration_curve.py --sample liquid --categories <Cat>`.
-   Re-measure at the lowest complete census level and on each new category. Candidate change for the bot (NOT
-   applied, needs the user's yes and the evidence at the bot's own liquidity bar): start the blend from a price
-   corrected by the measured gap where YES is under 35c in a busy market.
+2b. **Calibration curve** (report 3.10, 3.14): `python3 research/calibration_curve.py --sample liquid --categories
+   <Cat>`; read the per-event columns. Re-measure on each new category. The bot-prior correction is withdrawn.
 3. Leads to follow on the busy sample: NO where YES is 5 to 35c, resting (+6% / +6%, t 2.1 out of sample, thin);
    NO at 3 to 10c after a fall of 3c+ (momentum cross). They need more events: wait for more categories.
 4. Forward: `tail -20 data/run_cycle.log`; `python3 scripts/shadow_longshot.py --report`; commit

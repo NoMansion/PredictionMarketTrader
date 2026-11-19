@@ -1,21 +1,20 @@
-# PolymarketTrader
+# PredictionMarketTrader
 
 An experiment: Claude forecasts prediction-market questions, and plain code decides whether a forecast is worth a
-small bet. It runs on **paper only** for now, against live prices from Polymarket US (the CFTC-regulated venue open
-to US residents). No keys, no wallet and no money are involved until the paper record passes the gates in
-`docs/GO_LIVE.md`.
+small bet. It runs on **paper only**, against live prices from **Kalshi** (CFTC-regulated, open to US residents;
+Polymarket US is supported too and was measured to be much thinner). No keys, no wallet and no money are
+involved until the paper record passes the gates in `docs/GO_LIVE.md`.
 
-**Where it lives (since 2026-11-18, evening):** `E:\Coding\PredictionMarketTrader`, its own git repository
-(github.com/NoMansion/PredictionMarketTrader). It began the same day as a `PolymarketTrader/` folder on a branch
-of the stock trader's repository, built in a cloud session; that history was carried over, the stock trader's
-was not. The default venue is now Kalshi (`research/STATE.md` says why), the research code under `research/`
-was added after this page was written, and the test count below has grown to 170. Everything the project
-downloads or writes (the virtual environment, `data/`) stays in this folder on E:.
+**Where it lives:** `E:\Coding\PredictionMarketTrader` on the PC, its own git repository
+(github.com/NoMansion/PredictionMarketTrader). It began on 2026-11-18 as a `PolymarketTrader/` folder on a
+branch of the stock trader's repository, built in a cloud session; that folder's history was carried over,
+the stock trader's was not. Everything the project downloads or writes (the virtual environment, the Claude
+Code program in `.tools/`, `data/`) stays in this folder on E:.
 
-Status, 2026-11-18: built, unit-tested (149 tests) and run twice against the live exchange on a throwaway
-ledger: 5,548 markets scanned, four forecast by Claude, no trades (none of Claude's numbers was far enough from
-the market's). What that first contact showed is in `reports/2026-11-18_live_exchange_check.md`. The short
-version: the bot works, and **this exchange is very thin outside sports**, which makes the experiment slow.
+Status, 2026-11-19: built, unit-tested (173 tests), five paper cycles run against live Kalshi: 20 forecasts, four
+resting paper orders, none filled, paper account at $1,000. Alongside it, a night of backtests on Kalshi's
+history (`reports/2026-11-18_strategy_research.md`): one small mechanical effect has support (cheap YES contracts
+in busy markets are overpriced, and resting NO orders against them have paid), nothing else passes.
 
 ## What the research says (and how the design follows)
 
@@ -84,7 +83,7 @@ Run in PowerShell from the project folder.
 
 | Step | Command | What it shows |
 |---|---|---|
-| 1. Install, test, demo | `Set-ExecutionPolicy -Scope Process Bypass; .\setup.ps1` | 149 tests pass; a made-up month of trading prints a status report |
+| 1. Install, test, demo | `Set-ExecutionPolicy -Scope Process Bypass; .\setup.ps1` | All tests pass; a made-up month of trading prints a status report |
 | 2. Look at the real market list | `.venv\Scripts\python scripts\run_cycle.py --scan` | How many live markets pass the filters, and why the rest are dropped. Changes nothing, calls Claude zero times, takes under a minute |
 | 3. One real paper cycle | `.venv\Scripts\python scripts\run_cycle.py` | Up to 4 markets forecast by Claude (several minutes), any paper orders placed |
 | 4. Status | `.venv\Scripts\python scripts\status.py` | Account, positions, forecast scoring, go-live gates |
@@ -111,7 +110,7 @@ One cycle every 8 hours is plenty: these markets resolve over days and weeks, an
 18:20 local time, `runtime.quiet_windows`):
 
 ```
-schtasks /create /tn "PolymarketTrader Cycle" /sc hourly /mo 8 /st 07:40 /f /tr "wscript.exe //B \"E:\Coding\PredictionMarketTrader\scripts\run_cycle_hidden.vbs\""
+schtasks /create /tn "PredictionMarketTrader Cycle" /sc hourly /mo 8 /st 07:40 /f /tr "wscript.exe //B \"E:\Coding\PredictionMarketTrader\scripts\run_cycle_hidden.vbs\""
 ```
 
 That runs at 07:40, 15:40 and 23:40, hidden, logging to `data\run_cycle.log` and refreshing `data\status.md`.
