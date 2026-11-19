@@ -227,8 +227,11 @@ def phase_candles(db, k, categories, min_volume, max_markets, max_days, biggest_
                         if not cs:
                             status = 2              # no bars: never quoted
                     except KalshiError as e:
-                        status = 4 if e.status_code == 404 else 0
-                        if status == 0:
+                        # 404 and the other 4xx answers are final for this market (asking again gives the same
+                        # answer, and a market left at 0 is picked again at once: one bad ticker stalled the
+                        # whole download for a night). 5xx and 429 after the retries are left for the next run.
+                        status = 4 if 400 <= e.status_code < 500 and e.status_code != 429 else 0
+                        if e.status_code != 404:
                             log(f"candles: {ticker}: {e}")
                     except Exception as e:          # network trouble: leave it for the next run
                         status = 0

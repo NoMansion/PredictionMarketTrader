@@ -27,6 +27,17 @@ function Start-PmtJob([string]$script, [string]$scriptArgs, [string]$log) {
     Start-Process -FilePath "cmd.exe" -ArgumentList "/c", $cmd -WorkingDirectory $root -WindowStyle Hidden
 }
 
+$claude = Join-Path $root ".tools\claude\node_modules\@anthropic-ai\claude-code\bin\claude.exe"
+
+function Test-SignedIn {
+    # asked without a Claude session's own variables, so the answer is about this Windows user's stored sign-in
+    $saved = @{}
+    Get-ChildItem Env: | Where-Object { $_.Name -match '^(CLAUDECODE|CLAUDE_CODE_|CLAUDE_AGENT_SDK_|ANTHROPIC_BASE_URL)' } |
+        ForEach-Object { $saved[$_.Name] = $_.Value; Remove-Item "Env:\$($_.Name)" -ErrorAction SilentlyContinue }
+    try { return ((& $claude auth status 2>$null | Out-String) -match '"loggedIn":\s*true') }
+    finally { foreach ($k in $saved.Keys) { Set-Item "Env:\$k" $saved[$k] } }
+}
+
 $download = Join-Path $root "research\kalshi_download.py"
 $loop = Join-Path $root "scripts\paper_loop.py"
 $downloadLog = Join-Path $data "kalshi_download.log"
@@ -47,8 +58,12 @@ else {
 
 if ($PaperLoop) {
     if (Find-PmtJob $loop) { Write-Host "running: paper loop" }
-    elseif (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
-        Write-Host "NOT started: paper loop (the claude command is not installed on this PC; see README)"
+    elseif (-not ((Test-Path $claude) -or (Get-Command claude -ErrorAction SilentlyContinue))) {
+        Write-Host "NOT started: paper loop (the claude command is not installed; see README)"
+    }
+    elseif ((Test-Path $claude) -and -not (Test-SignedIn)) {
+        Write-Host "NOT started: paper loop (claude is not signed in). Run this once, then start again:"
+        Write-Host "    & `"$claude`" auth login"
     }
     else {
         $a = "--every $Every"

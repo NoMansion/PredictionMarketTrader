@@ -171,6 +171,23 @@ def test_make_backend(tmp_path, monkeypatch):
         fc.make_backend({"forecaster": {"backend": "gpt"}}, tmp_path)
 
 
+def test_configured_claude_path_is_used_when_it_exists(tmp_path):
+    exe = tmp_path / ".tools" / "claude.exe"
+    exe.parent.mkdir()
+    exe.write_text("")
+    assert fc.make_backend({"forecaster": {"executable": ".tools/claude.exe"}}, tmp_path).executable == str(exe)
+    assert fc.make_backend({"forecaster": {"executable": str(exe)}}, tmp_path).executable == str(exe)
+    assert fc.find_claude(".tools/missing.exe", tmp_path) is None and fc.find_claude(None, tmp_path) is None
+
+
+def test_forecaster_does_not_inherit_a_claude_session():
+    plain = {"PATH": "x", "ANTHROPIC_API_KEY": "k", "ANTHROPIC_BASE_URL": "https://proxy.example"}
+    assert fc.child_env(plain) == plain                       # started by Task Scheduler: untouched
+    inside = dict(plain, CLAUDECODE="1", CLAUDE_CODE_ENTRYPOINT="claude-desktop", CLAUDE_CODE_SESSION_ID="s",
+                  CLAUDE_AGENT_SDK_VERSION="1", CLAUDE_PID="7", CLAUDE_CONFIG_DIR="E:/cfg")
+    assert fc.child_env(inside) == {"PATH": "x", "ANTHROPIC_API_KEY": "k", "CLAUDE_CONFIG_DIR": "E:/cfg"}
+
+
 # ---- runtime ---------------------------------------------------------------------
 
 def test_quiet_windows():

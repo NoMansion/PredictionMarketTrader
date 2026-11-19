@@ -187,6 +187,30 @@ def aggregate(market_id: str, answers: list[dict], backend: str, model: str, cos
 
 # ---- backends ----------------------------------------------------------------
 
+def child_env(env: dict | None = None) -> dict:
+    """The environment for the forecaster's own `claude` process. When the job is started from inside a Claude
+    session (the desktop app, a terminal running Claude Code), that session's variables describe ITS connection
+    and sign-in (CLAUDECODE, CLAUDE_CODE_*, an ANTHROPIC_BASE_URL pointing at the host): handed on, they would
+    make the forecaster behave differently from the same job started by Task Scheduler. They are dropped, so the
+    forecaster always uses the sign-in stored for this Windows user. Outside a Claude session nothing is changed."""
+    env = dict(os.environ if env is None else env)
+    if "CLAUDECODE" not in env and "CLAUDE_CODE_ENTRYPOINT" not in env:
+        return env
+    return {k: v for k, v in env.items()
+            if not (k == "CLAUDECODE" or k == "ANTHROPIC_BASE_URL" or k.startswith(("CLAUDE_CODE_", "CLAUDE_AGENT_SDK_"))
+                    or k in ("CLAUDE_PID", "CLAUDE_PREVIEW_CLASSIFIER_FLOOR"))}
+
+
+def find_claude(setting: str | None, root: str | Path = ".") -> str | None:
+    """forecaster.executable: a path (relative to the project folder or absolute) to the Claude Code program.
+    Nothing set, or nothing at that path (a fresh clone, another machine): whatever `claude` is on PATH."""
+    if not setting:
+        return None
+    p = Path(str(setting))
+    p = p if p.is_absolute() else Path(root) / p
+    return str(p) if p.exists() else None
+
+
 class ClaudeCodeBackend:
     """`claude -p` with only the web tools enabled. No shell, no file access, no MCP servers, no saved session:
     whatever a web page says, this process has nothing to act with except its answer."""
@@ -226,7 +250,7 @@ class ClaudeCodeBackend:
         and killing only the shim would leave the real process holding the pipes."""
         kw = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
         proc = subprocess.Popen(self.command(), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                text=True, encoding="utf-8", errors="replace", cwd=self.cwd, **kw)
+                                text=True, encoding="utf-8", errors="replace", cwd=self.cwd, env=child_env(), **kw)
         try:
             out, err = proc.communicate(prompt, timeout=self.timeout_s)
             return proc.returncode, out, err
@@ -401,7 +425,8 @@ def make_backend(cfg: dict | None, root: str | Path = "."):
     if kind == "claude_code":
         return ClaudeCodeBackend(model=f.get("model", "opus"), runs=f.get("runs", 3), effort=f.get("effort", "high"),
                                  timeout_s=f.get("timeout_s", 900), max_budget_usd=f.get("max_budget_usd_per_run"),
-                                 cwd=Path(root) / "data" / "claude_cwd", max_run_spread=spread)
+                                 cwd=Path(root) / "data" / "claude_cwd", max_run_spread=spread,
+                                 executable=find_claude(f.get("executable"), root))
     if kind == "api":
         if not os.environ.get("ANTHROPIC_API_KEY") and not os.environ.get("ANTHROPIC_AUTH_TOKEN"):
             raise RuntimeError("forecaster.backend is 'api' but no Anthropic credentials are set")

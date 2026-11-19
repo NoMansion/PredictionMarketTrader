@@ -90,7 +90,19 @@ Run in PowerShell from the project folder.
 | 4. Status | `.venv\Scripts\python scripts\status.py` | Account, positions, forecast scoring, go-live gates |
 
 The forecaster needs the Claude Code command (`claude`) installed and signed in for the Windows user that runs
-the job. Check with `claude -p "say ok"`.
+the job. On this PC it is installed inside the project, so that it sits on E: with everything else
+(`.tools/` is not committed; `forecaster.executable` in `config.yaml` points at it):
+
+```
+npm install --prefix .tools\claude --cache data\tmp\npm-cache "@anthropic-ai/claude-code@latest"
+.tools\claude\node_modules\.bin\claude auth login       # once; opens the browser; choose the Claude subscription
+.tools\claude\node_modules\.bin\claude auth status      # "loggedIn": true
+```
+
+The same command with a newer version updates it. The sign-in itself is a small file under
+`C:\Users\<you>\.claude`, which is where Claude Code keeps it. The desktop app's own sign-in does not count:
+the forecaster deliberately ignores the session it was started from, so that it behaves the same from Task
+Scheduler.
 
 ## Running it unattended
 

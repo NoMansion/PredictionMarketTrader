@@ -153,6 +153,28 @@ def test_http_client_waits_out_a_rate_limit(monkeypatch):
     assert list(pager.pages("/markets", "markets")) == [1, 2, 3]
 
 
+def test_http_client_escapes_odd_tickers_in_the_path():
+    """A real archive ticker, "GPT%-23DEC31": sent raw, the gateway answered 400 and the download stalled on it."""
+    seen = []
+
+    class Resp:
+        status_code, headers, text = 200, {}, ""
+
+        def json(self):
+            return {}
+
+    class Client:
+        def get(self, url, params=None):
+            seen.append(url)
+            return Resp()
+
+    k = KalshiHTTP(min_interval=0, base="https://x/v2", client=Client())
+    k.get("/historical/markets/GPT%-23DEC31/candlesticks", start_ts=1)
+    k.get("/markets/KXCPIYOY-26NOV-T3.6/orderbook")
+    assert seen == ["https://x/v2/historical/markets/GPT%25-23DEC31/candlesticks",
+                    "https://x/v2/markets/KXCPIYOY-26NOV-T3.6/orderbook"]
+
+
 def test_listing_is_cached_and_a_cut_off_scan_resumes(tmp_path):
     http = FakeKalshiHTTP(NOW)
     for i in range(5):

@@ -7,8 +7,9 @@ slow answer. Nothing here can place an order: only GET requests are made, and no
 from __future__ import annotations
 
 import time
+from urllib.parse import quote
 
-BASE = "https://api.elections.kalshi.com/trade-api/v2"
+BASE ="https://api.elections.kalshi.com/trade-api/v2"
 
 
 class KalshiError(RuntimeError):
@@ -41,12 +42,15 @@ class KalshiHTTP:
         """GET base+path. 404 raises KalshiError(404); 429 and 5xx are waited out (5 s, 15 s, 45 s, then 90 s)
         up to `tries` attempts, after which KalshiError carries the status."""
         params = {k: v for k, v in params.items() if v is not None}
+        # A few old tickers carry characters that are not legal in a URL path ("GPT%-23DEC31"); sent raw, the
+        # gateway answers 400 with an HTML page.
+        url = self.base + quote(path, safe="/")
         pause = 5.0
         for attempt in range(tries):
             self._pace()
             self.requests += 1
             try:
-                r = self.client.get(self.base + path, params=params)
+                r = self.client.get(url, params=params)
             except Exception:                                # timeouts, connection resets
                 if attempt == tries - 1:
                     raise

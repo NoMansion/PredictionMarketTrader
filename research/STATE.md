@@ -62,9 +62,14 @@ branch on the stock trader's repository is no longer used. The cloud container's
   `reports/forward_log.csv` keeps the cloud account's rows (append, never overwrite).
 - Start what is not running: **`research\start_jobs.ps1`** (history download; add `-PaperLoop` for the paper
   loop, `-Stop` to stop both). Python is `.venv\Scripts\python.exe`, not `python3`.
-- The paper loop is NOT running locally yet: it needs the `claude` command installed for this Windows user,
-  and the user's yes (it spends Claude usage). The local config is `config.yaml` itself (quiet window around
-  the stock trader's evening job, 3 runs, high effort); `data/cloud_config.yaml` was for the cloud only.
+- The paper loop: the user said yes on 2026-11-19 (about 2:30 am CST). The `claude` command is installed in
+  `.tools\claude` (2.1.328; `forecaster.executable` points at it) but is NOT SIGNED IN: the user has to run
+  `claude auth login` once (README has the line). Until then `start_jobs.ps1 -PaperLoop` refuses and says so.
+  The local config is `config.yaml` itself (quiet window around the stock trader's evening job, 3 runs, high
+  effort, a cycle every 8 h); `data/cloud_config.yaml` was for the cloud only.
+- **A restart of the PC stops both jobs and nothing starts them again** (it was restarted at 10:40 pm and
+  1:38 am on the first night). Run `research\start_jobs.ps1 -PaperLoop` after a restart, at every check-in.
+  A Task Scheduler entry "at log on" would do it unattended: not created, it needs the user's yes.
 - The keep-awake task and the container notes below applied to the cloud machine only.
 
 What follows was written for the cloud container (Linux). Start whatever is not running, at any time:
@@ -183,6 +188,14 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   buy-NO. BUT the 5-cent rule as a TAKER fails the tail test on Politics alone (2025: -1.6% per bet); resting
   passes. Politics census still descending from 14,452 to 5,000: re-run `--sample liquid --categories Politics`
   when `research/panel.py`-level check shows it complete, then Companies.
+
+- 2:45 am CST, 2026-11-19 (first local check-in): the local download had stalled at 10:34 pm on one archive
+  ticker, `GPT%-23DEC31` (Kalshi answers 400 for it however the `%` is sent), retrying it every 16 s; then
+  the PC was restarted. Fixed: paths are URL-escaped (`src/kalshi_http.py`) and any 4xx except 429 is final
+  for a market (`candles_done = 4`). Restarted at 2:36 am. Local history so far: Economics 8,881 markets with
+  bars, Politics 7,023, Commodities 10,120, Companies 179, Science and Technology in progress. NOT yet
+  checked: whether each category's local random pass and census are complete (`research/panel.py`) before
+  any round is re-run here.
 
 ## How to run a round
 
