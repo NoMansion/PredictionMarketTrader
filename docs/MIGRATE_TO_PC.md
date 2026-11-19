@@ -4,8 +4,10 @@
 > `E:\Coding\PredictionMarketTrader` is its own git repository (github.com/NoMansion/PredictionMarketTrader)
 > holding this folder's history, and the cloud branch's later commits are merged into it with
 > `scripts\sync_from_github.ps1` (a git merge, not a file copy: do NOT robocopy over the folder, it would undo
-> fixes made on the PC). Step 3 has been run on Windows and passes. Step 2 is still open: the data bundle has
-> not reached the PC (see `research\STATE.md`).
+> fixes made on the PC). Step 2 was done at 3:34 am: the bundle is in `data\` and `status.py` shows the paper
+> account with its four resting orders. Step 3 has been run on Windows and passes (176 tests). Still to do, and
+> only on the user's word: the first paper cycle on the PC, with the cloud loop stopped first
+> (`research\STATE.md`, "Background jobs").
 
 Written 2026-11-19, 3:08 am CST. The work so far was done in a cloud session that cannot reach the PC, so the
 move is three steps you run yourself. Nothing here involves money, keys or accounts.

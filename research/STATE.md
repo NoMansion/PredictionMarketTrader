@@ -69,11 +69,16 @@ branch on the stock trader's repository is no longer used. The cloud container's
   from the data bundle, not continued. Do not run `start_jobs.ps1 -PaperLoop` or `run_cycle.py` until the
   user says so. (`run_cycle.py --scan` and `--no-forecast` ask Claude nothing, but `--no-forecast` writes to
   the ledger: leave it too.)
-- **The data bundle** (`PredictionMarketTrader_data.zip`, 62 MB: the cloud's paper ledger, observation log
-  and history database, snapshot 3:06 am) was NOT in the user's Downloads folder (`D:\Downloads`) at 3:25 am.
-  When it is there: stop the download (`start_jobs.ps1 -Stop`), move the PC's `data\` files aside into
-  `data\_pc_before_bundle\`, unzip into a new empty folder first and look, then move its `data\` into place
-  and restart the download (it resumes on the cloud's database, which is the one the report's rounds saw).
+- **The data bundle is in place** (3:34 am CST, 2026-11-19): `data\` now holds the cloud's snapshot of 3:06 am:
+  the paper ledger (5 cycles, 20 forecasts, 4 resting orders, $1,000; last cycle 1:07 am), the observation
+  log, the event flags and the history database the report's rounds saw. All four databases passed SQLite's
+  check; `status.py` shows the four resting orders; the download resumed on the cloud's database
+  (Commodities census). What the PC had before is in `data\_pc_before_bundle\` (its own history database,
+  285 MB, behind the cloud's except in Commodities, and the one-forecast ledger of the stopped cycle): nothing
+  reads it, and it can be deleted once the user agrees.
+  THE LEDGER HERE IS A SNAPSHOT: the cloud loop is still running and its ledger moves on. Before the first
+  paper cycle on the PC, ask the cloud session for a fresh `pmt.db` and `shadow.db` (or accept the gap and
+  say so in the report), and have its loop stopped: one ledger only.
 - The `claude` command is installed in `.tools\claude` (2.1.328; `forecaster.executable` points at it) and
   signed in to the user's subscription since 3:00 am. The local config is `config.yaml` itself (quiet window
   around the stock trader's evening job, 3 runs, high effort, a cycle every 8 h); the cloud cycles used
