@@ -1074,3 +1074,29 @@ standings; `claude_only_taker` $995.46 and `blend30_taker` $997.20 (the spread o
 other Claude accounts $999.73 each, both controls (`control_fade`, `control_coinflip`) $1,000.00 with 5 resting
 orders and nothing filled. Observation log of the 5-cent rule: 13 markets seen, none settled; 5 resting bids
 decided, all 5 filled.
+
+### 3.25 Round r22: Crypto, random sample: too short-lived for daily bars (9:20 am CST, November 19)
+
+**Data.** Crypto's random pass finished at 8:31 am CST (2,520 markets downloaded out of 3,018,367 listed). The
+panel keeps 227 of them (219 events, 1,295 daily bars, closes 2024-10-31 to 2026-09-19, 175 out of sample).
+
+- **Result: all 2,768 rules thin. 0 pass, 0 leads, 0 reliably losing.** Nothing can be said either way.
+- **Why so few.** 96.6% of all listed Crypto markets live less than 24 hours, and the median lifetime among
+  those downloaded so far is 15 minutes (the "price in the next 15 minutes" series). Such a market has one
+  daily bar or none, so the engine, which enters on one day's bar and judges on later ones, has nothing to
+  work with. Only the few hundred longer-dated questions (year-end price levels and the like) remain.
+- **What this means for the census.** 138,349 Crypto markets have 5,000+ lifetime contracts; the download takes
+  the 8,000 biggest, and those are mostly the same 15-minute markets (among 8,680 downloaded so far, 345 have
+  two or more daily bars). Round r23 on the busy sample will be run when the census finishes, with the
+  pre-stated tests (5-cent rule, NO where YES is at 5-35c), but expect it to be thin as well.
+- **Not tested, and not testable with this data:** rules inside the 15-minute and hourly markets. That would
+  need minute bars, a separate download and a separate engine; it is also where automated market makers are
+  most active. Left on the backlog (family 16), not started.
+
+**Forward logs.** Fourth PC cycle (7:48 am) ended ok; 40 forecasts, none resolved; next cycle about 9:50 am. Main
+account: 2 filled positions, 3 resting orders, $998.30. Variant paper accounts (12 accounts: the main one, 9
+that follow Claude under other rules, 2 controls): no market has settled, so no standings; `claude_only_taker`
+$995.46 and `blend30_taker` $995.81 (the spread on 5 and 2 positions), the three wide accounts $997.06 to
+$997.36, the four other Claude accounts $999.73, both controls (`control_fade`, `control_coinflip`) $1,000.00
+with 5 resting orders and nothing filled. Observation log of the 5-cent rule: 13 markets seen, none settled;
+5 resting bids decided, all 5 filled.

@@ -441,6 +441,14 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   42%, weekly Fable 68%, with 53% of the week past: `cycle_every_hours` left at 2, same reason as 5:15 am.
   E: 49.5 GB free, C: 29.8 GB.
 
+- 9:20 am CST Nov 19 (check-in): both jobs alive; fourth PC cycle (7:48 am) ended ok, 40 forecasts, none
+  resolved; next cycle about 9:50 am. Crypto random pass finished 8:31 am; census in progress. Report 3.25:
+  r22 (Crypto random): 227 markets, all 2,768 rules THIN, nothing to say. Cause: 97% of Crypto markets live
+  under 24 hours (median 15 minutes), so they have no usable daily bars; the census (8,000 biggest of
+  138,349) is mostly the same markets, so r23 will probably be thin too. Usage: 5-hour 29%, weekly all
+  models 42%, weekly Fable 68%, with 53% of the week past: `cycle_every_hours` left at 2, same reason as
+  5:15 am. E: 49.4 GB free, C: 29.8 GB.
+
 ## How to run a round
 
 ```
@@ -502,17 +510,17 @@ Forward-only (cannot be backtested):
    the last two days; exits before settlement (sell the NO at 99c instead of waiting); a combined-portfolio
    replay of several passing rules; sports and crypto samples last.
 6. Open for the user: trade the 5-cent rule in a second paper account? Which Claude model for the forecaster?
-7. **Waiting on the download (as of 8:15 am CST Nov 19):** Crypto (listing 303 series since 7:50 am, then its
-   random pass of 2,500 markets, then its census). When the download log's "categories with work" line shows
-   the random pass has moved on to the census: `run_sweep.py --round r22_random_crypto --categories Crypto`;
-   when it names another category: `--round r23_liquid_crypto --categories Crypto --sample liquid`, then the
+7. **Waiting on the download (as of 9:20 am CST Nov 19):** Crypto census (started 8:31 am; r22 on its
+   random sample is done, all thin, report 3.25: 97% of Crypto markets live under a day, so expect the
+   busy sample to be thin too). When the download log's "categories with work" line names another
+   category: `run_sweep.py --round r23_liquid_crypto --categories Crypto --sample liquid`, then the
    5-cent rule there (`analyze_rule.py --sample liquid --categories Crypto --rule "NO at mid <= 5c, <= 30d,
    spread <= 5c" --side no --entry tk`, and `mk`), the calibration curve, AND the Entertainment lead of 3.24
    as a pre-stated test on the new category: `--rule "NO where YES is at 5-35c"` (tk and mk). Then Social,
    Climate and Weather the same way. Entertainment is done (r20, r21): its wide NO rules are a LEAD (3.24);
    its 5-cent rule fails, so do not pool Entertainment into the 5-cent rule's categories. Mentions is done
-   (r18, r19): not confirmed in busy markets; do not pool it either. Rounds done so far: up to r21. Until
-   Crypto's random pass finishes there is nothing new: say so in one line and stop. Open for the user: a
+   (r18, r19): not confirmed in busy markets; do not pool it either. Rounds done so far: up to r22. Until
+   Crypto's census finishes there is nothing new: say so in one line and stop. Open for the user: a
    forward observation band for Entertainment (YES 5-35c, no orders) in `scripts/shadow_longshot.py`?
    The nine-category
    list for pooled rounds: Economics, Politics, Companies, Science and Technology, Elections, Health, World,
