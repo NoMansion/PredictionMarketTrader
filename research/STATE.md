@@ -96,6 +96,24 @@ branch on the stock trader's repository is no longer used. The cloud container's
   (cloud: 2 runs, medium effort) are a separate block of the record: compare the two blocks, do not pool them
   without saying so. The first PC cycle was started by hand at 3:46 am; the loop is started once it finishes
   (two writers cannot share `data\run_cycle.log`). The paragraph below is the state just before this.
+- **A CYCLE EVERY 2 HOURS, WIDENING BY ITSELF** (the user, 4:35 am CST 2026-11-19: "1 or 2 hours, but if Claude
+  is going to use up its limit then can you switch it to a larger time window"; they also said the stock
+  trader will eventually not need Claude). `runtime.cycle_every_hours: 2`, `cycle_max_hours: 12` in
+  `config.yaml`; the loop reads them before every decision. 2 and not 1: a cycle with 8 questions takes about
+  40 minutes. Two guards on the limit:
+  1. In the loop (`scripts/paper_loop.py`): after a cycle in which the forecaster hit a limit, was answered
+     by a model other than the configured one, or failed on every question, the gap doubles (to 12 h at
+     most); it halves again when forecasts come through. Current gap: `data\paper_loop_state.json` and the
+     loop's lines in `dataun_cycle.log`.
+  2. At each check-in, BEFORE the limit is reached: read the plan's usage (the app tool
+     `mcp__ccd_session_mgmt__get_usage` if the session has it). Raise `cycle_every_hours` one step (2, 4, 6,
+     8, 12) when the 5-hour window is at 80% or more, or when a weekly window's percent used is more than
+     10 points ahead of the share of the week that has passed; lower it one step when every window is
+     comfortably behind. Change only that one key, commit it, and write the numbers into the progress log.
+  Usage at 4:35 am CST Nov 19 (week resets Sunday Nov 22, 4:00 pm CST): 5-hour 54%, weekly all models 40%,
+  weekly Fable 65%. The paper loop's forecasts run on Opus (the all-models figure). The Fable figure is the
+  tight one and is spent by the interactive sessions and the check-ins, not by the paper loop: keep
+  check-ins short when nothing has changed.
 - **8 QUESTIONS PER CYCLE from the second PC cycle** (the user, 4:14 am CST 2026-11-19: "Feel free to use more
   than 4 questions"). `universe.max_candidates_per_cycle: 8` in `config.yaml`, with the measurements behind it.
   Not a break in the record (the forecaster is unchanged), but it reaches further down the ranking, so more
@@ -377,6 +395,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   account = twelve. STILL TO BUILD, once a few dozen markets have settled: a replay tool that takes a wide
   account's record and applies a daily budget, an edge threshold and a stake size after the fact (return per
   dollar staked, worst stretch), so that no further account per setting is needed.
+
+- 4:38 am CST Nov 19 (ON THE PC): paper loop restarted on the adaptive cadence (2 h; next cycle about
+  5:46 am). 194 tests.
 
 ## How to run a round
 

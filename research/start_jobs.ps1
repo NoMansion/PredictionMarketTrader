@@ -6,8 +6,8 @@
 # Everything they write goes under data\ in this folder (not committed).
 param(
     [switch]$PaperLoop,             # also start scripts\paper_loop.py (asks Claude: needs the claude command)
-    [double]$Every = 6,             # hours between paper cycles (a free dial: unlike the forecaster's runs and
-                                    # effort in config.yaml, changing it does not break the track record)
+    [double]$Every = 0,             # hours between paper cycles; 0 = runtime.cycle_every_hours in config.yaml,
+                                    # which the loop also widens by itself when Claude's limit is reached
     [string]$Config = "",           # config for the paper loop (default config.yaml)
     [switch]$Stop
 )
@@ -67,10 +67,11 @@ if ($PaperLoop) {
         Write-Host "    & `"$claude`" auth login"
     }
     else {
-        $a = "--every $Every"
+        $a = ""
+        if ($Every -gt 0) { $a = "--every $Every" }
         if ($Config) { $a += " --config `"$Config`"" }
         Start-PmtJob $loop $a (Join-Path $data "run_cycle.log")
-        Write-Host "started: paper loop (a cycle every $Every h)"
+        Write-Host "started: paper loop (its first log line in data/run_cycle.log gives the cadence)"
     }
 }
 

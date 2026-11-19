@@ -135,4 +135,12 @@ runtime:
   low_priority: true
   venue_min_interval_s: 1.0       # seconds between requests to the exchange (its public gateway rate-limits bursts)
   listing_cache_hours: 20         # Kalshi: the full market listing is refreshed at most this often (it is ~150 throttled requests)
+  # The paper loop (scripts/paper_loop.py): hours between cycles. A free dial: it does not touch the forecaster.
+  # 2 since 2026-11-19 (the user: "1 or 2 hours", and wider if Claude's limit is in danger). A cycle with 8
+  # questions takes about 40 minutes, so 1 hour would run them nearly back to back. The loop doubles the gap by
+  # itself, up to cycle_max_hours, after a cycle in which the forecaster could not answer, and comes back down
+  # when forecasts come through. Raise cycle_every_hours by hand when the plan's usage is running ahead of the
+  # week; the loop reads this file before every decision, no restart needed.
+  cycle_every_hours: 2
+  cycle_max_hours: 12
   lock_stale_hours: 1             # a lock not refreshed for this long belongs to a dead run (it is refreshed after every forecast)
