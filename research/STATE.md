@@ -62,7 +62,17 @@ branch on the stock trader's repository is no longer used. The cloud container's
   `reports/forward_log.csv` keeps the cloud account's rows (append, never overwrite).
 - Start what is not running: **`research\start_jobs.ps1`** (history download; add `-PaperLoop` for the paper
   loop, `-Stop` to stop both). Python is `.venv\Scripts\python.exe`, not `python3`.
-- **NO PAPER CYCLES ON THE PC YET, BUT NOTHING ELSE IS IN THE WAY** (3:40 am CST, 2026-11-19). The cloud
+- **PAPER TRADING RUNS ON THE PC since 3:46 am CST, 2026-11-19** (the user: "Start, PC settings", then "can
+  you use both settings or combine them to the best option"). The settings, fixed from this cycle on:
+  the forecaster as in `config.yaml` (model opus, 3 runs, high effort, quiet window 5:15 to 6:20 pm): these
+  decide the quality of each forecast, and changing them breaks the track record. The cadence is a free dial
+  (it only decides how many questions are forecast per day): every 6 hours, between the cloud's 3 h and the
+  PC's original 8 h; `research\start_jobs.ps1 -PaperLoop` uses it by default. 6 h is about 48 Claude runs a
+  day; go to 8 h if the user's Claude usage is short, down to 4 h if it is plentiful. The first 20 forecasts
+  (cloud: 2 runs, medium effort) are a separate block of the record: compare the two blocks, do not pool them
+  without saying so. The first PC cycle was started by hand at 3:46 am; the loop is started once it finishes
+  (two writers cannot share `data\run_cycle.log`). The paragraph below is the state just before this.
+- **Before the start** (3:40 am CST, 2026-11-19). The cloud
   loop was stopped for good at 3:37 am and the cloud session at 3:38 am; the final ledger is in `data\`.
   The user's "do not start paper cycles yet" (3:20 am) still stands until they say go, and they have to
   choose the settings first: `config.yaml` (3 runs, high effort, a cycle every 8 h, quiet window around

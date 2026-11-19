@@ -6,7 +6,8 @@
 # Everything they write goes under data\ in this folder (not committed).
 param(
     [switch]$PaperLoop,             # also start scripts\paper_loop.py (asks Claude: needs the claude command)
-    [double]$Every = 8,             # hours between paper cycles
+    [double]$Every = 6,             # hours between paper cycles (a free dial: unlike the forecaster's runs and
+                                    # effort in config.yaml, changing it does not break the track record)
     [string]$Config = "",           # config for the paper loop (default config.yaml)
     [switch]$Stop
 )
