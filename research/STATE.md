@@ -104,7 +104,7 @@ branch on the stock trader's repository is no longer used. The cloud container's
   1. In the loop (`scripts/paper_loop.py`): after a cycle in which the forecaster hit a limit, was answered
      by a model other than the configured one, or failed on every question, the gap doubles (to 12 h at
      most); it halves again when forecasts come through. Current gap: `data\paper_loop_state.json` and the
-     loop's lines in `dataun_cycle.log`.
+     loop's lines in `data\run_cycle.log`.
   2. At each check-in, BEFORE the limit is reached: read the plan's usage (the app tool
      `mcp__ccd_session_mgmt__get_usage` if the session has it). Raise `cycle_every_hours` one step (2, 4, 6,
      8, 12) when the 5-hour window is at 80% or more, or when a weekly window's percent used is more than
