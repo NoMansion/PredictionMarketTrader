@@ -21,7 +21,7 @@ session ran continues on the PC without waiting for the user. What that does and
   replay and its worst periods as well as its mean, and capacity in dollars is always reported.
 - What keeps it going (set up 2026-11-19, 3:55 am CST, with the user's yes):
   - The check-in is a scheduled task of the Claude desktop app, "PredictionMarketTrader check-in (every 3
-    hours)" (id `prediction-market-research-checkin`). EVERY 3 HOURS since 11:15 am CST 2026-11-19, at about
+    hours)" (id `prediction-market-research-checkin`). EVERY 3 HOURS since 11:05 am CST 2026-11-19, at about
     11 past 12, 3, 6 and 9, am and pm; hourly before that. The user chose it ("Yes, every 3 hours"): the
     hourly runs spent about 0.6 points of the weekly Fable allowance each and would have used it up about
     a day before the Sunday reset. Only the user changes this schedule. Each run is a new session
@@ -462,7 +462,7 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   weekly all models 43%, weekly Fable 69%, with 54% of the week past: `cycle_every_hours` left at 2, same
   reason as 5:15 am. E: 49.4 GB free, C: 29.6 GB.
 
-- 11:15 am CST Nov 19 (the user's session): CHECK-INS NOW EVERY 3 HOURS, not hourly (the user: "Yes, every 3
+- 11:05 am CST Nov 19 (the user's session): CHECK-INS NOW EVERY 3 HOURS, not hourly (the user: "Yes, every 3
   hours"). Reason: weekly Fable went from 65% to 69% between 4:35 and 11:03 am, about 0.6 points per check-in,
   which reaches 100% on Saturday afternoon, a day before the reset (Sunday 4:00 pm CST); every 3 hours ends
   the week near 84%. The task's prompt now says: the paper loop's gap is paced from the 5-hour and weekly
