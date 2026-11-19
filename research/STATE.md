@@ -62,13 +62,16 @@ branch on the stock trader's repository is no longer used. The cloud container's
   `reports/forward_log.csv` keeps the cloud account's rows (append, never overwrite).
 - Start what is not running: **`research\start_jobs.ps1`** (history download; add `-PaperLoop` for the paper
   loop, `-Stop` to stop both). Python is `.venv\Scripts\python.exe`, not `python3`.
-- **NO PAPER CYCLES ON THE PC YET** (the user's instruction, 2026-11-19 about 3:20 am CST, arriving with the
-  cloud session's migration steps). The cloud paper loop is still the one ledger. A local loop was started at
-  3:03 am at the user's earlier request and stopped at 3:22 am, before its first cycle had forecast anything:
-  `data\pmt.db` on the PC holds only the $1,000 opening deposit and is to be REPLACED by the cloud's ledger
-  from the data bundle, not continued. Do not run `start_jobs.ps1 -PaperLoop` or `run_cycle.py` until the
-  user says so. (`run_cycle.py --scan` and `--no-forecast` ask Claude nothing, but `--no-forecast` writes to
-  the ledger: leave it too.)
+- **NO PAPER CYCLES ON THE PC YET, BUT NOTHING ELSE IS IN THE WAY** (3:40 am CST, 2026-11-19). The cloud
+  loop was stopped for good at 3:37 am and the cloud session at 3:38 am; the final ledger is in `data\`.
+  The user's "do not start paper cycles yet" (3:20 am) still stands until they say go, and they have to
+  choose the settings first: `config.yaml` (3 runs, high effort, a cycle every 8 h, quiet window around
+  the stock trader's evening job) or the cloud's (`data\cloud_config.yaml`: 2 runs, medium effort, every
+  3 h, no quiet window). A change is a break in the track record; with 20 forecasts and none resolved,
+  now is the cheapest moment for one. Start with `research\start_jobs.ps1 -PaperLoop` (add
+  `-Config data\cloud_config.yaml -Every 3` for the cloud's settings). A local loop started at 3:03 am
+  at the user's earlier request was stopped at 3:22 am after one forecast; that ledger is in
+  `data\_pc_before_bundle\` and is not part of the record.
 - **The data bundle is in place** (3:34 am CST, 2026-11-19): `data\` now holds the cloud's snapshot of 3:06 am:
   the paper ledger (5 cycles, 20 forecasts, 4 resting orders, $1,000; last cycle 1:07 am), the observation
   log, the event flags and the history database the report's rounds saw. All four databases passed SQLite's
@@ -280,6 +283,28 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   bars, Politics 7,023, Commodities 10,120, Companies 179, Science and Technology in progress. NOT yet
   checked: whether each category's local random pass and census are complete (`research/panel.py`) before
   any round is re-run here.
+
+- 3:37 am CST Nov 19: THE PC COPY IS RUNNING (E:\Coding\PredictionMarketTrader; the user sent its status: 176
+  tests pass there, cloud data unpacked, its own download and hourly checks started). THE CLOUD PAPER LOOP IS
+  STOPPED FOR GOOD: `data/PAPER_LOOP_MOVED_TO_PC` makes `start_jobs.sh` skip it. Do not restart it. The ledger
+  and observation log were last written at 1:20 am CST (cycle 5), so the 3:06 am snapshot on the PC is
+  complete; final copies were handed over anyway. `reports/forward_log.csv` here is final at 20 forecasts.
+  OPEN, asked of the user: should the cloud download and the hourly research check-ins stop as well, now that
+  the PC runs its own? Until answered they continue (history download + rounds), without the paper loop.
+
+- 3:38 am CST Nov 19: **THE CLOUD SESSION IS STOPPED, at the user's instruction ("stop the cloud session").**
+  Both scheduled tasks are disabled (research loop, job watchdog), the history download and the paper loop are
+  killed, nothing is left running here. The project now lives on the user's PC at
+  E:\Coding\PredictionMarketTrader, which has the data, runs its own download and checks, and holds the only
+  paper ledger. Do not restart anything in the cloud unless the user asks. From here on, the PC copy's
+  `research/STATE.md` is the control sheet; this file is a record up to the handover.
+
+- 3:40 am CST Nov 19 (ON THE PC): the cloud session's FINAL ledger and observation log are in `data\`
+  (same five cycles and 20 forecasts as the 3:06 am snapshot, which is kept in
+  `data\_ledger_snapshot_0306\`). The cloud session is stopped: THIS FILE IS NOW THE CONTROL SHEET and the
+  PC holds the only paper ledger. No paper cycle has run here yet: waiting for the user's word and their
+  choice of forecaster settings (see "Background jobs"). The four resting paper orders are not being
+  marked while no loop runs.
 
 ## How to run a round
 
