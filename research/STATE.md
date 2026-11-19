@@ -429,6 +429,18 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   weekly all models 41%, weekly Fable 67%, with 52% of the week past: `cycle_every_hours` left at 2, same
   reason as 5:15 am. E: 50 GB free, C: 30 GB.
 
+- 8:15 am CST Nov 19 (check-in): both jobs alive; fourth PC cycle running since 7:48 am; 34 forecasts, none
+  resolved. Entertainment census finished 7:50 am; download is listing Crypto. Report 3.24: r21 (Entertainment
+  busy sample, 7,385 markets, 1,947 events): 18 pass, 68 leads, 113 lose. The 5-cent rule does NOT work there
+  (taker +0.12% per bet, tail test fails both halves; resting passes in sample only). But the WIDER NO rules
+  do, for the first time with the replay and the tail test on their side in both halves: NO against YES at
+  5-35c resting +7.3% per bet (replay at 0.5% stake +7.6% / +25.0% a year, drawdown under 3%), taker +3.3%
+  (+2.8% / +12.1%); also YES 5-10c resting and "10-25c after a 3c fall in 7 days". Caveats written in 3.24:
+  one category of eleven, event t 2.2 to 3.3 out of sample, fill model untested there, capacity about $100
+  to $200 per market (median $2,140 traded a week). A LEAD, not usable. Usage: 5-hour 19%, weekly all models
+  42%, weekly Fable 68%, with 53% of the week past: `cycle_every_hours` left at 2, same reason as 5:15 am.
+  E: 49.5 GB free, C: 29.8 GB.
+
 ## How to run a round
 
 ```
@@ -490,15 +502,18 @@ Forward-only (cannot be backtested):
    the last two days; exits before settlement (sell the NO at 99c instead of waiting); a combined-portfolio
    replay of several passing rules; sports and crypto samples last.
 6. Open for the user: trade the 5-cent rule in a second paper account? Which Claude model for the forecaster?
-7. **Waiting on the download (as of 7:25 am CST Nov 19):** Entertainment census (started 7:00 am; its random
-   round r20 is done, report 3.23). When the download log shows it has moved past Entertainment ("categories
-   with work" names another category): `run_sweep.py --round r21_liquid_entertainment --categories
-   Entertainment --sample liquid`, then the 5-cent rule there (`analyze_rule.py --sample liquid --categories
-   Entertainment --rule "NO at mid <= 5c, <= 30d, spread <= 5c" --side no --entry tk`, and `mk`) and the
-   calibration curve. Mentions is done (r18, r19): its NO lead was not confirmed in busy markets; do NOT pool
-   Mentions into the 5-cent rule's categories without saying so (it is a different kind of bet). After
-   Entertainment come Crypto, Social, Climate and Weather: one random and one liquid round each as they
-   finish. Rounds done so far: up to r20. Until the Entertainment census finishes there is nothing new: say so
-   in one line and stop. The nine-category
+7. **Waiting on the download (as of 8:15 am CST Nov 19):** Crypto (listing 303 series since 7:50 am, then its
+   random pass of 2,500 markets, then its census). When the download log's "categories with work" line shows
+   the random pass has moved on to the census: `run_sweep.py --round r22_random_crypto --categories Crypto`;
+   when it names another category: `--round r23_liquid_crypto --categories Crypto --sample liquid`, then the
+   5-cent rule there (`analyze_rule.py --sample liquid --categories Crypto --rule "NO at mid <= 5c, <= 30d,
+   spread <= 5c" --side no --entry tk`, and `mk`), the calibration curve, AND the Entertainment lead of 3.24
+   as a pre-stated test on the new category: `--rule "NO where YES is at 5-35c"` (tk and mk). Then Social,
+   Climate and Weather the same way. Entertainment is done (r20, r21): its wide NO rules are a LEAD (3.24);
+   its 5-cent rule fails, so do not pool Entertainment into the 5-cent rule's categories. Mentions is done
+   (r18, r19): not confirmed in busy markets; do not pool it either. Rounds done so far: up to r21. Until
+   Crypto's random pass finishes there is nothing new: say so in one line and stop. Open for the user: a
+   forward observation band for Entertainment (YES 5-35c, no orders) in `scripts/shadow_longshot.py`?
+   The nine-category
    list for pooled rounds: Economics, Politics, Companies, Science and Technology, Elections, Health, World,
    Commodities, Financials.

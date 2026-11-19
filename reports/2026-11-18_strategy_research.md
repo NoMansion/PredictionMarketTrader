@@ -1000,3 +1000,77 @@ Claude under other rules, 2 controls): no market has settled, so no standings. M
 `claude_only_taker` $995.46 and `blend30_taker` $997.20 (the spread on 5 and 2 positions); the seven other
 Claude accounts $999.73 each (one filled NO position marked under its price); both controls
 (`control_fade`, `control_coinflip`) $1,000.00 with 5 resting orders and nothing filled.
+
+### 3.24 Round r21: Entertainment's busy markets, the first category where the wider NO rules hold up (8:15 am CST, November 19)
+
+**What was new.** Entertainment's census of busy markets finished at 7:50 am (the download is now listing
+Crypto). One round, `r21_liquid_entertainment`: 7,385 markets, 1,947 events, 105,883 daily bars, closes
+September 2021 to September 2026, 2,781 markets out of sample; each market seen from the bar at which it had
+traded 5,000 contracts. 2,890 rules: **18 pass, 68 leads, 113 reliably losing**, 1,849 thin.
+
+**The picture by price band** (return per bet, before April 2026 / from April 2026):
+
+| YES price | YES taker | NO taker | NO resting | Events in / out |
+|---|---|---|---|---|
+| 0-5c | -50.0% / -49.4% | +0.3% / +0.1% | +1.9% / +1.1% | 486 / 291 |
+| 5-10c | -54.4% / -62.4% | +1.1% / +2.6% | +4.3% / +5.1% | 415 / 205 |
+| 10-20c | -35.4% / -41.4% | +1.6% / +3.1% | +4.9% / +5.7% | 431 / 189 |
+| 20-35c | -35.9% / -35.5% | +6.0% / +5.9% | +11.4% / +10.4% | 393 / 165 |
+| 35-50c | -22.7% / -25.6% | +4.9% / +8.5% | +11.4% / +15.7% | 325 / 129 |
+| 50-65c | -17.9% / -9.8% | +7.3% / -2.3% | +17.9% / +4.8% | 355 / 152 |
+| 80-90c | -2.3% / -1.4% | -23.3% / -19.5% | -14.7% / -13.3% | 323 / 176 |
+| 95-100c | +0.5% / +0.3% | -74.4% / -53.4% | -75.5% / -39.0% | 304 / 231 |
+
+YES is overpriced in every band up to 80 cents, in both halves (the calibration curve: a YES quoted at 5-10c
+resolved yes 4.6% / 3.4% of the time, at 20-35c 19% / 20%, at 35-50c 35% / 34%; per event the gap is 2 to 7
+points, t 1.7 to 3.3). All 113 losing rules buy YES below 80c or NO above 80c. All 18 passing rules buy NO
+against a YES between 5 and 35 cents, 17 of them with a resting order.
+
+**The 5-cent rule is NOT what works here.** "NO at mid <= 5c, <= 30 days, spread <= 5c":
+
+| Entry | Bets (events) | Mean per bet | Losing events in / out | Tail test in / out | Replay at 0.5%, in / out, per year |
+|---|---|---|---|---|---|
+| taker | 1,396 (651) | +0.12% | 11 of 406 / 11 of 246 | fails / fails (bounds 4.4% and 7.3% against break-even 3.2% and 4.2%) | +0.5% / -1.2% |
+| resting | 1,073 (561) | +1.42% | 11 of 358 / 11 of 204 | passes / fails (bounds 5.0% and 8.8% against 5.7% and 6.8%) | +1.7% / +2.8% |
+
+22 losing events in 651, all in 2025 and 2026 (Rotten Tomatoes scores, the Time cover, album sales, Netflix
+ranks). Entertainment joins Politics, Elections and Financials as a category where the taker version does not
+pay; do not add it to the rule's pooled categories as support.
+
+**The wider rules, with the replay and the tail test** (the check that sank them in 3.14):
+
+| Rule (buy NO) | Entry | Bets (events) | Mean per bet | Tail test in / out | Replay at 0.5% stake, in / out, per year | Worst drawdown in / out | At 2% stake, out |
+|---|---|---|---|---|---|---|---|
+| YES at 5-10c | resting | 1,044 (566) | +4.56% | passes / passes (11.1% and 10.9% against 15.6%) | +3.2% / +9.9% | 2.4% / 1.6% | +20.6% a year, drawdown 7.4% |
+| YES at 5-10c | taker | 1,225 (618) | +1.63% | fails / passes | +0.9% / +5.6% | 3.8% / 1.7% | +4.1%, drawdown 7.8% |
+| YES at 5-35c | resting | 1,937 (846) | +7.28% | passes / passes (27.8% and 26.3% against 37.5% and 34.7%) | +7.6% / +25.0% | 2.5% / 2.8% | +25.4%, drawdown 8.8% |
+| YES at 5-35c | taker | 2,135 (884) | +3.30% | passes / passes (27.7% and 26.6% against 30.7% and 29.8%) | +2.8% / +12.1% | 3.7% / 3.3% | +4.1%, drawdown 11.1% |
+| YES at 10-25c, down 3c+ in 7 days | resting | 716 (430) | +8.95% | passes / passes (23.4% and 20.2% against 29.7% and 29.3%) | +9.2% / +14.1% | 3.0% / 1.6% | +32.3%, drawdown 5.4% |
+| YES at 10-25c, down 3c+ in 7 days | taker | 822 (470) | +5.25% | passes / passes (22.3% and 18.1% against 24.8% and 24.2%) | +2.8% / +10.8% | 4.6% / 1.5% | +21.5%, drawdown 5.1% |
+
+- **This is the first category where a wide NO rule survives the account replay in both halves, and where a
+  taker version passes the tail test in both halves** (5-35c and the 7-day-fall rule). In the pooled sample of
+  3.14 the same rules had positive means and a losing replay. Here the profit is spread: 491 series, the
+  largest (Rotten Tomatoes scores) 9% of the bets and 2% of the profit; every year from 2024 is positive.
+- **Reasons not to call it usable yet.** (1) It is one category of eleven, found after ten others showed
+  nothing of the kind: by rule 4 the search across categories is itself a multiple test, and the random
+  Entertainment sample (r20) showed no NO edge at all. (2) Out of sample the event-weighted t of the passing
+  rules is 2.2 to 3.3, mostly under the bar of 3; the taker 5-35c rule is not among the sweep's 18 passes.
+  (3) The resting figures rest on the fill model (69% to 80% filled); the forward log has 5 fills decided so
+  far, all in other categories. (4) Out of sample is five and a half months of closes, 116 to 280 events.
+- **Capacity is small.** Dollars traded in the seven days before entry: median $2,140 for 5-35c (a quarter
+  under $950, a tenth under $435), $1,100 for 5-10c; 2,600 to 3,800 contracts on the entry day, a tenth of
+  entry days under about 100 contracts. Taking a tenth of a week's flow means $100 to $200 per market. With
+  about 2 new bets a day in the out-of-sample replay and a median holding time of 6 to 10 days, that is a few thousand
+  dollars at work, not more.
+- What would test it properly is forward observation, as for the 5-cent rule: `scripts/shadow_longshot.py`
+  records only YES at 5c or less. A second observation band (Entertainment, YES 5-35c, no orders) would be
+  new code and a new standing log; it is left for the user to say whether they want it.
+
+**Forward logs.** Fourth PC cycle running since 7:48 am (8 questions); the 5:48 am cycle ended ok. 34 forecasts,
+none resolved. The main account holds 2 filled positions and 3 resting orders, $998.30. Variant paper accounts
+(12 accounts: the main one, 9 that follow Claude under other rules, 2 controls): no market has settled, so no
+standings; `claude_only_taker` $995.46 and `blend30_taker` $997.20 (the spread on 5 and 2 positions), the seven
+other Claude accounts $999.73 each, both controls (`control_fade`, `control_coinflip`) $1,000.00 with 5 resting
+orders and nothing filled. Observation log of the 5-cent rule: 13 markets seen, none settled; 5 resting bids
+decided, all 5 filled.
