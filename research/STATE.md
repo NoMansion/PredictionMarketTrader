@@ -355,6 +355,20 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   choice of forecaster settings (see "Background jobs"). The four resting paper orders are not being
   marked while no loop runs.
 
+- 4:20 am CST Nov 19 (ON THE PC): FIRST PAPER CYCLE ON THE PC done (3:46 to 4:15 am, 29 minutes; 3 runs, high
+  effort): 4 forecasts, usage $0.60 to $0.89 each at list price; one resting order (YES on Hawaii visitor
+  arrivals above 9.6 million, $20 at 75c; Claude 0.85, market 0.76); two more had enough edge but the daily
+  budget (10% of equity deployed in 24 h, resting orders included) was used; one was low confidence. The
+  account has 5 resting orders, $1,000. VARIANT ACCOUNTS RAN FOR THE FIRST TIME (8 accounts, 42 s, no
+  Claude calls): each was handed 8 forecasts, the 4 new ones and the 4 of the cloud's 1:07 am cycle (2 runs,
+  medium effort; still inside the 6-hour forecast age limit, so they were traded at current prices: say so
+  when quoting the variants). Claude-only accounts placed 5 resting orders, the 50% blend 3, the main rule as
+  a taker none, Claude-only as a taker bought 3 at once (-$2.65 marked at the bid). The log-on task was
+  test-fired and started the paper loop: next cycle about 9:46 am, 8 questions, variants after it.
+  NOTE FOR CHECK-INS: this session and the hourly check-in session can work in the repository at the same
+  time. Stage your own files by name (never `git add -A`): at 4:15 am the r15 result files of a check-in in
+  progress were swept into commit 7f28a89, whose message is about something else.
+
 ## How to run a round
 
 ```
