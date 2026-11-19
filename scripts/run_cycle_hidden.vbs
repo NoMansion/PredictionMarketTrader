@@ -11,6 +11,7 @@ If Not fso.FolderExists("data") Then fso.CreateFolder("data")
 py = ".venv\Scripts\python.exe"
 log = " >> data\run_cycle.log 2>&1"
 sh.Run "cmd.exe /c ""echo ===== %DATE% %TIME% ===== >> data\run_cycle.log && " & py & " -u scripts\run_cycle.py" & log & _
+       " & " & py & " -u scripts\run_variants.py" & log & _
        " & " & py & " scripts\export_forecasts.py" & log & _
        " & " & py & " -u scripts\shadow_longshot.py" & log & _
        " & " & py & " scripts\status.py --write > nul 2>&1""", 0, False

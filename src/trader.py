@@ -54,6 +54,8 @@ class Trader:
         self.track_days = float(ex.get("track_forecasts_days", 7.0))
         self.reentry_cooldown_s = float(ex.get("reentry_cooldown_hours", 72.0)) * 3600.0
         self.max_depth_share = float(ex.get("max_depth_share", 0.25))
+        # Off for the paper bot. A variant account may switch it on to measure what the confidence filter is worth.
+        self.trade_low_confidence = bool(ex.get("trade_low_confidence", False))
         if safety.is_live(cfg):
             safety.require_live_confirmation(cfg)
             raise NotImplementedError("account.mode 'live' is not implemented: see docs/GO_LIVE.md")
@@ -365,7 +367,7 @@ class Trader:
                 skip("no two-sided market after the forecast")
                 continue
             yes, no, _ = b
-            if f.confidence == "low":
+            if f.confidence == "low" and not self.trade_low_confidence:
                 skip("forecast confidence is low")
                 continue
             if f.flags and (self.cfg.get("forecaster") or {}).get("flags_block", True):

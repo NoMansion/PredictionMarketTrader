@@ -34,6 +34,9 @@ def main() -> int:
         if time.time() - last_run_started(db) >= args.every * 3600:
             print(time.strftime("===== %Y-%m-%d %H:%M:%S UTC", time.gmtime()), flush=True)
             subprocess.run(cycle, cwd=str(ROOT))
+            # the variant accounts trade the forecasts this cycle has just made (no Claude calls): src/variants.py
+            subprocess.run([sys.executable, str(ROOT / "scripts" / "run_variants.py")]
+                           + (["--config", args.config] if args.config else []), cwd=str(ROOT))
             subprocess.run([sys.executable, str(ROOT / "scripts" / "export_forecasts.py")], cwd=str(ROOT))
             # the mechanical rule under observation (no orders, its own file): see scripts/shadow_longshot.py
             subprocess.run([sys.executable, str(ROOT / "scripts" / "shadow_longshot.py")], cwd=str(ROOT))

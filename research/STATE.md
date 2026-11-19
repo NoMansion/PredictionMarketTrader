@@ -96,6 +96,16 @@ branch on the stock trader's repository is no longer used. The cloud container's
   (cloud: 2 runs, medium effort) are a separate block of the record: compare the two blocks, do not pool them
   without saying so. The first PC cycle was started by hand at 3:46 am; the loop is started once it finishes
   (two writers cannot share `data\run_cycle.log`). The paragraph below is the state just before this.
+- **VARIANT ACCOUNTS since 2026-11-19, about 4:00 am CST** (the user: can it be done "based on a claude
+  analysis of the liklihood of an event occuring", then "yes add that account along with any variations of
+  tests that you can"). Eight extra paper accounts in `variants.yaml` reuse the main account's forecasts (no
+  Claude usage) under other rules: Claude alone (three versions), a 50% blend, taker versions, and two controls
+  (against Claude; a direction Claude did not choose). Code `src/variants.py`, ledgers `data\variants\`, run
+  by the paper loop after every cycle (`scripts\run_variants.py`). Standings: `scripts\run_variants.py
+  --report`; quote them in the report at check-ins, always with the two controls beside them and the number
+  of accounts. Do not change or remove a variant (it breaks its record): add a new name. A variant's settings
+  never go into `config.yaml` without the evidence in the report and the user's yes. Their record starts with
+  the first PC cycle; the cloud's 20 forecasts were not replayed (the order books of that moment are gone).
 - **Before the start** (3:40 am CST, 2026-11-19). The cloud
   loop was stopped for good at 3:37 am and the cloud session at 3:38 am; the final ledger is in `data\`.
   The user's "do not start paper cycles yet" (3:20 am) still stands until they say go, and they have to

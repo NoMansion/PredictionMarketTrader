@@ -140,6 +140,28 @@ gateway says to slow down (it does: bursts get an HTTP 429).
 3. **Did the paper account make money?** The noisiest measure: a 5-point edge needs about 400 independent bets to
    show up in the win rate. A good or bad month means little.
 
+### Variant accounts: the same forecasts, traded differently
+
+The main account trades a cautious blend of Claude's number and the market price. To see what Claude's
+judgement is worth on its own, eight more paper accounts (`variants.yaml`, `src/variants.py`) are handed the
+forecasts the main account has just made and trade them under other rules. They ask Claude nothing, so they
+cost no usage; each has its own $1,000 and its own ledger in `data\variants\`.
+
+| Account | What it does |
+|---|---|
+| `claude_only` | Claude's probability alone, no blending, no "a big gap means we are wrong" rule |
+| `claude_only_capped` | Claude alone, but a gap above 25 points is still not traded |
+| `blend50` | Half way between the market price and Claude |
+| `blend30_taker` | The main rule, paying the ask at once instead of resting a bid |
+| `claude_only_taker` | Claude alone, paying the ask at once |
+| `claude_only_unfiltered` | Claude alone, also trading low-confidence and flagged forecasts |
+| `control_fade` | **Control:** bets against Claude |
+| `control_coinflip` | **Control:** Claude's size of disagreement, in a direction Claude did not choose |
+
+Stake caps, the daily budget and the safety stops are the same in all of them. `scripts\run_variants.py
+--report` prints where every account stands. With nine accounts one will look good by luck: read them against
+the two controls and against each other, and expect nothing meaningful before dozens of markets have settled.
+
 Paper results will flatter reality. The simulator is deliberately pessimistic (resting orders fill only when the
 price moves against them, and an order left resting in a market that closes against it is counted as filled;
 positions are valued at the bid), but one published comparison of the same strategy on

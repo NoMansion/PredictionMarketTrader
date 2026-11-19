@@ -1,0 +1,59 @@
+# Variant paper accounts (src/variants.py): the same Claude forecasts as the paper bot, traded under different
+# rules. They cost no Claude usage: each is handed the forecasts the main account has just made. Each has its own
+# ledger (data/variants/<name>.db) and starts with the main account's paper bankroll.
+#
+#   about       one line for the report
+#   overrides   laid over config.yaml, section by section
+#   transform   none (default) | fade | coinflip: what a CONTROL account does to Claude's number first
+#
+# Everything not overridden is the main account's: stake caps (2% of the account per market, $50 an order),
+# the daily budget, the price limits (12 to 88 cents), the safety stops, the kill switch.
+#
+# Adding an account later is fine: it starts from the next cycle. Changing or removing one breaks its record:
+# add a new name instead. With this many accounts one will look good by luck: compare them, and say how many.
+
+variants:
+  claude_only:
+    about: "Claude's probability alone: no blending toward the market price, and a big disagreement is not treated as a mistake"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+
+  claude_only_capped:
+    about: "Claude alone, but a gap above 25 points still means 'we are missing something' and no trade"
+    overrides:
+      sizing: {shrink_weight: 1.0}
+
+  blend50:
+    about: "Half way between the market price and Claude (the main account goes 30% of the way)"
+    overrides:
+      sizing: {shrink_weight: 0.5}
+
+  blend30_taker:
+    about: "The main account's rule, but paying the ask at once instead of resting a bid: is the resting order worth it?"
+    overrides:
+      execution: {style: taker}
+
+  claude_only_taker:
+    about: "Claude alone, paying the ask at once: the plainest version of 'bet on what Claude thinks'"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {style: taker}
+
+  claude_only_unfiltered:
+    about: "Claude alone, also trading its low-confidence forecasts and the ones it flagged: are those filters worth having?"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {trade_low_confidence: true}
+      forecaster: {flags_block: false}
+
+  control_fade:
+    about: "CONTROL: bets against Claude, the same distance from the market price on the other side"
+    transform: fade
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+
+  control_coinflip:
+    about: "CONTROL: Claude's size of disagreement in a direction fixed by the market's name, not by Claude"
+    transform: coinflip
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
