@@ -820,3 +820,53 @@ What the family shows without passing (busy sample; NO where YES is 5 cents or l
 - **Forward.** The observation log now records how many markets each qualifying event has, so stand-alone
   questions can be followed separately as they come.
 
+
+### 3.21 Rounds r15 and r16: Commodities and Financials (5:15 am CST, November 19)
+
+**What was new.** Commodities finished downloading at 4:13 am (random pass and census); round r15 was run then
+but not written up. Financials' random pass finished at 4:30 am; its census of busy markets is still coming
+down, so only the random sample of Financials can be judged yet (r16).
+
+**Commodities alone: too small to say anything.** Random sample 806 markets in 527 events, busy sample 1,241
+markets in 319 events, and almost all of it closed after April 1, 2026 (2 to 16 events per price band before).
+Every one of about 2,780 rules is "thin" on both samples: 0 pass, 0 leads, 0 lose.
+
+The 5-cent rule there (NO where YES is 5 cents or less, 30 days or less, spread 5 cents or less; busy sample):
+
+| Entry | Bets (events) | Mean per bet | Lost | Tail test |
+|---|---|---|---|---|
+| taker | 79 (28) | -0.22% | 2 | fails (26 events since April, none lost; bound 10.9% against 5.7% break-even) |
+| resting | 64 (24) | +0.50% | 2 | fails (22 events since April; bound 12.7% against 8.2%) |
+
+Both losses are weekly oil price markets (KXWTIW, which has 71% of the bets). Bets last 1.6 days; a median of
+$1,363 traded in the 7 days before entry. Not a failure of the rule and not support for it: too few events.
+
+**Eight categories pooled (busy sample, 19,619 markets, 6,142 events; 4,145 rules):** 19 pass, 143 leads, 306
+lose. 18 of the 19 are resting NO orders against a cheap YES, the same picture as r13 (3.19); the other is a
+resting YES at 95 cents and above on "custom" questions. On the random sample (4,315 rules): 1 pass, 5 leads,
+105 lose, which is what chance gives.
+
+The 5-cent rule pooled over eight categories, with the account replay at 1% stakes:
+
+| Entry | Events in / out | Mean per bet | Tail test in / out | Replay in / out, per year | Worst drawdown in / out |
+|---|---|---|---|---|---|
+| resting | 1,026 / 584 | +1.77% | passes / passes (bounds 4.7% and 6.1% against break-even 6.8% and 7.4%) | +3.3% / +12.1% | 3.4% / 5.0% |
+| taker | 1,426 / 701 | +0.36% | fails / fails (bounds 3.7% and 5.1% against 3.4% and 4.7%) | -0.7% / -1.9% | 7.4% / 5.8% |
+
+Adding Commodities changed nothing: the resting version passes, paying the ask does not, as in 3.19. Capacity is
+unchanged and small: the median qualifying market traded $209 in the 7 days before entry (a quarter under $66),
+and 22% of entry days traded under 100 contracts. The resting result still rests on the fill model (52% filled);
+the forward log has 5 resting bids decided so far, all 5 filled, none settled.
+
+**Financials, random sample (r16: 1,890 markets, 1,184 events, 1,310 markets since April; 2,840 rules):** 0 pass,
+0 leads, 8 reliably losing. All eight are the same bet, paying the ask for NO where YES is at 50 cents or less:
+-5% to -7% per bet before April 2026 and -13% to -16% after (t -3.1 to -3.6 by event, 150 to 200 events each
+side); one more, NO in the last week on questions without deadline wording, lost 30% after April. So in
+Financials' small markets the cheap side won more often than its price said, the opposite of the busy markets of
+the other categories. These are mostly daily and weekly index and rate ranges. The busy sample of Financials
+decides whether this is a property of the category or of thin quotes: run it when the census is complete.
+
+**Variant paper accounts (12 accounts: the main one, 9 that follow Claude under other rules, 2 controls):** no
+market has settled, so there are no standings. Only `claude_only_taker` has filled orders (3 positions, -$2.65
+marked at the bid, which is the spread it paid); the two controls (`control_fade`, `control_coinflip`) have 5
+resting orders each and $1,000.

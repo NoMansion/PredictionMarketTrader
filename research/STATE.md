@@ -399,6 +399,16 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 4:38 am CST Nov 19 (ON THE PC): paper loop restarted on the adaptive cadence (2 h; next cycle about
   5:46 am). 194 tests.
 
+- 5:15 am CST Nov 19 (check-in): both jobs alive; last cycle (3:46 am) ok, next about 5:46 am. Report 3.21:
+  r15 (Commodities, run at 4:13 am but not written until now) and r16 (Financials, random sample). Commodities
+  alone is too small (all rules thin); eight categories pooled: 5-cent rule RESTING passes both halves (+1.77%
+  per bet, replay +3.3% / +12.1% a year), TAKER fails, as in 3.19. Financials random: 0 pass, 8 lose (taker NO
+  against YES at 50c or less, -13% to -16% out of sample). Financials census still downloading (46,000 markets
+  with bars at 5:10 am). Usage: 5-hour 0%, weekly all models 40%, weekly Fable 66%, with 51% of the week past.
+  `cycle_every_hours` LEFT AT 2: the all-models window (which the paper loop spends) is 11 points behind; the
+  Fable window is 15 points ahead, but the loop does not spend it and the user set 2 h at 4:35 am with the
+  same figures in view. Check-ins spend Fable: stop early when nothing has landed.
+
 ## How to run a round
 
 ```
@@ -460,3 +470,8 @@ Forward-only (cannot be backtested):
    the last two days; exits before settlement (sell the NO at 99c instead of waiting); a combined-portfolio
    replay of several passing rules; sports and crypto samples last.
 6. Open for the user: trade the 5-cent rule in a second paper account? Which Claude model for the forecaster?
+7. **Waiting on the download (as of 5:15 am CST Nov 19):** Financials census. When the download log shows it has
+   moved past Financials: `run_sweep.py --round r17_liquid_financials --categories Financials --sample liquid`,
+   the 5-cent rule on it (tk and mk), and say whether the random sample's "taker NO loses" (report 3.21) holds
+   in busy markets. Then nine categories pooled. After Financials come Mentions, Entertainment, Crypto, Social,
+   Climate and Weather: one random and one liquid round each as they finish. Rounds done so far: up to r16.
