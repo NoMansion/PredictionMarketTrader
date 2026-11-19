@@ -953,3 +953,50 @@ rules, 2 controls): no market has settled, so no standings. Main $999.14 (one fi
 cents under its price), `claude_only_taker` $997.35 (the spread on 3 positions), every other account,
 including both controls (`control_fade`, `control_coinflip`), $1,000.00 with 3 to 6 resting orders. The third
 PC cycle (8 questions) started at 5:48 am and was still running when this was written.
+
+### 3.23 Rounds r19 and r20: Mentions' busy markets do not confirm the lead; Entertainment (7:25 am CST, November 19)
+
+**What was new.** Mentions' census of busy markets finished at about 6:40 am and Entertainment's random pass at
+7:00 am (its census is coming down now). Two rounds: `r19_liquid_mentions`, `r20_random_entertainment`.
+
+**Mentions, busy sample (5,685 markets, 1,153 events, but only 10,502 daily bars; 2,792 rules): every rule is
+thin.** These markets live about two daily bars each after reaching 5,000 contracts, so a price band holds 5
+to 50 events a side. No pass, no lead, no reliable loser. The question 3.22 left for this sample was whether
+"NO where YES is at 20 to 80 cents" still earns where there is money to trade against:
+
+| Entry | Bets (events) | Mean per bet | Losing events in / out | Tail test in / out | Replay at 0.5%, in / out, per year | Worst drawdown |
+|---|---|---|---|---|---|---|
+| taker | 138 (50) | -0.58% | 17 of 33 / 9 of 18 | fails / fails (bounds 66.7% and 70.9% against break-even 56.4% and 38.4%) | +0.6% / -1.7% | 4.0% / 2.5% |
+| resting | 132 (48) | +5.81% | 17 of 33 / 8 of 16 | fails / fails (bounds 66.7% and 72.1% against 63.7% and 41.5%) | +1.9% / -0.2% | 4.0% / 2.4% |
+
+- **It is not confirmed.** As a taker the rule is at zero (-0.6% per bet, 2025 -14.6%, 2026 +5.4%); resting it
+  is positive on average but the account replay is flat to slightly negative after April 2026 and the tail
+  test fails in both halves. Out of sample a winner made 0.83 to 0.87 of the stake and a loser cost 1.2 to 1.3
+  (several bets per event), the reverse of the random sample's picture.
+- **It is too small a sample to call the opposite either**: 50 events, 16 to 18 of them after April. The band
+  table points the same way as 3.22 below 35 cents (NO taker +7.5% / +8.6% at 20-35c on 19 / 9 events) and
+  the other way at 35-50c (+10.9% / -23.4% on 10 / 7 events). One event, KXDJTJOINTSESSION, holds 23 of the
+  138 bets.
+- **Capacity is the one thing that is clearly there**: median $16,745 traded in the seven days before entry (a
+  tenth under $7,900), 14,700 contracts on the entry day, against $47 to $88 in the random sample.
+- Reading the two samples together, by the test 3.22 set beforehand: the Mentions edge lives where about $50
+  a week trades and is not visible where thousands do. It stays a curiosity. Nothing more is spent on it
+  unless a forward log is wanted, which would be the user's choice.
+
+**Entertainment, random sample (r20: 2,426 markets, 1,876 events, 50,442 daily bars, 2021 to 2026; 2,864
+rules):** 0 pass, 0 leads, 9 reliably losing, all nine buying YES at low prices (for example a resting YES at
+5-20c with a 6-15c spread: -74% before April, -91% after, t by event -9; YES at 50c or less 30 to 60 days
+before the close: -61% to -76%, t by event -10). Cheap YES is overpriced here as elsewhere, but, as in every
+other random sample, the other side does not collect it: paying the ask for NO against a YES under 20 cents
+lost 0.3% to 5% in both halves, and a resting NO was -0.4% to -2.9% before April and +1.2% to +4.3% after. NO
+against favourites (YES above 65c) lost 14% to 80%. Nothing to follow until the census is down: the busy
+sample is where the 5-cent rule is judged.
+
+**Forward logs.** Observation log of the 5-cent rule: 13 qualifying markets seen, none settled; 5 resting bids
+decided, all 5 filled (the backtest's model fills 55% to 60%; five is too few to say it is wrong). The third
+PC cycle (5:48 am, 8 questions) ended ok: 4 low confidence, 4 with enough edge stopped by the daily order
+budget; 32 forecasts so far, none resolved. Variant paper accounts (12 accounts: the main one, 9 that follow
+Claude under other rules, 2 controls): no market has settled, so no standings. Main $999.14;
+`claude_only_taker` $995.46 and `blend30_taker` $997.20 (the spread on 5 and 2 positions); the seven other
+Claude accounts $999.73 each (one filled NO position marked under its price); both controls
+(`control_fade`, `control_coinflip`) $1,000.00 with 5 resting orders and nothing filled.

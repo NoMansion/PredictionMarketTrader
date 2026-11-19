@@ -420,6 +420,15 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   5:15 am (the loop spends the all-models window, which is 11 points behind; Fable is 16 ahead and is spent
   by check-ins, so: stop early when nothing has landed).
 
+- 7:25 am CST Nov 19 (check-in): both jobs alive; third PC cycle (5:48 am) ended ok, 32 forecasts, none
+  resolved; next cycle about 7:50 am. Report 3.23: r19 (Mentions busy sample) and r20 (Entertainment random).
+  Mentions busy: every rule thin (two daily bars per market); NO at 20-80c is NOT confirmed there (taker
+  -0.6% per bet, resting +5.8% but replay flat out of sample, tail test fails both halves, 50 events), with
+  real capacity ($16,700 a week median): the 3.22 lead is closed as a curiosity of $50-a-week markets.
+  Entertainment random: 0 pass, 0 leads, 9 lose (all cheap YES); NO does not collect it. Usage: 5-hour 14%,
+  weekly all models 41%, weekly Fable 67%, with 52% of the week past: `cycle_every_hours` left at 2, same
+  reason as 5:15 am. E: 50 GB free, C: 30 GB.
+
 ## How to run a round
 
 ```
@@ -481,13 +490,15 @@ Forward-only (cannot be backtested):
    the last two days; exits before settlement (sell the NO at 99c instead of waiting); a combined-portfolio
    replay of several passing rules; sports and crypto samples last.
 6. Open for the user: trade the 5-cent rule in a second paper account? Which Claude model for the forecaster?
-7. **Waiting on the download (as of 6:30 am CST Nov 19):** Mentions census (started 5:41 am). When the download
-   log shows it has moved past Mentions ("categories with work" names another category):
-   `run_sweep.py --round r19_liquid_mentions --categories Mentions --sample liquid`, then
-   `analyze_rule.py --sample liquid --categories Mentions --rule "Mentions, mid 20-80c" --side no --entry tk`
-   (and `mk`), and say whether the random sample's "YES overpriced, NO at 20-80c earns" (report 3.22) holds in
-   busy markets and with how many dollars. Do NOT pool Mentions into the 5-cent rule's categories without
-   saying so (it is a different kind of bet). After Mentions come Entertainment, Crypto, Social, Climate and
-   Weather: one random and one liquid round each as they finish. Rounds done so far: up to r18. The nine-category
+7. **Waiting on the download (as of 7:25 am CST Nov 19):** Entertainment census (started 7:00 am; its random
+   round r20 is done, report 3.23). When the download log shows it has moved past Entertainment ("categories
+   with work" names another category): `run_sweep.py --round r21_liquid_entertainment --categories
+   Entertainment --sample liquid`, then the 5-cent rule there (`analyze_rule.py --sample liquid --categories
+   Entertainment --rule "NO at mid <= 5c, <= 30d, spread <= 5c" --side no --entry tk`, and `mk`) and the
+   calibration curve. Mentions is done (r18, r19): its NO lead was not confirmed in busy markets; do NOT pool
+   Mentions into the 5-cent rule's categories without saying so (it is a different kind of bet). After
+   Entertainment come Crypto, Social, Climate and Weather: one random and one liquid round each as they
+   finish. Rounds done so far: up to r20. Until the Entertainment census finishes there is nothing new: say so
+   in one line and stop. The nine-category
    list for pooled rounds: Economics, Politics, Companies, Science and Technology, Elections, Health, World,
    Commodities, Financials.
