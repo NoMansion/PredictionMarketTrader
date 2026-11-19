@@ -4,20 +4,6 @@ The user asked (2026-11-18, before going to bed) for strategy research to keep r
 that can be tested, and combinations of families, with settings varied. This file is what each check-in
 reads first. Keep it short and current. Findings go in the report; this is the control sheet.
 
-## PAUSED BY THE USER since 1:20 pm CST, 2026-11-19 ("Pause", then "Everything")
-
-Nothing runs until the user says resume. Do NOT start the download or the paper loop, do not run a cycle or a
-research round, and do not re-enable anything below on your own.
-
-- Stopped with `research\start_jobs.ps1 -Stop`: the paper loop (last cycle 11:53 am to 12:52 pm, ended ok) and
-  the history download (110,497 markets with bars at 1:09 pm). Both resume where they left off.
-- Switched off: the app's scheduled check-in (`prediction-market-research-checkin`, enabled = false) and the
-  Windows log-on task "PredictionMarketTrader Jobs" (disabled, so a restart of the PC does not unpause).
-- To resume, on the user's word only: `Enable-ScheduledTask -TaskName "PredictionMarketTrader Jobs"`, enable
-  the check-in again, then `research\start_jobs.ps1 -PaperLoop`. Then delete this section and add a progress line.
-- While paused: resting paper orders pass their 24-hour limit and are expired at the first cycle after the
-  resume; open positions are simply re-valued then. Forecasts older than 6 hours are not traded.
-
 **Report:** `reports/2026-11-18_strategy_research.md` (create on first results; add a dated section per check-in).
 
 ## Standing instruction (2026-11-19, about 3:50 am CST, on the PC)
@@ -41,10 +27,10 @@ session ran continues on the PC without waiting for the user. What that does and
     a day before the Sunday reset. Only the user changes this schedule. Each run is a new session
     that knows only its prompt and this file: keep this file current. It runs while the app is open; a run
     missed while the app was closed happens at the next launch. The user manages it under "Scheduled" in
-    the app. Since 11:10 am CST 2026-11-19 (the user: "can you send an update message every check in") each
-    finished run notifies the user's main session, which passes a short update on to the user; that works
-    only while that session exists. So END EVERY RUN with the three or four plain lines the prompt asks for:
-    they are what the user is sent.
+    the app. UPDATE MESSAGE EVERY RUN (the user, 11:10 am CST 2026-11-19: "can you send an update message
+    every check in"): since 2:45 pm CST each run ends by sending the user a one-line phone/desktop
+    notification itself (PushNotification; part E of its prompt). The first attempt, a completion notice to
+    the user's main session, never arrived (12:11 pm run), so the run now sends its own.
   - The Windows task "PredictionMarketTrader Jobs" runs `scripts\start_jobs_hidden.vbs` when the user logs
     on: two minutes later it starts the history download and the paper loop if they are not running.
     Remove it with: `Unregister-ScheduledTask -TaskName "PredictionMarketTrader Jobs"`.
@@ -500,6 +486,12 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   category (same shuffle, still valid). Usage: 5-hour 20%, weekly all models 44%, weekly Fable 70%, with 55%
   of the week past: `cycle_every_hours` left at 2 (all-models 11 points behind; 2 is the floor). E: 49.3 GB
   free, C: 29.6 GB.
+
+- 1:20 pm to 2:41 pm CST Nov 19: EVERYTHING PAUSED at the user's word ("Pause", "Everything"), then resumed
+  ("Resume"). Both jobs stopped, the check-in and the log-on task switched off; at 2:41 pm all switched back on
+  and both jobs restarted; a paper cycle began at once (the last had started at 11:53 am). Check-ins now send
+  their own one-line notification (part E of the prompt), because the completion notice to the main session
+  never arrived.
 
 ## How to run a round
 
