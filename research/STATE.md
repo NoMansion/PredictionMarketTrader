@@ -19,8 +19,16 @@ session ran continues on the PC without waiting for the user. What that does and
   entry or other standing change on the PC.
 - "Risk averse" is read as: the rules for judging below stay as they are, a rule is judged by its account
   replay and its worst periods as well as its mean, and capacity in dollars is always reported.
-- The hourly check-in lives in the Claude session that set it up. It stops if the app closes or the PC
-  restarts, and expires after 7 days: after any of those, a new session has to set it up again from this file.
+- What keeps it going (set up 2026-11-19, 3:55 am CST, with the user's yes):
+  - The hourly check-in is a scheduled task of the Claude desktop app, "PredictionMarketTrader hourly
+    check-in" (id `prediction-market-research-checkin`, at 11 past every hour). Each run is a new session
+    that knows only its prompt and this file: keep this file current. It runs while the app is open; a run
+    missed while the app was closed happens at the next launch. The user manages it under "Scheduled" in
+    the app. Its runs do not report into another session: read their results there.
+  - The Windows task "PredictionMarketTrader Jobs" runs `scripts\start_jobs_hidden.vbs` when the user logs
+    on: two minutes later it starts the history download and the paper loop if they are not running.
+    Remove it with: `Unregister-ScheduledTask -TaskName "PredictionMarketTrader Jobs"`.
+  - Neither helps while the PC is off, the user is logged out, or Claude usage is exhausted.
 
 ## Decisions already made
 
