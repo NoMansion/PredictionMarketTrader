@@ -145,7 +145,7 @@ gateway says to slow down (it does: bursts get an HTTP 429).
 ### Variant accounts: the same forecasts, traded differently
 
 The main account trades a cautious blend of Claude's number and the market price. To see what Claude's
-judgement is worth on its own, eight more paper accounts (`variants.yaml`, `src/variants.py`) are handed the
+judgement is worth on its own, eleven more paper accounts (`variants.yaml`, `src/variants.py`) are handed the
 forecasts the main account has just made and trade them under other rules. They ask Claude nothing, so they
 cost no usage; each has its own $1,000 and its own ledger in `data\variants\`.
 
@@ -159,9 +159,16 @@ cost no usage; each has its own $1,000 and its own ledger in `data\variants\`.
 | `claude_only_unfiltered` | Claude alone, also trading low-confidence and flagged forecasts |
 | `control_fade` | **Control:** bets against Claude |
 | `control_coinflip` | **Control:** Claude's size of disagreement, in a direction Claude did not choose |
+| `claude_only_wide` | **Wide:** Claude alone with no daily budget and no category or total exposure cap |
+| `claude_only_wide_edge1` | **Wide:** the same, trading at 1 point of edge instead of 3 |
+| `blend30_wide` | **Wide:** the main account's own rule with those limits lifted |
 
-Stake caps, the daily budget and the safety stops are the same in all of them. `scripts\run_variants.py
---report` prints where every account stands. With nine accounts one will look good by luck: read them against
+Stake caps, the daily budget and the safety stops are the same in all of them, except the three wide accounts.
+Those lift the limits on how much is traded (not the stake per market or the safety stops), so that each
+records every trade its rule wants: what a given daily budget, edge threshold or stake would have done is
+then worked out from that record afterwards, without an account per setting. They bet more and will swing
+more: compare return per dollar staked and the worst stretch, not the totals. `scripts\run_variants.py
+--report` prints where every account stands. With twelve accounts one will look good by luck: read them against
 the two controls and against each other, and expect nothing meaningful before dozens of markets have settled.
 
 Paper results will flatter reality. The simulator is deliberately pessimistic (resting orders fill only when the

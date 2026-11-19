@@ -1,6 +1,7 @@
 import pytest
 
 from fakes import FakeKalshiHTTP, TableForecaster
+from src import safety, universe
 from src.kalshi import Kalshi
 from src.ledger import Ledger
 from src.trader import Trader
@@ -192,10 +193,14 @@ def test_variants_file_is_valid_and_every_variant_builds_a_trader(tmp_path):
     root = Path(__file__).resolve().parent.parent
     variants = load_variants(root / "variants.yaml")
     assert {"claude_only", "control_fade", "control_coinflip"} <= set(variants)
+    wide = variant_config(load_config(root / "config.yaml"), variants["claude_only_wide"]["overrides"])
+    assert wide["sizing"]["max_position_pct"] == 0.02 and wide["safety"]["max_drawdown"] == 0.15    # stake and stops kept
     main_cfg = load_config(root / "config.yaml")
     for name, spec in variants.items():
         led = Ledger(tmp_path / f"{name}.db")
-        Trader(variant_config(main_cfg, spec["overrides"]), led, None, None, root=tmp_path)    # unknown settings raise here
+        vcfg = variant_config(main_cfg, spec["overrides"])
+        Trader(vcfg, led, None, None, root=tmp_path)                 # unknown sizing settings raise here
+        safety.settings(vcfg); universe.settings(vcfg)              # ... and unknown safety or universe ones here
         led.close()
     assert load_variants(tmp_path / "missing.yaml") == {}
     bad = tmp_path / "bad.yaml"

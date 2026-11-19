@@ -369,6 +369,15 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   time. Stage your own files by name (never `git add -A`): at 4:15 am the r15 result files of a check-in in
   progress were swept into commit 7f28a89, whose message is about something else.
 
+- 4:30 am CST Nov 19 (ON THE PC): THREE WIDE ACCOUNTS ADDED (the user: budget "and other variables" are worth
+  testing; "Do it now"). `claude_only_wide`, `claude_only_wide_edge1`, `blend30_wide` in `variants.yaml`: the
+  daily budget and the category and total exposure caps are lifted, the stake per market and the safety
+  stops are kept. They record every trade their rule wants; they are NOT candidates for the paper bot. Started
+  on the same 8 forecasts as the others, 12 minutes later (prices of 4:29 am). Eleven variants plus the main
+  account = twelve. STILL TO BUILD, once a few dozen markets have settled: a replay tool that takes a wide
+  account's record and applies a daily budget, an edge threshold and a stake size after the fact (return per
+  dollar staked, worst stretch), so that no further account per setting is needed.
+
 ## How to run a round
 
 ```

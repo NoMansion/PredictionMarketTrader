@@ -57,3 +57,28 @@ variants:
     transform: coinflip
     overrides:
       sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+
+  # ---- wide accounts (added 2026-11-19, 4:30 am CST) ----------------------------------------------------------
+  # These three lift the limits that decide HOW MUCH is traded, so that each records every trade its rule wants.
+  # Lifted: the daily budget (orders and dollars per 24 hours) and the category and total exposure caps. Kept: the
+  # stake per market (2% of the account, $50 an order), the per-event cap, the price limits, the safety stops.
+  # They are not candidates for the paper bot: they are the record from which "what would a daily budget of X, an
+  # edge threshold of Y or a stake of Z have done" can be worked out afterwards, without one account per setting.
+  # They bet more, so they will swing more: compare return per dollar staked and the worst stretch, not the total.
+  claude_only_wide:
+    about: "WIDE: Claude alone with no daily budget and no category or total exposure cap: every trade the rule wants"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0, max_category_pct: 1.0, max_total_exposure_pct: 1.0}
+      safety: {max_orders_per_day: 1000, max_deploy_per_day_pct: 1.0}
+
+  claude_only_wide_edge1:
+    about: "WIDE: the same, trading at 1 point of edge instead of 3: any threshold in between can be read off this record"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0, max_category_pct: 1.0, max_total_exposure_pct: 1.0, min_edge: 0.01}
+      safety: {max_orders_per_day: 1000, max_deploy_per_day_pct: 1.0}
+
+  blend30_wide:
+    about: "WIDE: the main account's own rule with no daily budget and no category or total exposure cap"
+    overrides:
+      sizing: {max_category_pct: 1.0, max_total_exposure_pct: 1.0}
+      safety: {max_orders_per_day: 1000, max_deploy_per_day_pct: 1.0}
