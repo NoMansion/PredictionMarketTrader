@@ -616,8 +616,8 @@ Forward-only (cannot be backtested):
    part A, the forward logs (variants, observation log) once markets have settled, and otherwise one line
    and stop. Left to code, none urgent, one per check-in at most: exits before settlement; a
    combined-portfolio replay; the after-the-fact replay tool for the wide variant accounts (once a few dozen
-   markets have settled). Open for the user: second paper account for the 5-cent resting rule; a forward
-   observation band for the wide NO rule (YES 5-35c, no orders) in Entertainment and Climate and Weather.
+   markets have settled). [Those three were coded 2026-11-20, report 3.28.] Open for the user: see item 6
+   (as of Nov 20 the questions are the 45,000-contract version of the 5-cent account and an Entertainment-only band).
    The text below is the record of what was waited for.
    **Was waiting on the download (as of 10:20 am CST Nov 19):** Climate and Weather census (started 9:38 am; it
    is the LAST category in the download order). It is finished when the download log shows "finished this
