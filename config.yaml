@@ -117,8 +117,11 @@ safety:
   max_equity_change: 0.20
   max_drawdown: 0.15              # from the high-water mark: no new positions until reviewed
   max_total_loss: 0.25            # of everything deposited: the experiment stops
-  max_orders_per_day: 6
-  max_deploy_per_day_pct: 0.10
+  # No daily budget (user, 2026-11-20 6:40 am CST: "no limits on the amount of trades per day"). Was 6 orders and
+  # 10% of equity per 24 hours. Still in force: the stake per market and per order, the per-event, per-category and
+  # total exposure caps, the price limits and every stop above.
+  max_orders_per_day: 1000
+  max_deploy_per_day_pct: 1.0
   max_forecast_age_hours: 6
   max_book_age_seconds: 120
   max_move_since_forecast: 0.04

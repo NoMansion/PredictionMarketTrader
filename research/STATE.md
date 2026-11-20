@@ -539,6 +539,13 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   both halves on busy markets and loses on the random sample. Paper accounts: price-only exits in
   `src/trader.py` (off for the paper bot), six exit accounts from 4:04 am (18 accounts). `scripts/replay_wide.py`
   works, nothing settled yet. The check-in now runs on Opus from a Windows task (top of this file). 214 tests.
+- 6:40 am CST Nov 20: NO DAILY BUDGET ANY MORE, in any account (the user: "Make sure you are resting also having
+  no limits on the amount of trades per day"). config.yaml safety: max_orders_per_day 1000 (was 6),
+  max_deploy_per_day_pct 1.0 (was 0.10). Orders already rest by default (execution.style passive); the two
+  taker accounts (blend30_taker, claude_only_taker) stay taker on purpose, as the comparison for resting.
+  Kept: stake per market (2%, $50 an order), per-event, category (20%) and total (40%) exposure caps, price limits,
+  stops. The main account's record before and after this time is under different rules: compare them apart.
+  Takes effect at the next cycle (the loop reads config.yaml each time; no restart).
 
 ## How to run a round
 

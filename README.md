@@ -68,7 +68,7 @@ available to it: no shell, no files, no order code. Whatever a web page says to 
 | Disagreement ceiling | above 25 points, assume we are wrong: no trade | `sizing.max_disagreement` |
 | Stake | quarter Kelly, at most 2% of equity per market, 4% per event, 20% per category, $50 per order | `sizing` |
 | Cash | at least 60% of the account stays uninvested | `sizing.max_total_exposure_pct` |
-| Daily budget | 6 orders and 10% of equity per 24 hours | `safety` |
+| Daily budget | none since 2026-11-20 (was 6 orders and 10% of equity per 24 hours) | `safety` |
 | Drawdown | 15% from the peak: no new positions until reviewed | `safety.max_drawdown` |
 | Total loss | 25% of the money deposited: the experiment stops | `safety.max_total_loss` |
 | Kill switch | create the file `data/STOP` (`STOP.txt` also counts); checked at the start of a cycle and again before every order; cancels resting orders; delete it to resume | `safety.kill_switch` |
@@ -188,7 +188,8 @@ that differs in nothing else; the price rules they use (`execution.take_profit_p
 mechanical bets over five years of history are in `research\exit_study.py` (report 3.28), and
 `scripts\replay_wide.py` replays the wide accounts' records under other budgets, edges, stakes and exits.
 
-Stake caps, the daily budget and the safety stops are the same in all of them, except the three wide accounts.
+Stake caps and the safety stops are the same in all of them, except the three wide accounts. No account has a
+daily budget since 2026-11-20; the wide accounts still differ by having no category or total exposure cap.
 Those lift the limits on how much is traded (not the stake per market or the safety stops), so that each
 records every trade its rule wants: what a given daily budget, edge threshold or stake would have done is
 then worked out from that record afterwards, without an account per setting. They bet more and will swing

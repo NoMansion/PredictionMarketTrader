@@ -7,7 +7,8 @@
 #   transform   none (default) | fade | coinflip: what a CONTROL account does to Claude's number first
 #
 # Everything not overridden is the main account's: stake caps (2% of the account per market, $50 an order),
-# the daily budget, the price limits (12 to 88 cents), the safety stops, the kill switch.
+# the price limits (12 to 88 cents), the safety stops, the kill switch. Since 2026-11-20 6:40 am CST no account has
+# a daily budget (config.yaml safety, at the user's word); before that it was 6 orders and 10% of equity a day.
 #
 # Adding an account later is fine: it starts from the next cycle. Changing or removing one breaks its record:
 # add a new name instead. With this many accounts one will look good by luck: compare them, and say how many.
