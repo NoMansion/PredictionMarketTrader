@@ -546,6 +546,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   Kept: stake per market (2%, $50 an order), per-event, category (20%) and total (40%) exposure caps, price limits,
   stops. The main account's record before and after this time is under different rules: compare them apart.
   Takes effect at the next cycle (the loop reads config.yaml each time; no restart).
+- 5:23 pm CST Nov 20: EVERYTHING PAUSED at the user's word ("Pause"). Download and paper loop stopped (no cycle
+  was running), both Windows tasks (Check-in, Jobs) disabled, no session reminders left. To resume: enable both
+  tasks and run `research\start_jobs.ps1 -PaperLoop`.
 
 ## How to run a round
 
