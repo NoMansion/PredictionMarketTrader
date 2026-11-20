@@ -7,16 +7,20 @@
 param(
     [int]$TimeoutMinutes = 60,
     [string]$Model = "claude-opus-5-5",
-    [string]$PromptFile = ""           # default scripts\checkin_prompt.md (another file only for testing the plumbing)
+    [string]$PromptFile = "",          # default scripts\checkin_prompt.md (another file only for testing the plumbing)
+    # the three below are for tests/test_checkin_ps1.py only; the scheduled task never passes them
+    [string]$ClaudeExe = "",           # default .tools\claude\...\claude.exe
+    [string]$DataDir = "",             # default data\
+    [switch]$NoNote                    # no Windows notification
 )
 $ErrorActionPreference = "Stop"
 $root = Split-Path $PSScriptRoot -Parent
-$data = Join-Path $root "data"
+$data = if ($DataDir) { $DataDir } else { Join-Path $root "data" }
 $dir = Join-Path $data "checkin"
 New-Item -ItemType Directory -Force $dir | Out-Null
 $log = Join-Path $data "checkin.log"
 $lock = Join-Path $data "checkin.lock"
-$claude = Join-Path $root ".tools\claude\node_modules\@anthropic-ai\claude-code\bin\claude.exe"
+$claude = if ($ClaudeExe) { $ClaudeExe } else { Join-Path $root ".tools\claude\node_modules\@anthropic-ai\claude-code\bin\claude.exe" }
 if (-not $PromptFile) { $PromptFile = Join-Path $PSScriptRoot "checkin_prompt.md" }
 $prompt = Get-Content $PromptFile -Raw -Encoding UTF8
 $stamp = Get-Date -Format "yyyyMMdd-HHmm"
@@ -26,6 +30,7 @@ function Write-Log([string]$msg) {
 }
 
 function Show-Note([string]$text) {
+    if ($NoNote) { return }
     try {
         [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
         $xml = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02)
@@ -60,6 +65,7 @@ try {
               "--output-format", "json")
     $p = Start-Process -FilePath $claude -ArgumentList $cliArgs -WorkingDirectory $root -NoNewWindow -PassThru `
         -RedirectStandardInput $pfile -RedirectStandardOutput $out -RedirectStandardError $err
+    $null = $p.Handle                  # keep the handle, or ExitCode comes back empty after the program ends
     if (-not $p.WaitForExit($TimeoutMinutes * 60 * 1000)) {
         Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
         Write-Log "FAILED: no answer within $TimeoutMinutes minutes (stopped)"
@@ -70,7 +76,7 @@ try {
     try { $j = $raw | ConvertFrom-Json } catch { $j = $null }
     if (-not $j) {
         $e = (Get-Content $err -Raw -ErrorAction SilentlyContinue)
-        Write-Log "FAILED: exit $($p.ExitCode), no JSON answer: $(($e + $raw) -replace '\s+', ' ' | Select-Object -First 1)"
+        Write-Log "FAILED: exit $($p.ExitCode), no JSON answer: $(("$e $raw").Trim() -replace '\s+', ' ')"
         Show-Note "check-in failed (exit $($p.ExitCode)): see data\checkin.log"
         return
     }
@@ -84,6 +90,7 @@ try {
     $mins = if ($j.duration_ms) { "{0:n0}" -f ([double]$j.duration_ms / 60000) } else { "?" }
     $flag = if ($j.is_error) { "ERROR " } else { "" }
     if ($bad.Count) { $flag += "OTHER MODEL USED ($($bad -join ', ')) " }
+    if (-not $models.Count) { $flag += "NO MODEL REPORTED " }   # cannot confirm it was Opus
     Write-Log ("{0}ok in {1} min, list price `${2}, models {3}: {4}" -f $flag, $mins, $cost, ($models -join ","), $last.Trim())
     Show-Note $last.Trim()
 } finally {

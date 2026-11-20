@@ -31,18 +31,19 @@ def main() -> int:
         for rule, t in df.groupby("rule", sort=False):
             hold = t[t["policy"].str.startswith("hold")].iloc[0]
             cand = t[~t["policy"].str.startswith("hold")]
-            best = cand.loc[cand["is_cagr"].idxmax()] if cand["is_cagr"].notna().any() else None
+            best = (cand.loc[cand["is_cagr"].idxmax()]
+                    if "is_cagr" in cand and cand["is_cagr"].notna().any() else None)
             fam = cand.assign(fam=cand["policy"].map(family)).groupby("fam")
             d = {"sample": tag, "rule": rule.replace("NO at mid <= 5c, <= 30d, spread <= 5c", "5-cent rule")
                  .replace("NO where YES is at 5-35c", "NO vs YES 5-35c"),
                  "out bets": int(hold.get("oos_bets", 0) or 0),
-                 "hold in/bet": hold["is_ret"], "hold out/bet": hold.get("oos_ret"),
+                 "hold in/bet": hold.get("is_ret"), "hold out/bet": hold.get("oos_ret"),
                  "hold out/yr": hold.get("oos_cagr"), "hold out dd": hold.get("oos_maxdd"),
                  "hold out tail": hold.get("oos_tail_ok")}
             if best is not None:
                 d.update({"chosen in sample": best["policy"], "its out/bet": best.get("oos_ret"),
                           "its out/yr": best.get("oos_cagr"), "its out dd": best.get("oos_maxdd")})
-            for name, g in fam:
+            for name, g in fam if "oos_ret" in t else ():        # a rule with no bets out of sample: nothing to count
                 d[f"{name}: beat hold out/bet"] = f"{int((g['oos_ret'] > hold.get('oos_ret')).sum())}/{len(g)}"
             rows.append(d)
     out = pd.DataFrame(rows)

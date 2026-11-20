@@ -549,6 +549,20 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 5:23 pm CST Nov 20: EVERYTHING PAUSED at the user's word ("Pause"). Download and paper loop stopped (no cycle
   was running), both Windows tasks (Check-in, Jobs) disabled, no session reminders left. To resume: enable both
   tasks and run `research\start_jobs.ps1 -PaperLoop`.
+- 6:30 pm CST Nov 20 (still paused): TESTS FOR EVERYTHING (the user: "You can delete anything and please make
+  tests for anything you can"). Deleted `data\_pc_before_bundle`, `data\_ledger_snapshot_0306` and data\tmp's
+  contents. Five new test files (scripts, src gaps, downloader, research tools, the check-in script with a fake
+  claude): 214 -> 440 tests, coverage 68% -> 99%. Bugs they found, all fixed:
+  downloader: a transient error wrote a series' schedule off (early=-1); one failing market was re-requested
+  without end in the same pass; tickers with "%" were encoded twice and written off (GPT%-23DEC31 reset to
+  be fetched again). panel: the liquid-census floors were lost (pandas 3 merges drop attrs). portfolio.run put
+  a bet in or out of sample by its release time, not its market's close (as Panel.evaluate does): replay
+  numbers near the 2026-04-01 split can move slightly on a re-run. analyze_rule and exit_study crashed on a
+  rule with no bets; exit_summary on such a file; combined.py turned an unknown --exit name into "hold" and
+  overwrote combined_hold.csv (now an error). forecast.py: claude JSON that is not an object crashed the
+  market's remaining runs; the "only N of M runs valid" count was wrong. checkin.ps1: the exit code of a
+  failed claude run was never logged; an answer reporting no model is now flagged "NO MODEL REPORTED";
+  -ClaudeExe, -DataDir and -NoNote added for the tests only. replay_wide crashed without a main ledger.
 
 ## How to run a round
 

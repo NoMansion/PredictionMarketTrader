@@ -188,7 +188,10 @@ def load(db_path: str | Path = DB, categories: list[str] | None = None, min_bars
     df["r_no_mk"] = np.where(df["f3_no"], ((1 - y) - c) / c, np.nan).astype("float32")
     df["oos"] = df["close_ts"] >= SPLIT_TS
     df = df[df["nbars"] >= min_bars].reset_index(drop=True)
-    return ladder(df)
+    df = ladder(df)
+    if floors:                                      # set last: merges drop attrs (pandas 3)
+        df.attrs["floors"] = floors
+    return df
 
 
 def ladder(df: pd.DataFrame) -> pd.DataFrame:

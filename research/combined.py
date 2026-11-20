@@ -79,7 +79,9 @@ def main() -> int:
     f = Features(p)
     titles = titles_for(df, args.db)
     ex = Exits(p)
-    pol = next((x for x in policies() if x.name == args.exit), HOLD) if args.exit else HOLD
+    pol = next((x for x in policies() if x.name == args.exit), None) if args.exit else HOLD
+    if pol is None:                    # an unknown name must not quietly become "hold" and overwrite its results
+        raise SystemExit(f"unknown exit policy {args.exit!r}; known: " + "; ".join(x.name for x in policies()))
     catcol = df["category"].to_numpy(object)
     legs = []
     for label, name, side, entry, leg_cats in LEGS:

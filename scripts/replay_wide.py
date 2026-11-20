@@ -29,7 +29,7 @@ def main() -> int:
         if not path.exists():
             print(f"{name}: no ledger yet")
             continue
-        trades, paths, settle, ends, sells = load(path, [main_db])
+        trades, paths, settle, ends, sells = load(path, [main_db] if main_db.exists() else [])
         print(f"\n== {name}: {len(trades)} orders recorded, {sum(t.filled for t in trades)} filled, "
               f"{sum(1 for t in trades if t.market_id in settle)} in markets that have settled ==")
         print(f"{'setting':48s} {'accept':>6s} {'filled':>6s} {'settl':>5s} {'sold':>4s} {'open':>4s} {'staked':>8s} "

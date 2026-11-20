@@ -91,6 +91,8 @@ def bets_frame(p: Panel, mask: np.ndarray, side: str, entry: str) -> pd.DataFram
 
 
 def report(b: pd.DataFrame, p: Panel, mask: np.ndarray, side: str, entry: str) -> str:
+    if b.empty:
+        return "0 bets: the rule finds nothing in this sample"
     out = []
     w = out.append
     w(f"{len(b):,} bets in {b['event'].nunique():,} events; mean return {b['r'].mean():+.2%} per bet, "

@@ -284,7 +284,13 @@ class ClaudeCodeBackend:
             tail = (stderr or stdout or "").strip().splitlines()[-1:] or ["no output"]
             self.last_error = f"claude exited {code} without JSON: {tail[0][:200]}"
             return None, 0.0
-        cost = float(out.get("total_cost_usd") or 0.0)
+        if not isinstance(out, dict):
+            self.last_error = f"claude exited {code} with JSON that is not an object: {str(stdout).strip()[:200]}"
+            return None, 0.0
+        try:
+            cost = float(out.get("total_cost_usd") or 0.0)
+        except (TypeError, ValueError):
+            cost = 0.0
         if isinstance(out.get("modelUsage"), dict):
             self.served.update(str(k) for k in out["modelUsage"])
         if out.get("is_error"):
@@ -312,7 +318,14 @@ class ClaudeCodeBackend:
         f = aggregate(m.market_id, answers, self.name, model, cost, max_run_spread=self.max_run_spread,
                       min_runs=min(2, self.runs), now=now)
         if f is None and not self.last_error:
-            self.last_error = f"only {len(answers)} of {self.runs} runs gave a valid answer"
+            valid = 0
+            for a in answers:
+                try:
+                    validate(a)
+                    valid += 1
+                except ValueError:
+                    pass
+            self.last_error = f"only {valid} of {self.runs} runs gave a valid answer"
         return f
 
 

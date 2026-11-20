@@ -17,7 +17,6 @@ The data stays on this machine (data/ is not committed): Kalshi's terms do not a
     python research/kalshi_download.py --phase candles --min-volume 200 --max-markets 50000
 """
 import argparse
-from urllib.parse import quote
 import sqlite3
 import sys
 import time
@@ -172,6 +171,9 @@ def phase_backfill(db, k, categories, census_volume):
         try:
             rows = [(*schedule(m), m["ticker"]) for m in k.pages("/historical/markets", "markets", tries=3, series_ticker=series)]
             db.executemany("UPDATE markets SET exp_ts=?, early=? WHERE ticker=?", rows)
+            # whatever the archive no longer lists must not be asked for again (only after a full answer: a
+            # failed read says nothing about what is listed, and the series is tried again on the next run)
+            db.execute("UPDATE markets SET early=-1 WHERE series=? AND early IS NULL AND src='hist'", (series,))
             failures = 0
         except KalshiError as e:
             failures += 1
@@ -179,8 +181,6 @@ def phase_backfill(db, k, categories, census_volume):
             if failures >= 5:
                 break
             time.sleep(60)
-        # whatever the archive no longer lists must not be asked for again
-        db.execute("UPDATE markets SET early=-1 WHERE series=? AND early IS NULL AND src='hist'", (series,))
         db.commit()
         if i % 200 == 0:
             log(f"backfill: {i}/{len(todo)} series; {k.requests} requests, {k.rate_limited} rate limits")
@@ -208,10 +208,12 @@ def phase_candles(db, k, categories, min_volume, max_markets, max_days, biggest_
     cats = [c for c in categories if db.execute("SELECT 1 FROM markets WHERE category=? AND candles_done=0 AND volume>=? LIMIT 1",
                                                 (c, min_volume)).fetchone()]
     log(f"candles ({'census, volume >= %g' % min_volume if biggest_first else 'random order'}): categories with work: {cats}")
+    retry_later: set[str] = set()                   # failed for a passing reason in this pass: not picked again in it
     while cats and done < max_markets:
         for cat in list(cats):                      # round-robin across categories
             rows = db.execute("SELECT ticker, series, open_ts, close_ts, src FROM markets WHERE category=? AND candles_done=0 "
-                              f"AND volume>=? ORDER BY {order} LIMIT 40", (cat, min_volume)).fetchall()
+                              f"AND volume>=? ORDER BY {order} LIMIT ?", (cat, min_volume, 40 + len(retry_later))).fetchall()
+            rows = [r for r in rows if r[0] not in retry_later][:40]
             if not rows:
                 cats.remove(cat)
                 continue
@@ -221,9 +223,10 @@ def phase_candles(db, k, categories, min_volume, max_markets, max_days, biggest_
                     status = 3
                 else:
                     start = max(o, cl - max_days * 86400)
-                    safe = quote(ticker, safe="")       # a few old tickers contain "%" or spaces
-                    path = (f"/historical/markets/{safe}/candlesticks" if src == "hist"
-                            else f"/series/{quote(series or '', safe='')}/markets/{safe}/candlesticks")
+                    # a few old tickers contain "%" or spaces: KalshiHTTP.get encodes the path once (encoding it
+                    # here as well sent "%2525" and got a 404, which wrote the market off)
+                    path = (f"/historical/markets/{ticker}/candlesticks" if src == "hist"
+                            else f"/series/{series or ''}/markets/{ticker}/candlesticks")
                     try:
                         cs = k.get(path, start_ts=start, end_ts=cl + 86400, period_interval=1440).get("candlesticks") or []
                         db.executemany("INSERT OR IGNORE INTO candles VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", candle_rows(ticker, cs))
@@ -243,6 +246,8 @@ def phase_candles(db, k, categories, min_volume, max_markets, max_days, biggest_
                         time.sleep(10)
                 if status:
                     db.execute("UPDATE markets SET candles_done=? WHERE ticker=?", (status, ticker))
+                else:
+                    retry_later.add(ticker)
                 done += 1
             db.commit()
             if done % 2000 < 40:

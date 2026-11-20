@@ -18,7 +18,6 @@ from dataclasses import dataclass
 
 import numpy as np
 
-import panel
 from backtest import Panel
 
 DAY = 86400.0
@@ -41,12 +40,14 @@ class Account:
                 f"{prefix}_years": self.years}
 
 
-def entries(p: Panel, rules: list[tuple[np.ndarray, str, str]]) -> np.ndarray:
+def entries(p: Panel, rules: list[tuple[np.ndarray, str, str]], with_oos: bool = False):
     """Rows of the first qualifying bar of each market across all rules -> array of (entry ts, close ts, return,
-    event code), sorted by entry time."""
+    event code), sorted by entry time. with_oos: also the out-of-sample flag of each bet, taken from the panel (by
+    the market's close, as Panel.evaluate does), not from the release time, which is at least a day after entry."""
     ts = p.col("ts").astype("float64")
     close = p.col("close_ts").astype("float64")
     best: dict[int, tuple[float, float, float, int]] = {}
+    oos: dict[int, bool] = {}
     for mask, side, entry in rules:
         key = (side, entry)
         rows = p.first_per_market(mask & p.ok[key])
@@ -55,11 +56,13 @@ def entries(p: Panel, rules: list[tuple[np.ndarray, str, str]]) -> np.ndarray:
             t = int(p.ticker[i])
             if t not in best or ts[i] < best[t][0]:
                 best[t] = (ts[i], max(close[i], ts[i] + DAY), float(r[i]), int(p.event[i]))
+                oos[t] = bool(p.oos[i])
     # Bets of the same day are taken in an order that has nothing to do with how they ended. (Until 2026-11-19
     # this sorted ties by return, losers first: with a cap per event that made the account always hold the one
     # losing outcome of a big event, and the replay too pessimistic.)
     order = sorted(best, key=lambda t: (best[t][0], (t * 2654435761) % 4294967296))
-    return np.array([best[t] for t in order], dtype="float64") if best else np.zeros((0, 4))
+    b = np.array([best[t] for t in order], dtype="float64") if best else np.zeros((0, 4))
+    return (b, np.array([oos[t] for t in order], dtype=bool)) if with_oos else b
 
 
 def simulate(bets: np.ndarray, stake_frac: float = 0.01, event_cap: float = 0.03, max_exposure: float = 0.5,
@@ -117,9 +120,7 @@ def simulate(bets: np.ndarray, stake_frac: float = 0.01, event_cap: float = 0.03
 
 def run(p: Panel, rules: list[tuple[np.ndarray, str, str]], **kw) -> tuple[Account, Account]:
     """(in sample, out of sample): each period simulated on its own from a fresh bankroll."""
-    b = entries(p, rules)
+    b, o = entries(p, rules, with_oos=True)
     if len(b) == 0:
         return Account(), Account()
-    ins = b[b[:, 1] < panel.SPLIT_TS]
-    oos = b[b[:, 1] >= panel.SPLIT_TS]
-    return simulate(ins, **kw), simulate(oos, **kw)
+    return simulate(b[~o], **kw), simulate(b[o], **kw)

@@ -126,7 +126,7 @@ def main() -> int:
               f"({int(hold['is_bets'])} bets in sample, {int(hold.get('oos_bets', 0))} out) ===")
         print(show(t))
         cand = t.iloc[1:]
-        if len(cand) and cand["is_cagr"].notna().any():
+        if len(cand) and "is_cagr" in cand and cand["is_cagr"].notna().any():
             best = cand.loc[cand["is_cagr"].idxmax()]
             print(f"chosen in sample (best replay a year at {args.stake:.0%}): {best['policy']}: in {best['is_cagr']:+.2%}/y "
                   f"vs hold {hold['is_cagr']:+.2%}/y; OUT OF SAMPLE {best.get('oos_cagr', float('nan')):+.2%}/y vs hold "
