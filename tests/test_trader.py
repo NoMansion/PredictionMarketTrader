@@ -410,3 +410,66 @@ def test_order_is_capped_at_a_share_of_the_nearby_depth(ledger, tmp_path):
     run(tr)
     o = ledger.q("SELECT * FROM orders")[0]
     assert o["usd"] <= 0.25 * (0.48 * 40 + 0.47 * 80) + 0.01 and o["usd"] < 20.0
+
+
+# ---- selling before settlement on price alone (variant accounts; off for the paper bot) -----------------------
+
+def bought(ledger, tmp_path, **execution):
+    """A taker YES position in cpi-above-3 bought at the 0.50 ask, then the cycle loop's view of it."""
+    ex, fc, tr = setup(ledger, tmp_path, {"cpi-above-3": 0.75}, execution={"style": "taker", **execution})
+    run(tr)
+    assert len(ledger.positions()) == 1
+    return ex, fc, tr
+
+
+def test_take_profit_price_sells_without_waiting_for_a_new_forecast(ledger, tmp_path):
+    ex, fc, tr = bought(ledger, tmp_path, take_profit_price=0.60)
+    ex.set_book("cpi-above-3", 0.58, 0.60)
+    r = run(tr, NOW + 2 * H)                                     # the forecast is 2 h old: still fresh, no new one
+    assert ledger.positions() != []                              # bid 0.58: not yet
+    ex.set_book("cpi-above-3", 0.61, 0.63)
+    r = run(tr, NOW + 9 * H)                                     # forecast now stale (6 h): the price rule acts anyway
+    assert ledger.positions() == [] and any("take profit" in line for line in r.log)
+    assert ledger.cash() > 1000.0                                # bought at 0.50, sold at 0.61 less fees
+    d = ledger.q("SELECT * FROM decisions WHERE action='SELL'")
+    assert len(d) == 1 and "take profit" in d[0]["reason"]
+
+
+def test_take_profit_gain_and_stop_loss_are_measured_from_the_price_paid(ledger, tmp_path):
+    ex, fc, tr = bought(ledger, tmp_path, take_profit_gain=0.15, stop_loss_drop=0.10)
+    paid = ledger.positions()[0]["cost"] / ledger.positions()[0]["shares"]
+    assert 0.50 <= paid < 0.53                                    # the ask plus the fee
+    ex.set_book("cpi-above-3", 0.44, 0.46)                        # mid 0.45: down 5 to 8 points, inside the stop
+    run(tr, NOW + 8 * H)
+    assert ledger.positions() != []
+    ex.set_book("cpi-above-3", 0.38, 0.40)                        # mid 0.39: more than 10 points under
+    r = run(tr, NOW + 16 * H)
+    assert ledger.positions() == [] and any("stop loss" in line for line in r.log)
+    assert ledger.cash() < 1000.0
+
+
+def test_time_exit_sells_before_the_scheduled_end(ledger, tmp_path):
+    ex, fc, tr = bought(ledger, tmp_path, sell_days_before_end=3)  # the market ends 20 days after NOW
+    run(tr, NOW + 10 * 24 * H)
+    assert ledger.positions() != []
+    r = run(tr, NOW + 17.5 * 24 * H)
+    assert ledger.positions() == [] and any("time exit" in line for line in r.log)
+
+
+def test_hold_only_account_ignores_a_reversed_forecast(ledger, tmp_path):
+    ex, fc, tr = bought(ledger, tmp_path, exit_on_forecast=False)
+    fc.table["cpi-above-3"] = 0.20                               # the case where the paper bot sells (test above)
+    r = run(tr, NOW + 49 * H)
+    assert len(ledger.positions()) == 1 and not any("SELL" in line for line in r.log)
+
+
+def test_price_exits_are_off_unless_configured(ledger, tmp_path):
+    ex, fc, tr = bought(ledger, tmp_path)
+    ex.set_book("cpi-above-3", 0.97, 0.99)
+    run(tr, NOW + 8 * H)                                         # a huge gain, no rule configured, no fresh forecast
+    assert len(ledger.positions()) == 1
+
+
+def test_misspelt_execution_setting_is_an_error(ledger, tmp_path):
+    with pytest.raises(ValueError, match="take_profit_prize"):
+        setup(ledger, tmp_path, {}, execution={"take_profit_prize": 0.9})

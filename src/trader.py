@@ -41,6 +41,11 @@ class CycleResult:
         self.log.append(msg)
 
 
+EXECUTION_KEYS = {"style", "tick", "resting_ttl_hours", "depth_haircut", "max_depth_share", "exit_margin",
+                  "reentry_cooldown_hours", "track_forecasts_days", "trade_low_confidence", "take_profit_price",
+                  "take_profit_gain", "stop_loss_drop", "sell_days_before_end", "exit_on_forecast"}
+
+
 class Trader:
     def __init__(self, cfg: dict, ledger: Ledger, venue, forecaster, root=".", heartbeat=None):
         self.cfg, self.ledger, self.venue, self.forecaster, self.root = cfg, ledger, venue, forecaster, root
@@ -48,9 +53,27 @@ class Trader:
         self.rules = SizingRules.from_config(cfg.get("sizing"))
         self.fees = FeeModel.from_config(cfg)
         ex = cfg.get("execution") or {}
+        unknown = sorted(set(ex) - EXECUTION_KEYS)
+        if unknown:                                     # a misspelt rule must not silently do nothing
+            raise ValueError(f"unknown execution setting(s) in config: {', '.join(unknown)}")
         self.style = str(ex.get("style", "passive")).lower()
         self.tick = float(ex.get("tick", 0.01))
         self.exit_margin = float(ex.get("exit_margin", 0.03))
+        # Selling before settlement on price alone (research/exits.py measures the same rules on history). All off
+        # for the paper bot; variant accounts switch them on. Checked every cycle, fresh forecast or not.
+        #   take_profit_price   sell when our side's bid reaches this price
+        #   take_profit_gain    sell when our side's bid is this many points above the average price paid
+        #   stop_loss_drop      sell when our side's mid is this many points below the average price paid
+        #   sell_days_before_end  sell when the market's scheduled end is this many days away or less
+        #   exit_on_forecast    the forecast-based exit (a fresh forecast says the bid is worth more than holding)
+        def opt(key):
+            v = ex.get(key)
+            return None if v is None else float(v)
+        self.take_profit_price = opt("take_profit_price")
+        self.take_profit_gain = opt("take_profit_gain")
+        self.stop_loss_drop = opt("stop_loss_drop")
+        self.sell_days_before_end = opt("sell_days_before_end")
+        self.exit_on_forecast = bool(ex.get("exit_on_forecast", True))
         self.track_days = float(ex.get("track_forecasts_days", 7.0))
         self.reentry_cooldown_s = float(ex.get("reentry_cooldown_hours", 72.0)) * 3600.0
         self.max_depth_share = float(ex.get("max_depth_share", 0.25))
@@ -196,33 +219,68 @@ class Trader:
         res.say(f"{market_id}: settled, YES pays {pay:g}, ${credited:,.2f} credited")
 
     # ---- 3. exits -------------------------------------------------------------------
+    def _price_exit(self, pos, yes, book, now: float) -> str | None:
+        """The price-only exit rules (all off unless configured). Returns why to sell, or None."""
+        if all(v is None for v in (self.take_profit_price, self.take_profit_gain, self.stop_loss_drop,
+                                   self.sell_days_before_end)):
+            return None
+        shares = float(pos["shares"])
+        paid = float(pos["cost"]) / shares if shares > 0 else None
+        bid = book.best_bid
+        mine = None if yes.mid is None else (yes.mid if pos["outcome"] == "YES" else 1.0 - yes.mid)
+        if bid is not None and bid > 0:
+            if self.take_profit_price is not None and bid >= self.take_profit_price - 1e-9:
+                return f"take profit: bid {bid:.3f} reached {self.take_profit_price:.2f}"
+            if self.take_profit_gain is not None and paid is not None and bid >= paid + self.take_profit_gain - 1e-9:
+                return f"take profit: bid {bid:.3f} is {bid - paid:+.3f} over the {paid:.3f} paid"
+        if self.stop_loss_drop is not None and paid is not None and mine is not None \
+                and mine <= paid - self.stop_loss_drop + 1e-9:
+            return f"stop loss: mid {mine:.3f} is {mine - paid:+.3f} under the {paid:.3f} paid"
+        if self.sell_days_before_end is not None:
+            m = self._markets.get(pos["market_id"])
+            end = m.end_ts if m is not None and m.end_ts else None
+            if end is None:
+                row = self.ledger.market(pos["market_id"])
+                end = row["end_ts"] if row else None
+            if end is not None and float(end) - now <= self.sell_days_before_end * DAY:
+                return f"time exit: {(float(end) - now) / DAY:.1f} days to the scheduled end"
+        return None
+
+    def _sell(self, pos, book, why: str, res: CycleResult, now: float, forecast=None, p_market=None) -> None:
+        mid, side = pos["market_id"], pos["outcome"]
+        did = self.ledger.add_decision({"ts": now, "run_id": res.run_id, "market_id": mid,
+                                        "forecast_id": forecast["id"] if forecast else None, "action": "SELL",
+                                        "reason": why, "p_model": forecast["p_yes"] if forecast else None,
+                                        "p_market": p_market})
+        known = self._markets.get(mid)
+        sold = self.broker.sell_taker(res.run_id, mid, side, book, float(pos["shares"]), limit=book.best_bid - 0.02,
+                                      category=self._category(mid), decision_id=did, now=now,
+                                      fee_rate=known.fee_rate if known else None)
+        res.say(f"{mid}: SELL {sold:g} {side} ({why})")
+        res.stats["exits"] = res.stats.get("exits", 0) + 1
+
     def exits(self, res: CycleResult, now: float) -> None:
         max_age = safety.settings(self.cfg)["max_forecast_age_hours"] * 3600.0
         for pos in self.ledger.positions():
             mid, side = pos["market_id"], pos["outcome"]
             f = self.ledger.latest_forecast(mid)
-            if not f or now - float(f["ts"]) > max_age:
-                continue                                         # no fresh view: hold, it gets re-forecast first
-            if f["run_id"] == res.run_id:                        # forecast made this cycle: the book read before it is stale
+            fresh = bool(f) and now - float(f["ts"]) <= max_age
+            if fresh and f["run_id"] == res.run_id:              # forecast made this cycle: the book read before it is stale
                 self._books.pop(mid, None)
             b = self._load_books(mid, res)
             if not b:
                 continue
             yes, no, _ = b
             book = yes if side == "YES" else no
-            if yes.mid is None:
+            why = self._price_exit(pos, yes, book, now)
+            if why and book.best_bid:
+                self._sell(pos, book, why, res, now, forecast=f if fresh else None, p_market=yes.mid)
                 continue
+            if not self.exit_on_forecast or not fresh or yes.mid is None:
+                continue                                         # no fresh view: hold, it gets re-forecast first
             sell, why = exit_signal(side, float(f["p_yes"]), yes.mid, book.best_bid, self.rules, self.exit_margin)
-            if not sell:
-                continue
-            did = self.ledger.add_decision({"ts": now, "run_id": res.run_id, "market_id": mid, "forecast_id": f["id"],
-                                            "action": "SELL", "reason": why, "p_model": f["p_yes"], "p_market": yes.mid})
-            known = self._markets.get(mid)
-            sold = self.broker.sell_taker(res.run_id, mid, side, book, float(pos["shares"]), limit=book.best_bid - 0.02,
-                                          category=self._category(mid), decision_id=did, now=now,
-                                          fee_rate=known.fee_rate if known else None)
-            res.say(f"{mid}: SELL {sold:g} {side} ({why})")
-            res.stats["exits"] = res.stats.get("exits", 0) + 1
+            if sell:
+                self._sell(pos, book, why, res, now, forecast=f, p_market=yes.mid)
 
     # ---- 4. forecast ------------------------------------------------------------------
     def forecast(self, res: CycleResult, now: float) -> list[tuple[Market, Forecast, int, float]]:

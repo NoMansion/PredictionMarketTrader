@@ -82,3 +82,43 @@ variants:
     overrides:
       sizing: {max_category_pct: 1.0, max_total_exposure_pct: 1.0}
       safety: {max_orders_per_day: 1000, max_deploy_per_day_pct: 1.0}
+
+  # ---- exit accounts (added 2026-11-20, 4:05 am CST) -----------------------------------------------------------
+  # The user asked to see "how selling before settlement can impact things". Each is the same entry rule as an
+  # account above, with ONE change to when it sells; compare each with its pair (claude_only, or main for blend30).
+  # The paper bot and every account above sell when a fresh forecast says the bid is worth more than holding.
+  # The backtest of the same price rules on mechanical bets is research/exit_study.py (report 3.28).
+  blend30_hold:
+    about: "EXIT: the main account's rule, but never sells before settlement, whatever a new forecast says"
+    overrides:
+      execution: {exit_on_forecast: false}
+
+  claude_only_hold:
+    about: "EXIT: Claude alone, never sells before settlement (pair: claude_only)"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {exit_on_forecast: false}
+
+  claude_only_take10:
+    about: "EXIT: Claude alone, also takes the profit once its side is bid 10 points over the price paid"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {take_profit_gain: 0.10}
+
+  claude_only_stop15:
+    about: "EXIT: Claude alone, also cuts the loss once its side's mid is 15 points under the price paid"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {stop_loss_drop: 0.15}
+
+  claude_only_take_stop:
+    about: "EXIT: Claude alone, take profit at +10 points and stop at -15 points"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {take_profit_gain: 0.10, stop_loss_drop: 0.15}
+
+  claude_only_last3d:
+    about: "EXIT: Claude alone, sells everything 3 days before the scheduled end (no settlement risk at the end)"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {sell_days_before_end: 3}
