@@ -1,4 +1,4 @@
-# Strategy research on Kalshi history
+﻿# Strategy research on Kalshi history
 *Started Wednesday 2026-11-18. A running report: newest status first, then method, then one dated section per
 round. Nothing here has been traded, on paper or otherwise.*
 
@@ -1214,3 +1214,115 @@ main one, 9 that follow Claude under other rules, 2 controls): nothing has settl
 equity $995.46 to $999.73 for the accounts that follow Claude, both controls $1,000.00 with nothing filled.
 Observation log of the 5-cent rule: 13 markets seen, none settled; 6 resting bids decided, all 6 filled
 (the backtest's model assumes 55% to 60%).
+
+### 3.28 Selling before settlement; the 5-cent rule on a larger census; one account for the survivors (4:20 am CST, November 20)
+
+**What was asked.** The user: implement the open coding items and be thorough, "especially curious to see how
+selling before settlement can impact things". Built and tested (214 tests): `research/exits.py` (follows each
+historical bet bar by bar after entry and sells on a take-profit, stop-loss or time rule, at prices the market
+offered LATER: a taker exit at the next bar's opening bid less the fee, a resting exit only if the market traded
+through it), `research/exit_study.py` (a grid of 25 exit policies, fixed before any exit result was seen),
+`research/combined.py` (several rules in one account), `research/exit_summary.py`, price-only exits for the paper
+accounts (`src/trader.py`, six new exit accounts in `variants.yaml`), and the replay of the wide accounts' own
+records (`src/replay.py`, `scripts/replay_wide.py`). Held to settlement, the exit engine reproduces
+`analyze_rule.py` to the cent (checked on the live data and in `tests/test_exits.py`).
+
+**1. Exits, mechanical rules (5 years of Kalshi history).** Each rule × 25 policies, in sample (closing before
+2026-04-01) and out of sample; the policy is chosen in sample by its account replay and judged out of sample.
+Out-of-sample return per bet, holding against the best policy of each family (count = policies of that family
+that beat holding out of sample):
+
+| Sample | Rule | Bets out | Hold, per bet | Take-profit (12) | Stop-loss (6) | Time exit (3) | Take + stop (3) |
+|---|---|---|---|---|---|---|---|
+| nine categories, busy | 5-cent rule, resting | 1,862 | +0.72% | 0 beat hold | 0 | 0 | 0 |
+| nine categories, busy | 5-cent rule, taker | 3,048 | +0.02% | 0 | 0 | 0 | 0 |
+| nine categories, busy | NO vs YES 5-35c, resting | 5,420 | -2.32% | 0 | 0 | 0 | 0 |
+| twelve categories, busy | 5-cent rule, resting | 2,377 | +0.79% | 0 | 0 | 0 | 0 |
+| Entertainment, busy | NO vs YES 5-35c, resting | 643 | +7.16% | 0 | 0 | 0 | 0 |
+| Entertainment, busy | 5-cent rule, resting | 403 | +0.78% | 0 | 5 of 6 | 0 | 2 of 3 |
+| Climate and Weather, busy | NO vs YES 5-35c, resting | 71 | +8.17% | 0 | 0 | 0 | 0 |
+| Mentions, busy | both rules | 44-84 | -0.4% to +3.3% | 0 | 0 to 2 | 0 | 0 |
+| nine categories, random | both rules | 2,425-10,316 | -0.1% to -4.8% | 0 | 0 | 0 | 0 |
+| Entertainment, random | both rules | 533-1,377 | -1.9% to +0.1% | 0 | 0 | 0 | 0 |
+
+Out of 32 rule-and-sample cases (eight samples, four rules), **take-profits never beat holding out of sample (0 of
+384 tries), time exits never did (0 of 96), and stop-losses did in four cases, all small**: the 5-cent rule in
+Entertainment (resting and taker, 403 and 549 bets, where holding was already weak: +0.78% and -0.13% a bet)
+and the wide NO rule in Mentions (44 and 52 bets). What the grid shows, read across all of them:
+- **Stops are the costliest idea.** They sell a longshot NO after the YES has jumped, which is exactly when it
+  most often comes back down: the 5-cent rule in nine categories goes from +0.72% a bet to -1.4% (stop at -10
+  points) and -1.8% (stop at -5); every stop raises the number of LOSING events (55 to 105-183 out of sample),
+  because a stopped-out bet is a certain small loss where holding was mostly a win. The rare total loss is what
+  a stop should prevent; on daily bars it usually cannot (the jump happens within a day; the sale is at the next
+  open), and the many false alarms cost more than the few saves.
+- **Taking profit at 97-99 cents gives away the last cents that are the whole edge** of a bet bought at 95-96
+  cents: the 5-cent rule earns about +1 cent per contract, and a taker exit pays a spread and a fee to save the
+  last 1-2. Resting the sale at the ask is cheaper and hurts less (take at 0.99 resting: +0.69% against +0.72%).
+- **Selling days before the scheduled end throws away the decay** the rule is paid for: 1, 3 or 7 days early
+  costs 1 to 2.5 points a bet.
+- **What an exit does buy is capital time**: money comes back earlier and is staked again. On the account
+  replay this sometimes outweighs the lower return per bet (Entertainment's NO rule: take at 98c resting, +32%
+  a year out of sample against +27% holding, at 1% a bet), but never reliably, and the per-bet return falls in
+  every such case.
+- Caveat for all of it: daily bars. An exit can only happen at the next day's open, which is fair to a bot that
+  checks once a day (the paper bot checks every 2 hours) but pessimistic for stops in fast markets. Hourly bars
+  for the last days are still not downloaded.
+
+**2. The same question for the whole account (combined replay, 0.5% a bet).** Four legs in one account: the
+5-cent rule resting on the nine categories; NO against YES at 5-35c resting in Entertainment and in Climate and
+Weather; the 5-cent rule resting in Entertainment. Out of sample (0.93 years):
+
+| Exit rule | Return a year | Worst drawdown | Sharpe | At work |
+|---|---|---|---|---|
+| hold to settlement | +15.3% | 5.4% | 2.73 | 25% |
+| take at 98c, resting | +14.6% | 5.4% | 2.47 | 24% |
+| stop at -10 points | -2.1% | 4.7% | -0.31 | 24% |
+| take 99c resting + stop -10 | -2.1% | 4.8% | -0.33 | 23% |
+
+In sample (4.7 years): +7.6%, +8.1%, +1.1%, +1.1% a year, drawdowns 8.6% to 18.6%. **Holding to settlement is
+the best or tied-best exit for the combined account too.** Combining helps (the 5-cent rule alone: +5.6% a year
+out of sample at 0.5%, drawdown 3.7%), but most of the combined return is the Entertainment leg, which was
+FOUND on Entertainment's data (3.24): its in-sample half is not independent evidence, and only its out-of-sample
+half counts. At 1% and 2% a bet the combined account does worse out of sample (+12.2%, +2.6% a year): the event
+cap binds and the 5-cent leg's losses grow faster than its gains.
+
+**3. The 5-cent rule on the larger census: it now fails at the default level, and passes on busy markets.**
+Since 3.22 the download has gone further down the volume ladder: the nine-category busy sample grew from 26,635
+to 39,858 markets. At the new default level (the lowest level complete in each category), the resting rule's
+mean fell to +0.91% a bet and it **no longer passes the tail test out of sample** (55 losing events of 828, 95%
+bound 8.25% against a break-even of 8.14%); replay at 1%: +2.4% a year in sample, -0.5% out of sample, worst
+drawdown 12.3%. By the level of trading a market had reached (the 45,000-contract level is the one used since
+3.7; the others are the neighbours):
+
+| Contracts traded so far | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay at 1%, in / out a year | Worst drawdown |
+|---|---|---|---|---|---|---|
+| 5,000 (Economics not yet complete there) | 1,981 (1,088) | +1.29% | 28 of 699 / 23 of 415 | passes / fails | +1.5% / +2.6% | 4.5% / 5.9% |
+| 20,000 | 1,637 (945) | +2.40% | 16 of 652 / 8 of 315 | passes / passes | +3.3% / +19.9% | 3.3% / 2.3% |
+| 45,000 | 1,188 (716) | +2.07% | 16 of 505 / 4 of 227 | passes / passes | +1.6% / +18.1% | 3.0% / 1.5% |
+| default (lowest complete) | 4,514 (2,238) | +0.91% | 84 of 1,442 / 55 of 828 | passes / fails | +2.4% / -0.5% | 12.3% / 8.1% |
+
+So the rule lives in markets that are already busy, and the quiet markets the download added are where its rare
+total losses come from (KXAPRPOTUS and KX538APPROVE, approval-rating ranges, are the two biggest series and both
+lose money). Choosing a level after seeing this is one more variant tried; the 45,000 level was fixed in 3.7,
+before any of this, and it passes. Capacity stays small: median $72 traded in the week before a resting entry at
+the default level.
+
+**4. The Entertainment lead, both samples.** Busy markets (7,385 markets, 846 events with a bet): NO against YES
+at 5-35c resting, +7.28% a bet, **tail test passes in both halves** (144 of 584 and 58 of 267 losing events,
+bounds 27.8% and 26.3% against break-evens of 37.5% and 34.7%), replay at 0.5%: +7.6% a year in sample, +25.0%
+out of sample, drawdowns 2.5% and 2.8%; capacity a median $2,140 traded in the week before entry, the best of any
+rule so far. Random sample (13,584 markets): the same rule LOSES (-0.60% a bet, tail test fails both halves,
+replay -1.6% and -7.6% a year). Like the 5-cent rule, it is a busy-market effect. With the random sample against
+it, and found on this data, it stays a lead: the forward observation log is the place to test it.
+
+**5. Forward.** Six exit accounts started at 4:04 am (`blend30_hold`, `claude_only_hold`, `claude_only_take10`,
+`claude_only_stop15`, `claude_only_take_stop`, `claude_only_last3d`): the same Claude forecasts, each with one
+change to when it sells, against a pair that differs in nothing else; 18 accounts in all. The replay of the wide
+accounts works (tested on a ledger with known answers) and has nothing to say yet: 0 of their markets have
+settled. Main account $1,001.67, 88 forecasts, none resolved.
+
+**What this changes, and what it does not.** Nothing reaches the paper bot. The paper bot keeps its rule (sell
+only when a fresh forecast says the bid is worth more than holding; no price stops). For the mechanical rules,
+the history says: hold to settlement, rest the entry, and trade only markets that are already busy. Open for the
+user: a second paper account for the 5-cent rule restricted to markets with 45,000+ contracts traded, and a
+forward observation band (no orders) for NO against YES at 5-35c in busy Entertainment markets.

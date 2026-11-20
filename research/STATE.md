@@ -1,4 +1,4 @@
-# Research loop: state
+﻿# Research loop: state
 
 The user asked (2026-11-18, before going to bed) for strategy research to keep running: every strategy family
 that can be tested, and combinations of families, with settings varied. This file is what each check-in
@@ -8,16 +8,18 @@ reads first. Keep it short and current. Findings go in the report; this is the c
 
 - The paper bot's forecaster already runs on Opus (`forecaster.model: opus`; every forecast in the ledger is
   claude-opus-5-5, with Claude Code's own small helper calls on Haiku). Leave it.
-- THE APP'S CHECK-IN IS SWITCHED OFF (enabled = false, since 3:14 am CST Nov 20), because its runs started on
-  the app's default model, Fable 5.2 (every run so far; the task record has no model field). A
-  `model: claude-opus-5-5` line was added to its SKILL.md front matter, but whether the app honours it is
-  untested (a test run from Claude was refused by the permission check). Do not switch it back on unless a run
-  is shown to start on Opus, or the user says so.
+- THE CHECK-IN RUNS ON OPUS from the Windows task "PredictionMarketTrader Check-in" (set up 3:55 am CST Nov 20,
+  the user: "Implement ... the fable to opus"): every 3 hours at 12:11, 3:11, 6:11 and 9:11, am and pm, it runs
+  `scripts\checkin.ps1`, which gives `scripts\checkin_prompt.md` to the Claude program headless with
+  `--model claude-opus-5-5` and no fallback model (if Opus is unavailable the run fails rather than answering on
+  another model). Every run's answer, the models really used and the cost: `data\checkin\<time>.json`; one line
+  per run in `data\checkin.log` (a line saying OTHER MODEL USED is a fault: tell the user); its last line is
+  shown as a Windows notification (not a phone push). The plumbing test at 3:51 am used claude-opus-5-5 only.
+- The app's own scheduled check-in (`prediction-market-research-checkin`) stays SWITCHED OFF: its runs started
+  on the app's default model, Fable 5.2, and the task record has no model setting. Do not switch it on.
 - Any Claude session in this project: run on Opus 5.5, never Fable.
-- Until noon Nov 20 the check-ins run inside the user's main session instead (on Opus, the user chose it with
-  /model at 3:20 am): one-shot reminders of that session at about 5:23, 7:23, 9:23 and 11:23 am, and a
-  morning summary at 12:23 pm. They live only in that session: if the app closes, they are gone.
-
+- Until noon Nov 20 the user's main session also has one-shot reminders (it runs on Opus): they check that the
+  Windows check-in ran, and at about 12:23 pm write the user a morning summary. They live only in that session.
 **Report:** `reports/2026-11-18_strategy_research.md` (create on first results; add a dated section per check-in).
 
 ## Standing instruction (2026-11-19, about 3:50 am CST, on the PC)
@@ -34,18 +36,13 @@ session ran continues on the PC without waiting for the user. What that does and
 - "Risk averse" is read as: the rules for judging below stay as they are, a rule is judged by its account
   replay and its worst periods as well as its mean, and capacity in dollars is always reported.
 - What keeps it going (set up 2026-11-19, 3:55 am CST, with the user's yes):
-  - The check-in is a scheduled task of the Claude desktop app, "PredictionMarketTrader check-in (every 3
-    hours)" (id `prediction-market-research-checkin`). EVERY 3 HOURS since 11:05 am CST 2026-11-19, at about
-    11 past 12, 3, 6 and 9, am and pm; hourly before that. The user chose it ("Yes, every 3 hours"): the
-    hourly runs spent about 0.6 points of the weekly Fable allowance each and would have used it up about
-    a day before the Sunday reset. Only the user changes this schedule. Each run is a new session
-    that knows only its prompt and this file: keep this file current. It runs while the app is open; a run
-    missed while the app was closed happens at the next launch. The user manages it under "Scheduled" in
-    the app. UPDATE MESSAGE EVERY RUN (the user, 11:10 am CST 2026-11-19: "can you send an update message
-    every check in"): since 2:45 pm CST each run ends by sending the user a one-line phone/desktop
-    notification itself (PushNotification; part E of its prompt). The first attempt, a completion notice to
-    the user's main session, never arrived (12:11 pm run), so the run now sends its own.
-  - The Windows task "PredictionMarketTrader Jobs" runs `scripts\start_jobs_hidden.vbs` when the user logs
+  - The check-in: the Windows task "PredictionMarketTrader Check-in", every 3 hours, headless on Opus 5.5 (see
+    "No Fable usage" at the top; README "Running it unattended"). Each run is a new session that knows only its
+    prompt and this file: keep this file current. It runs while the user is logged on; a run missed while the PC
+    was off runs when it is next on (StartWhenAvailable). Until 3:14 am Nov 20 the check-in was the Claude app's
+    scheduled task (hourly, then every 3 hours from 11:05 am Nov 19, the user: "Yes, every 3 hours"), which
+    spent the weekly Fable allowance; it is off. UPDATE MESSAGE EVERY RUN (the user, 11:10 am Nov 19: "can you
+    send an update message every check in"): the run's last line, shown as a Windows notification.  - The Windows task "PredictionMarketTrader Jobs" runs `scripts\start_jobs_hidden.vbs` when the user logs
     on: two minutes later it starts the history download and the paper loop if they are not running.
     Remove it with: `Unregister-ScheduledTask -TaskName "PredictionMarketTrader Jobs"`.
   - Neither helps while the PC is off, the user is logged out, or Claude usage is exhausted.
@@ -530,6 +527,19 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   Log-on task re-enabled, both jobs restarted at 3:13 am, a paper cycle began at once. The check-in stays OFF:
   see "No Fable usage" at the top.
 
+- 4:25 am CST Nov 20 (the user's session, on Opus): THE CODING ITEMS ARE DONE (the user: "Implement the coding
+  changes and the fable to opus ... especially curious to see how selling before settlement can impact
+  things"). Report 3.28. Exits before settlement (`research/exits.py`, `exit_study.py`, `exit_summary.py`): 25
+  policies x 32 rule-and-sample cases; take-profits and time exits never beat holding out of sample, stops did
+  in 4 small cases and cost the most elsewhere; HOLD TO SETTLEMENT. Combined account (`research/combined.py`):
+  +15.3% a year out of sample at 0.5% a bet, drawdown 5.4%, holding; most of it the Entertainment leg (found
+  on that data). THE 5-CENT RULE NOW FAILS THE TAIL TEST OUT OF SAMPLE AT THE DEFAULT CENSUS LEVEL (the sample
+  grew from 26,635 to 39,858 markets) and PASSES at 20,000 and 45,000 contracts traded (replay +18% to +20% a
+  year out of sample at 1%): a busy-market effect. Entertainment's NO-against-5-35c rule passes the tail test in
+  both halves on busy markets and loses on the random sample. Paper accounts: price-only exits in
+  `src/trader.py` (off for the paper bot), six exit accounts from 4:04 am (18 accounts). `scripts/replay_wide.py`
+  works, nothing settled yet. The check-in now runs on Opus from a Windows task (top of this file). 214 tests.
+
 ## How to run a round
 
 ```
@@ -588,9 +598,17 @@ Forward-only (cannot be backtested):
 4. Forward: `tail -20 data/run_cycle.log`; `python3 scripts/shadow_longshot.py --report`; commit
    `reports/forward_log.csv`; one line each in the report.
 5. Still to code: sums over mutually exclusive events with Kalshi's own flag (needs `/events`); hourly bars for
-   the last two days; exits before settlement (sell the NO at 99c instead of waiting); a combined-portfolio
-   replay of several passing rules; sports and crypto samples last.
-6. Open for the user: trade the 5-cent rule in a second paper account? Which Claude model for the forecaster?
+   the last two days (the exit study's one real caveat: daily bars make stops sell at the next open); sports
+   and crypto samples last. DONE 2026-11-20 (report 3.28): exits before settlement, the combined-portfolio
+   replay, the wide-account replay tool.
+5b. **Each check-in, cheap:** once markets of the paper accounts settle, `scripts\run_variants.py --report`
+   (18 accounts: compare each exit account with its pair, `claude_only` or `main`) and
+   `scripts\replay_wide.py`. When the download extends a sample, re-run `research\exit_study.py` only if a rule's
+   held-to-settlement figures change verdict; report the 5-cent rule at the 45,000 level (fixed in 3.7) beside
+   the default level, never only the better one.
+6. Open for the user: a second paper account for the 5-cent rule resting, restricted to markets with 45,000+
+   contracts traded? A forward observation band (no orders) for NO against YES at 5-35c in busy Entertainment
+   markets?
 7. **AS OF 12:25 pm CST Nov 19: NOTHING IS WAITING ON THE DOWNLOAD.** r25 is done (report 3.27) and every
    category has had both samples. The download is only enlarging the random samples (same shuffle): that is
    NOT a reason for a new round at each check-in. Re-run the random rounds once, when the download log shows

@@ -119,6 +119,15 @@ schtasks /create /tn "PredictionMarketTrader Cycle" /sc hourly /mo 8 /st 07:40 /
 That runs at 07:40, 15:40 and 23:40, hidden, logging to `data\run_cycle.log` and refreshing `data\status.md`.
 Like the stock trader's task, it runs only while the user is logged in. A missed cycle is harmless.
 
+**The research check-in** (since 2026-11-20) is the Windows task "PredictionMarketTrader Check-in": every 3 hours
+(12:11, 3:11, 6:11 and 9:11, am and pm) it runs `scripts\checkin.ps1`, which gives `scripts\checkin_prompt.md`
+to the Claude program headless, on Opus 5.5 only (`--model claude-opus-5-5`, no fallback model, auto permission
+mode with nobody to answer prompts). Each run's full answer, with the models actually used and the cost, is in
+`data\checkin\`, one line per run in `data\checkin.log`, and its last line is shown as a Windows notification.
+Run one by hand: `powershell -ExecutionPolicy Bypass -File scripts\checkin.ps1`. Remove the task:
+`Unregister-ScheduledTask -TaskName "PredictionMarketTrader Check-in"`. (The Claude app's own scheduled task
+did the same until then, but started its runs on the app's default model, Fable; it is switched off.)
+
 **What it costs the PC.** One Python process using a few megabytes, a few dozen small web requests half a second
 apart, and one Claude process at a time. It runs at below-normal priority, will not start with under 1.5 GB of
 memory free, and a lock file stops two cycles overlapping. It holds no data in memory between cycles.
@@ -148,7 +157,7 @@ gateway says to slow down (it does: bursts get an HTTP 429).
 ### Variant accounts: the same forecasts, traded differently
 
 The main account trades a cautious blend of Claude's number and the market price. To see what Claude's
-judgement is worth on its own, eleven more paper accounts (`variants.yaml`, `src/variants.py`) are handed the
+judgement is worth on its own, seventeen more paper accounts (`variants.yaml`, `src/variants.py`) are handed the
 forecasts the main account has just made and trade them under other rules. They ask Claude nothing, so they
 cost no usage; each has its own $1,000 and its own ledger in `data\variants\`.
 
@@ -165,13 +174,26 @@ cost no usage; each has its own $1,000 and its own ledger in `data\variants\`.
 | `claude_only_wide` | **Wide:** Claude alone with no daily budget and no category or total exposure cap |
 | `claude_only_wide_edge1` | **Wide:** the same, trading at 1 point of edge instead of 3 |
 | `blend30_wide` | **Wide:** the main account's own rule with those limits lifted |
+| `blend30_hold` | **Exit:** the main rule, never sells before settlement |
+| `claude_only_hold` | **Exit:** Claude alone, never sells before settlement (pair: `claude_only`) |
+| `claude_only_take10` | **Exit:** Claude alone, takes the profit once its side is bid 10 points over the price paid |
+| `claude_only_stop15` | **Exit:** Claude alone, cuts the loss once its side's mid is 15 points under the price paid |
+| `claude_only_take_stop` | **Exit:** both of the above |
+| `claude_only_last3d` | **Exit:** Claude alone, sells everything 3 days before the scheduled end |
+
+The main account and the first eleven sell a position only when a fresh forecast says the bid is worth more than
+holding (`execution.exit_margin`). The six exit accounts (added 2026-11-20) change only that, each against a pair
+that differs in nothing else; the price rules they use (`execution.take_profit_price`, `take_profit_gain`,
+`stop_loss_drop`, `sell_days_before_end`, `exit_on_forecast`) are off for the paper bot. The same rules on
+mechanical bets over five years of history are in `research\exit_study.py` (report 3.28), and
+`scripts\replay_wide.py` replays the wide accounts' records under other budgets, edges, stakes and exits.
 
 Stake caps, the daily budget and the safety stops are the same in all of them, except the three wide accounts.
 Those lift the limits on how much is traded (not the stake per market or the safety stops), so that each
 records every trade its rule wants: what a given daily budget, edge threshold or stake would have done is
 then worked out from that record afterwards, without an account per setting. They bet more and will swing
 more: compare return per dollar staked and the worst stretch, not the totals. `scripts\run_variants.py
---report` prints where every account stands. With twelve accounts one will look good by luck: read them against
+--report` prints where every account stands. With eighteen accounts one will look good by luck: read them against
 the two controls and against each other, and expect nothing meaningful before dozens of markets have settled.
 
 Paper results will flatter reality. The simulator is deliberately pessimistic (resting orders fill only when the
