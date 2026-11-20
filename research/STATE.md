@@ -500,6 +500,16 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   weekly all models 48%, weekly Fable 76% (70% at 12:25 pm), with 57% of the week past:
   `cycle_every_hours` left at 2 (all-models 9 points behind; 2 is the floor). E: 49.2 GB free, C: 29.4 GB.
 
+- 6:12 pm CST Nov 19 (check-in): both jobs alive (since 2:41 pm); cycles at 2:41 and 4:44 pm ok (eight in
+  all on the PC), next about 6:45 pm; 72 forecasts, none resolved; main account $998.56, 2 positions, 3
+  resting (new: YES on December CPI above -0.1 at 67c). The variants were skipped after the 4:44 pm cycle
+  (it ended inside the 5:15 to 6:20 pm quiet window); they run after the next one. Nothing new for a round:
+  the download is still enlarging the random samples (141,745 markets with bars, no rate limits).
+  Observation log: 14 markets seen, none settled; resting NO bids 7 of 7 filled. Usage: 5-hour 24%, weekly
+  all models 51%, weekly Fable 79% (76% at 3:12 pm), with 59% of the week past: `cycle_every_hours` left at
+  2 (all-models 8 points behind; 2 is the floor). Fable is on course to pass 90% during Friday: from then a
+  check-in does health only. E: 49.1 GB free, C: 28.5 GB.
+
 ## How to run a round
 
 ```
