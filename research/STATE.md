@@ -14,6 +14,9 @@ reads first. Keep it short and current. Findings go in the report; this is the c
   untested (a test run from Claude was refused by the permission check). Do not switch it back on unless a run
   is shown to start on Opus, or the user says so.
 - Any Claude session in this project: run on Opus 5.5, never Fable.
+- Until noon Nov 20 the check-ins run inside the user's main session instead (on Opus, the user chose it with
+  /model at 3:20 am): one-shot reminders of that session at about 5:23, 7:23, 9:23 and 11:23 am, and a
+  morning summary at 12:23 pm. They live only in that session: if the app closes, they are gone.
 
 **Report:** `reports/2026-11-18_strategy_research.md` (create on first results; add a dated section per check-in).
 
