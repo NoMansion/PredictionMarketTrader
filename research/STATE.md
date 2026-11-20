@@ -4,6 +4,20 @@ The user asked (2026-11-18, before going to bed) for strategy research to keep r
 that can be tested, and combinations of families, with settings varied. This file is what each check-in
 reads first. Keep it short and current. Findings go in the report; this is the control sheet.
 
+## PAUSED BY THE USER since 7:55 pm CST, 2026-11-19 ("Pause"; the second pause of the day, read as "Everything" like the first)
+
+Nothing runs until the user says resume. Do NOT start the download or the paper loop, do not run a cycle or a
+research round, and do not re-enable anything below on your own.
+
+- Stopped with `research\start_jobs.ps1 -Stop`, between cycles: the paper loop (last cycle started 6:44 pm,
+  ended ok) and the history download (157,738 markets with bars at 7:53 pm). Both resume where they left off.
+- Switched off: the app's scheduled check-in (`prediction-market-research-checkin`, enabled = false) and the
+  Windows log-on task "PredictionMarketTrader Jobs" (disabled, so a restart of the PC does not unpause).
+- To resume, on the user's word only: `Enable-ScheduledTask -TaskName "PredictionMarketTrader Jobs"`, enable
+  the check-in again, then `research\start_jobs.ps1 -PaperLoop`. Then delete this section and add a progress line.
+- While paused: resting paper orders pass their 24-hour limit and are expired at the first cycle after the
+  resume; open positions are simply re-valued then. Forecasts older than 6 hours are not traded.
+
 **Report:** `reports/2026-11-18_strategy_research.md` (create on first results; add a dated section per check-in).
 
 ## Standing instruction (2026-11-19, about 3:50 am CST, on the PC)
