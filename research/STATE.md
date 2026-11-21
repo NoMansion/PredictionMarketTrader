@@ -600,6 +600,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   at most 2 questions a cycle; usage at 5:17 am: weekly all models 63% with 79% of the week gone, Fable 84%,
   unchanged). Queue item 1 done (report 3.29): the Entertainment band passes the tail test in both halves at
   5,000, 20,000 and 45,000 contracts.
+- 6:25 am CST Nov 21: queue item 2 (report 3.30): the Entertainment band as a taker earns about half the resting
+  version (+3.5% a bet) and fails the tail test in sample at 45,000. No new account. Jobs ok; cycle running.
 
 ## How to run a round
 
@@ -714,8 +716,8 @@ drawdown, capacity in dollars, and say how many variants were tried.
 1. DONE 5:40 am CST Nov 21 (report 3.29): Entertainment band (NO vs YES 5-35c, resting) at 5,000 / 20,000 /
    45,000 contracts: passes the tail test in both halves at all three; +7.3% / +7.4% / +7.1% a bet; replay at 1%
    out of sample +31% / +33% / +26% a year, worst drawdown 6.0% / 6.6% / 2.3%. Holds at the busiest level too.
-2. Entertainment band as a TAKER at 20,000 and 45,000 (`--entry tk`): does the taker version pass where markets
-   are busiest? If it does, a taker account needs no fill luck.
+2. DONE 6:25 am CST Nov 21 (report 3.30): Entertainment band as a TAKER: +3.5% a bet at 20,000 and 45,000 (half
+   the resting edge); passes both halves at 20,000, FAILS in sample at 45,000 (bound 29.0% vs 28.5%). No new account.
 3. The 5-cent rule at 45,000 split by days to the close (the "25 longshot NO" family: "NO at mid 0-3c, 0-7d to
    scheduled end, fixed date" and its neighbours, both entries): where does the rule's money come from?
 4. The 5-cent rule on stand-alone questions only at 45,000 ("single-market event: NO where YES is 5c or less,
@@ -738,3 +740,5 @@ drawdown, capacity in dollars, and say how many variants were tried.
     resting fill rates against the backtest's 55-80% model (50+ decided).
 13. When a queue item passes all the tests, add a paper account for it under a new name in rules.yaml (allowed
     by the user's word above), and say so in the report.
+14. The Entertainment band (resting) by days to close (0-7, 7-30, 30+ days) at 20,000: taker results (3.30) are
+    thin in 2025; is the edge in the short-dated markets, where capital turns over fastest?

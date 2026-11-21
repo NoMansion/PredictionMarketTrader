@@ -1368,3 +1368,23 @@ report 3.28). It is still one category of eleven, found on its own data: the for
 ideas queue in STATE.md (13 items: taker and days-window splits, stand-alone questions, the band per category,
 calibration at 45,000, risk-averse sizing, exits at the busy level, momentum, hourly bars, event sums, and the
 forward comparisons) instead of stopping.
+
+### 3.30 The Entertainment band as a taker at the busy levels (6:25 am CST, November 21)
+
+**Ideas queue, item 2.** The band of 3.29 buying NO at the ask (taker, fee in) instead of resting at the bid.
+`research/analyze_rule.py --sample liquid --categories Entertainment --rule "NO where YES is at 5-35c" --side no
+--entry tk`, at two census levels:
+
+| Contracts traded so far | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay at 1%, in / out a year | Worst drawdown in / out |
+|---|---|---|---|---|---|---|
+| 20,000 | 1,675 (726) | +3.47% | 113 of 497 / 48 of 232 | passes (bound 26.1% against 29.5%) / passes (25.6% against 27.3%) | +2.9% / +13.7% | 7.6% / 7.4% |
+| 45,000 | 883 (413) | +3.45% | 71 of 290 / 20 of 124 | **fails** (bound 29.0% against 28.5%) / passes (22.6% against 30.6%) | +2.0% / +16.1% | 10.0% / 4.0% |
+
+**Result: the taker version is about half the resting version** (+3.5% a bet against +7.1-7.4%), as the spread
+and fee would predict, and at the busiest level it fails the tail test in sample by half a point. At 20,000 it
+passes both halves, but its in-sample replay is thin (+2.9% a year, worst drawdown 7.6%); 2025 was flat (+2.2% a
+bet). Capacity at 45,000: median $5,664 traded in the week before entry. The largest series, Rotten Tomatoes
+(KXRT, 8-9% of bets), loses slightly in both; dropping it would be a filter chosen after the look and is not
+done. Two variants tried here (two levels, both fixed beforehand). **Verdict: not a new account.** The resting
+band stays the stronger form; the paper account `rule_ent_band_taker` (5,000+) already tests the taker side
+forward, and the paper broker's harsher resting fills are what decide between them.
