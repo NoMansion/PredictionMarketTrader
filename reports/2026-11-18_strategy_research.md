@@ -1472,3 +1472,26 @@ not risk-averse on its in-sample record. Capacity at 45,000: median $4,799 trade
 pooled), $5,043 Politics. With 12 variants and nothing above the tail test by a clear margin out of sample,
 **verdict: no new account.** Follow-up to the queue (item 16): is the pooled band's 2026 jump a change in the
 market or a horizon effect (days to close by year)?
+
+### 3.34 Calibration curve at 45,000 contracts, every category (12:25 pm CST, November 21)
+
+Ideas queue item 6. `research/calibration_curve.py --sample liquid --min-cumvol 45000`, one category at a time
+(Economics, Politics, Companies, Science and Technology, Elections, Health, World, Commodities, Financials,
+Entertainment, Mentions, Climate and Weather, Crypto; 10 price bands each, about 130 band-halves). Question:
+is YES overpriced (or underpriced) in some band in BOTH halves, per event, beyond what is already known?
+
+- Bands with the same sign in both halves and the per-event t at least 2 in both, with 30+ events in each half:
+  only three. Politics 0-5c (-1.8c in / -3.3c out; the 5-cent rule's ground, report 3.33), Entertainment 10-20c
+  (-3.8c / -8.1c; inside the known Entertainment band, 3.29), and Climate and Weather 0-5c (-2.7c / -2.7c; 76 and
+  45 events). Every other "both halves" hit has under 30 events a half (World, Commodities, Financials, Mentions,
+  Climate 90-100c) and its t comes from no YES at all in a handful of events: not evidence.
+- The longshot side (YES 0-20c too dear) shows the same sign out of sample in Politics, Science and Technology,
+  Elections, Entertainment, Mentions and Economics, but out-of-sample t under 2 everywhere except the three above.
+- The one new candidate, tested as a rule: the 5-cent rule ("NO at mid <= 5c, <= 30d, spread <= 5c") on Climate
+  and Weather alone at 45,000. Resting: 89 events, 0 losing, +4.8% a bet, but the tail test fails in both halves
+  (in 57 events, bound 5.12% vs break-even 4.75%; out 32 events, bound 8.94% vs 4.26%); replay at 1% +0.7%/y in
+  sample, +2.8%/y out, no drawdown; median $1,153 traded in the week before entry. Taker: 111 events, 0 losing,
+  +2.5% a bet, fails both halves. No losses, but too few events to prove the loss rate is below break-even.
+  (At the random sample the 5-cent rule FAILED in Climate and Weather, r24.) 2 variants tried (mk, tk).
+- Verdict: no new band. Climate and Weather's 5-cent rule at 45,000 is a lead that needs more events; not an
+  account. Queue item 17 added: re-test it when the download has added Climate and Weather markets.

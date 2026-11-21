@@ -608,6 +608,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   sample, too thin out of sample (27-35 events). No new account. Jobs ok; main $1,010.72, 0 settled.
 - 9:45 am CST Nov 21: queue item 5 (report 3.33): the wide band per category at 45,000: only Politics passes alone, by a
   hair and not at 20,000; the nine pooled pass at 45,000 but earn almost only in 2026. No new account; item 16 added.
+- 12:25 pm CST Nov 21: queue item 6 (report 3.34): calibration at 45,000 per category finds no new band; Climate and Weather's
+  5-cent rule: 0 losses in 89 events, fails the tail test (too few). Item 17 added. Jobs ok; main $1,010.72, 0 settled.
 
 ## How to run a round
 
@@ -734,7 +736,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
    by 0.4 pt out of sample, and fails at 20,000 / loses at 5,000; Economics fails out of sample. The nine pooled at
    45,000 pass both (+4.2% a bet) but the money is 2026 (2025 +1.3%), in-sample replay +1.0%/y, DD 11.2%. No account.
    Was: the wide band (NO vs YES 5-35c, resting) in each of the nine categories ALONE at 45,000.
-6. Calibration curve at 45,000 for every category (`research/calibration_curve.py --sample liquid --min-cumvol
+6. DONE 12:25 pm CST Nov 21 (report 3.34): only Politics 0-5c, Entertainment 10-20c (both known) and Climate and Weather 0-5c
+   are off in both halves with 30+ events; Climate's 5-cent rule at 45,000: 0 losses in 89 events but fails the tail test
+   both halves (too few). No account; item 17 added. Was: Calibration curve at 45,000 for every category (`research/calibration_curve.py --sample liquid --min-cumvol
    45000 --categories <Cat>`): any other band where YES is overpriced in both halves, per event?
 7. Risk-averse sizing for the combined account: `research/combined.py --stakes 0.0025,0.005,0.0075` and the
    worst drawdown of each; does a smaller stake buy a much smaller drawdown?
@@ -756,3 +760,5 @@ drawdown, capacity in dollars, and say how many variants were tried.
     45,000 and the default level. Needs a new rule name in research/families.py (add, do not rename) and a test.
 16. The nine-category wide band at 45,000 (report 3.33) earns almost only in 2026: split by year AND days to close
     (0-7, 7-30, 30+) to see whether 2026 is a change in the market or a shift to short-dated markets.
+17. Climate and Weather 5-cent rule at 45,000 (report 3.34: 0 losing in 89 events, too few): re-run analyze_rule mk/tk
+    once the download has added Climate and Weather markets; also pool it with Politics only (both pass/near-pass alone).
