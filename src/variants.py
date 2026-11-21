@@ -205,11 +205,14 @@ def run_variants(main_cfg: dict, variants: dict[str, dict], main_ledger: Ledger,
     return out
 
 
-def standings(root: str | Path, variants: dict[str, dict], main_db: str | Path | None = None) -> list[dict]:
-    """Where every account stands, the main one first. Equity values positions at the bid, as everywhere else."""
+def standings(root: str | Path, variants: dict[str, dict], main_db: str | Path | None = None, folder: str = "variants",
+              with_main: bool = True) -> list[dict]:
+    """Where every account stands, the main one first (unless with_main is False: the rule accounts of
+    src/rules.py, folder "rules"). Equity values positions at the bid, as everywhere else."""
     root = Path(root)
-    books = [("main", Path(main_db) if main_db else root / "data" / "pmt.db", "the paper bot itself: Claude blended with the market price")]
-    books += [(n, root / "data" / "variants" / f"{n}.db", s["about"]) for n, s in variants.items()]
+    books = [("main", Path(main_db) if main_db else root / "data" / "pmt.db",
+              "the paper bot itself: Claude blended with the market price")] if with_main else []
+    books += [(n, root / "data" / folder / f"{n}.db", s["about"]) for n, s in variants.items()]
     out = []
     for name, path, about in books:
         if not path.exists():

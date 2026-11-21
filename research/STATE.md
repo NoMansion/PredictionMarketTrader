@@ -565,6 +565,22 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   -ClaudeExe, -DataDir and -NoNote added for the tests only. replay_wide crashed without a main ledger.
 - 3:25 am CST Nov 21: RESUMED at the user's word ("resume"). Both Windows tasks enabled again (next Opus
   check-in 6:11 am), download and paper loop restarted with the fixed downloader; a paper cycle began at once.
+- 5:15 am CST Nov 21: NINE MECHANICAL RULE ACCOUNTS, FIVE STRICTER CLAUDE ACCOUNTS, A SECOND OBSERVATION BAND
+  (the user, to both open questions: "Yes make both of those and anything else possible for testing. We ar under
+  no time constraint and want to to find the best possible source of risk averse money making"). New code:
+  `src/rules.py`, `rules.yaml`, `scripts/run_rules.py` (accounts under data\rules\, own listing
+  data\rules\kalshi_listing.json, 6 h, all twelve tested categories, 0.25-400 days; no Claude; hold to settlement;
+  resting joins the best NO bid for 72 h; 1% a bet, 3% per event, 50% exposure, as research/portfolio.simulate).
+  Accounts: rule_5c_busy and rule_ent_band (the two asked for), rule_combined (the four legs of combined.py at
+  0.5%), rule_5c_busy_taker, rule_ent_band_taker, rule_ent_fall (Entertainment 10-25c down 3c+ in 7 days, from
+  Kalshi's daily candles), rule_climate_band, and two CONTROLS on quiet markets (control_5c_quiet under 45,000
+  contracts, control_ent_quiet under 5,000), where the history says the rules lose. First run 5:01 am: 152 paper
+  orders across the nine (24 Entertainment band, 7 5-cent busy, 26 combined, 23 per control), 714 requests,
+  8 minutes. Variants: claude_only_edge5, _edge8, _high_conf (new execution.min_confidence), _dear_side (side
+  priced 50c+), _no_side (new execution.only_side): 23 Claude accounts. `scripts/shadow_longshot.py --band ent`
+  logs the Entertainment band's books and resting fills (data\shadow_ent.db; first pass 17 recorded). The paper
+  loop runs both after every cycle (restarted 5:13 am). 470 tests, all pass. With 9 + 23 accounts one will look
+  good by luck: read the controls first.
 
 ## How to run a round
 
@@ -632,9 +648,12 @@ Forward-only (cannot be backtested):
    `scripts\replay_wide.py`. When the download extends a sample, re-run `research\exit_study.py` only if a rule's
    held-to-settlement figures change verdict; report the 5-cent rule at the 45,000 level (fixed in 3.7) beside
    the default level, never only the better one.
-6. Open for the user: a second paper account for the 5-cent rule resting, restricted to markets with 45,000+
-   contracts traded? A forward observation band (no orders) for NO against YES at 5-35c in busy Entertainment
-   markets?
+6. DONE 2026-11-21 (the user said yes to both): the 5-cent busy account and the Entertainment band are paper
+   accounts in `rules.yaml` (with seven more), and the band has its own observation log (`--band ent`). Each
+   check-in: `scripts\run_rules.py --report`; once a few dozen bets of an account have settled, compare it with its
+   quiet-market control and with the backtest's per-bet figure (5-cent busy +2.07%, Entertainment band +7.28%,
+   fall rule +8.95%, combined +15.3% a year out of sample), and write it in the report. Paper fills are harsher
+   than the backtest's (the market must trade through the bid): read the shadow logs' fill rates beside them.
 7. **AS OF 12:25 pm CST Nov 19: NOTHING IS WAITING ON THE DOWNLOAD.** r25 is done (report 3.27) and every
    category has had both samples. The download is only enlarging the random samples (same shuffle): that is
    NOT a reason for a new round at each check-in. Re-run the random rounds once, when the download log shows

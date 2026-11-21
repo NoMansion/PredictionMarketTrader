@@ -87,3 +87,24 @@ def test_a_resting_bid_nobody_reached_is_recorded_as_unfilled_after_three_days(t
     assert db.execute("SELECT rest_filled, rest_done FROM obs").fetchone() == (0, 1)
     assert sl.resting_fill([{"taker_side": "yes", "yes_price_dollars": "0.0400", "count_fp": "1", "created_time": "2026-01-01T00:00:00Z"}],
                            0.03, None) is not None                         # through the price: filled whatever the queue
+
+
+def test_the_entertainment_band_has_its_own_rule(tmp_path):
+    band = sl.BANDS["ent"]
+    assert band["db"] == "shadow_ent.db" and band["categories"] == "entertainment" and band["min_volume"] == 5000
+    assert band["listing"] == "rules/kalshi_listing.json" and sl.BANDS["5c"]["rule"] is sl.RULE
+    http = FakeKalshiHTTP(NOW)
+    http.add("BAND", days=60, bid=0.19, ask=0.21, volume=9000)          # YES 20c: in the band
+    http.add("CHEAP", days=60, bid=0.01, ask=0.02, volume=9000)         # YES under 5c: the other rule's
+    http.add("DEAR", days=60, bid=0.50, ask=0.52, volume=9000)          # YES 51c: out
+    http.add("DRIFT", days=60, bid=0.19, ask=0.21, volume=9000)         # listed in the band, now 2c
+    listing = {"markets": [dict(m) for m in http.markets.values()]}
+    http.set_book("DRIFT", 0.01, 0.03)
+    venue = Kalshi(http=http, clock=lambda: NOW)
+    venue._load_series(["Economics"])
+    db = sqlite3.connect(str(tmp_path / "ent.db"))
+    res = sl.observe(venue, db, listing, {"economics"}, NOW, per_event=10, min_volume=5000, rule=band["rule"])
+    assert res["recorded"] == 1 and res["looked"] == 2                  # CHEAP and DEAR never cost a request
+    assert db.execute("SELECT ticker, rest_px FROM obs").fetchone() == ("BAND", pytest.approx(0.79))
+    assert "mid" in dict(db.execute("SELECT ticker, why FROM checked"))["DRIFT"]
+    assert sl.report(db, band["fill_note"]).startswith("1 qualifying markets seen")

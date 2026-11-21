@@ -43,7 +43,9 @@ class CycleResult:
 
 EXECUTION_KEYS = {"style", "tick", "resting_ttl_hours", "depth_haircut", "max_depth_share", "exit_margin",
                   "reentry_cooldown_hours", "track_forecasts_days", "trade_low_confidence", "take_profit_price",
-                  "take_profit_gain", "stop_loss_drop", "sell_days_before_end", "exit_on_forecast"}
+                  "take_profit_gain", "stop_loss_drop", "sell_days_before_end", "exit_on_forecast",
+                  "min_confidence", "only_side"}
+CONFIDENCE = {"low": 0, "medium": 1, "high": 2}
 
 
 class Trader:
@@ -79,6 +81,14 @@ class Trader:
         self.max_depth_share = float(ex.get("max_depth_share", 0.25))
         # Off for the paper bot. A variant account may switch it on to measure what the confidence filter is worth.
         self.trade_low_confidence = bool(ex.get("trade_low_confidence", False))
+        # Variant accounts only (both off for the paper bot): trade only forecasts at least this confident, and
+        # only buy this side ("YES" or "NO").
+        self.min_confidence = str(ex.get("min_confidence", "low")).lower()
+        if self.min_confidence not in CONFIDENCE:
+            raise ValueError(f"execution.min_confidence must be one of {', '.join(CONFIDENCE)}")
+        self.only_side = str(ex["only_side"]).upper() if ex.get("only_side") else None
+        if self.only_side not in (None, "YES", "NO"):
+            raise ValueError("execution.only_side must be YES or NO")
         if safety.is_live(cfg):
             safety.require_live_confirmation(cfg)
             raise NotImplementedError("account.mode 'live' is not implemented: see docs/GO_LIVE.md")
@@ -428,6 +438,9 @@ class Trader:
             if f.confidence == "low" and not self.trade_low_confidence:
                 skip("forecast confidence is low")
                 continue
+            if CONFIDENCE.get(f.confidence, 0) < CONFIDENCE[self.min_confidence]:
+                skip(f"forecast confidence is {f.confidence}, this account needs {self.min_confidence}")
+                continue
             if f.flags and (self.cfg.get("forecaster") or {}).get("flags_block", True):
                 skip("forecaster raised flags: " + "; ".join(f.flags)[:300])
                 continue
@@ -454,6 +467,10 @@ class Trader:
                       "style": self.style, "mid_at_forecast": mid_then}
             if not sz.trade:
                 skip(sz.reason, q=sz.q, cost=sz.cost, edge=sz.edge, detail=detail)
+                continue
+            if self.only_side and sz.side != self.only_side:
+                skip(f"this account buys {self.only_side} only; the forecast favours {sz.side}",
+                     q=sz.q, cost=sz.cost, edge=sz.edge, detail=detail)
                 continue
             # never more than a share of what is resting near the price: a bigger order would BE the market
             room = self.max_depth_share * yes.near_touch_usd(universe.settings(self.cfg)["depth_band"])

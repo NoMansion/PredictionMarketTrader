@@ -473,3 +473,33 @@ def test_price_exits_are_off_unless_configured(ledger, tmp_path):
 def test_misspelt_execution_setting_is_an_error(ledger, tmp_path):
     with pytest.raises(ValueError, match="take_profit_prize"):
         setup(ledger, tmp_path, {}, execution={"take_profit_prize": 0.9})
+
+
+def test_min_confidence_and_only_side_for_the_strict_variants(ledger, tmp_path):
+    ex, fc, tr = setup(ledger, tmp_path, {"cpi-above-3": 0.70}, execution={"min_confidence": "high"})
+    run(tr)
+    assert ledger.q("SELECT * FROM orders") == []
+    assert "confidence is medium, this account needs high" in ledger.one("SELECT reason FROM decisions")["reason"]
+    fc.table["cpi-above-3"] = {"p_yes": 0.70, "confidence": "high"}
+    tr2 = Trader(cfg(execution={"min_confidence": "high"}), ledger, tr.venue, fc, root=tmp_path)
+    run(tr2, NOW + 49 * H)                                              # past the re-forecast wait
+    assert ledger.q("SELECT outcome FROM orders")[0]["outcome"] == "YES"
+
+
+def test_only_side_skips_the_other_side(ledger, tmp_path):
+    ex, fc, tr = setup(ledger, tmp_path, {"cpi-above-3": 0.70}, execution={"only_side": "NO"})
+    run(tr)
+    assert ledger.q("SELECT * FROM orders") == []
+    assert "buys NO only; the forecast favours YES" in ledger.one("SELECT reason FROM decisions")["reason"]
+
+
+def test_only_side_allows_its_own_side(ledger, tmp_path):
+    ex, fc, tr = setup(ledger, tmp_path, {"cpi-above-3": 0.30}, execution={"only_side": "no"})
+    run(tr)
+    assert ledger.q("SELECT outcome FROM orders")[0]["outcome"] == "NO"
+
+
+@pytest.mark.parametrize("ex, msg", [({"min_confidence": "very"}, "min_confidence"), ({"only_side": "both"}, "only_side")])
+def test_bad_strict_settings_are_errors(ledger, tmp_path, ex, msg):
+    with pytest.raises(ValueError, match=msg):
+        Trader(cfg(execution=ex), ledger, PolymarketUS(FakeExchange(NOW), min_interval=0), TableForecaster({}))

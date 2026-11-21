@@ -123,3 +123,33 @@ variants:
     overrides:
       sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
       execution: {sell_days_before_end: 3}
+
+  # ---- stricter accounts (added 2026-11-21, at the user's word: "find the best possible source of risk averse
+  # money making") ---------------------------------------------------------------------------------------------
+  # Each asks MORE of a trade than its pair (claude_only), so it trades less: does demanding more pay?
+  claude_only_edge5:
+    about: "STRICT: Claude alone, but only at 5 points of edge or more (pair: claude_only at 3)"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0, min_edge: 0.05}
+
+  claude_only_edge8:
+    about: "STRICT: Claude alone, only at 8 points of edge or more"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0, min_edge: 0.08}
+
+  claude_only_high_conf:
+    about: "STRICT: Claude alone, only the forecasts Claude itself rated high confidence"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {min_confidence: high}
+
+  claude_only_dear_side:
+    about: "STRICT: Claude alone, only buying a side priced 50c or more (fewer, smaller losses; the favourite side)"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0, min_price: 0.50}
+
+  claude_only_no_side:
+    about: "STRICT: Claude alone, only buying NO (the history says YES is overpriced almost everywhere: Claude plus that bias)"
+    overrides:
+      sizing: {shrink_weight: 1.0, max_disagreement: 1.0}
+      execution: {only_side: "NO"}

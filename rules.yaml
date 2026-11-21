@@ -1,0 +1,102 @@
+# Mechanical paper accounts (src/rules.py, scripts/run_rules.py): rules from five years of Kalshi history,
+# traded forward on paper. No Claude usage, no real orders. Each account has its own ledger (data/rules/<name>.db)
+# and $1,000 of paper money, and holds every bet to settlement (the exit study, report 3.28).
+# Added 2026-11-21 at the user's word: "Yes make both of those and anything else possible for testing ... find the
+# best possible source of risk averse money making".
+#
+# Per account:
+#   entry          resting (join the best NO bid = 1 - the YES ask, 72 hours; the backtest's "mk") | taker (pay the ask)
+#   stake_pct      of equity per bet; event_cap_pct, max_exposure_pct: research/portfolio.simulate's 3% and 50%
+#   legs           the rule(s); a market is entered once, by the first leg that fits it
+#   control        true for the quiet-market twins: the history says they do NOT pay
+# Per leg (YES prices are the mid; min and max inclusive): categories, side, min_yes_mid, max_yes_mid, max_spread,
+#   min_days, max_days (to the close), min_volume / max_volume (contracts traded so far), min_fall_7d.
+#
+# As with the variant accounts: adding one later is fine (it starts at the next cycle); changing one breaks its
+# record, so add a new name instead. With this many accounts one will look good by luck: read the controls first.
+
+nine: &nine [Economics, Politics, Elections, Science and Technology, World, Health, Companies, Commodities, Financials]
+
+five_cent_busy: &five_cent_busy
+  label: "5-cent rule, busy"
+  categories: *nine
+  max_yes_mid: 0.05
+  max_spread: 0.05
+  max_days: 30
+  min_volume: 45000
+
+ent_band: &ent_band
+  label: "NO vs YES 5-35c, Entertainment"
+  categories: [Entertainment]
+  min_yes_mid: 0.05
+  max_yes_mid: 0.345            # the backtest's band is 5c <= mid < 35c; Kalshi mids step by half a cent
+  min_volume: 5000              # the Entertainment census level (report 3.24)
+
+accounts:
+  # ---- the two the user said yes to (2026-11-21) ----------------------------------------------------------------
+  rule_5c_busy:
+    about: "5-cent rule, resting: NO where YES is 5c or less, 30 days or less, spread 5c or less, nine categories, 45,000+ contracts traded"
+    entry: resting
+    stake_pct: 0.01
+    legs: [*five_cent_busy]
+
+  rule_ent_band:
+    about: "NO against YES at 5-35c in busy Entertainment markets (5,000+ contracts), resting: the Entertainment lead of report 3.24"
+    entry: resting
+    stake_pct: 0.01
+    legs: [*ent_band]
+
+  # ---- the backtest's best whole account (report 3.28, part 2: +15.3% a year out of sample at 0.5%) -------------
+  rule_combined:
+    about: "COMBINED: four legs in one account at 0.5% a bet, as research/combined.py: 5-cent busy, Entertainment band, Climate band, 5-cent Entertainment"
+    entry: resting
+    stake_pct: 0.005
+    legs:
+      - *five_cent_busy
+      - *ent_band
+      - {label: "NO vs YES 5-35c, Climate and Weather", categories: [Climate and Weather], min_yes_mid: 0.05, max_yes_mid: 0.345, min_volume: 5000}
+      - {label: "5-cent rule, Entertainment", categories: [Entertainment], max_yes_mid: 0.05, max_spread: 0.05, max_days: 30, min_volume: 5000}
+
+  # ---- one change each, to learn what matters -------------------------------------------------------------------
+  rule_5c_busy_taker:
+    about: "5-cent rule on busy markets, paying the ask: the history says taking fails where resting passes (is the resting order the edge?)"
+    entry: taker
+    stake_pct: 0.01
+    legs: [*five_cent_busy]
+
+  rule_ent_band_taker:
+    about: "Entertainment band, paying the ask: the one taker rule that passed the tail test in both halves (report 3.24)"
+    entry: taker
+    stake_pct: 0.01
+    legs: [*ent_band]
+
+  rule_ent_fall:
+    about: "NO where an Entertainment YES at 10-25c has fallen 3c+ in 7 days, resting: the best per-bet rule of report 3.24 (+8.95% a bet)"
+    entry: resting
+    stake_pct: 0.01
+    legs:
+      - {label: "Entertainment 10-25c, down 3c+ in 7d", categories: [Entertainment], min_yes_mid: 0.10, max_yes_mid: 0.245, min_volume: 5000, min_fall_7d: 0.03}
+
+  rule_climate_band:
+    about: "NO against YES at 5-35c in busy Climate and Weather markets, resting: the same-signed echo of the Entertainment lead (report 3.27)"
+    entry: resting
+    stake_pct: 0.01
+    legs:
+      - {label: "NO vs YES 5-35c, Climate and Weather", categories: [Climate and Weather], min_yes_mid: 0.05, max_yes_mid: 0.345, min_volume: 5000}
+
+  # ---- controls: the same rules on quiet markets, where the history says they lose -----------------------------
+  control_5c_quiet:
+    about: "CONTROL: the 5-cent rule on QUIET markets (under 45,000 contracts traded): the history says the busy-market level is what pays"
+    entry: resting
+    stake_pct: 0.01
+    control: true
+    legs:
+      - {label: "5-cent rule, quiet", categories: *nine, max_yes_mid: 0.05, max_spread: 0.05, max_days: 30, max_volume: 45000}
+
+  control_ent_quiet:
+    about: "CONTROL: the Entertainment band on QUIET markets (under 5,000 contracts): the random sample says it loses there"
+    entry: resting
+    stake_pct: 0.01
+    control: true
+    legs:
+      - {label: "NO vs YES 5-35c, Entertainment, quiet", categories: [Entertainment], min_yes_mid: 0.05, max_yes_mid: 0.345, max_volume: 5000}

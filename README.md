@@ -157,7 +157,7 @@ gateway says to slow down (it does: bursts get an HTTP 429).
 ### Variant accounts: the same forecasts, traded differently
 
 The main account trades a cautious blend of Claude's number and the market price. To see what Claude's
-judgement is worth on its own, seventeen more paper accounts (`variants.yaml`, `src/variants.py`) are handed the
+judgement is worth on its own, twenty-two more paper accounts (`variants.yaml`, `src/variants.py`) are handed the
 forecasts the main account has just made and trade them under other rules. They ask Claude nothing, so they
 cost no usage; each has its own $1,000 and its own ledger in `data\variants\`.
 
@@ -180,6 +180,10 @@ cost no usage; each has its own $1,000 and its own ledger in `data\variants\`.
 | `claude_only_stop15` | **Exit:** Claude alone, cuts the loss once its side's mid is 15 points under the price paid |
 | `claude_only_take_stop` | **Exit:** both of the above |
 | `claude_only_last3d` | **Exit:** Claude alone, sells everything 3 days before the scheduled end |
+| `claude_only_edge5`, `claude_only_edge8` | **Strict:** Claude alone, only at 5 (8) points of edge or more |
+| `claude_only_high_conf` | **Strict:** Claude alone, only forecasts Claude rated high confidence (`execution.min_confidence`) |
+| `claude_only_dear_side` | **Strict:** Claude alone, only buying a side priced 50c or more |
+| `claude_only_no_side` | **Strict:** Claude alone, only buying NO (`execution.only_side`) |
 
 The main account and the first eleven sell a position only when a fresh forecast says the bid is worth more than
 holding (`execution.exit_margin`). The six exit accounts (added 2026-11-20) change only that, each against a pair
@@ -194,8 +198,29 @@ Those lift the limits on how much is traded (not the stake per market or the saf
 records every trade its rule wants: what a given daily budget, edge threshold or stake would have done is
 then worked out from that record afterwards, without an account per setting. They bet more and will swing
 more: compare return per dollar staked and the worst stretch, not the totals. `scripts\run_variants.py
---report` prints where every account stands. With eighteen accounts one will look good by luck: read them against
+--report` prints where every account stands. With twenty-three accounts one will look good by luck: read them against
 the two controls and against each other, and expect nothing meaningful before dozens of markets have settled.
+
+### Rule accounts: the backtest's own rules, traded forward
+
+Nine more paper accounts (`rules.yaml`, `src/rules.py`, `scripts/run_rules.py`, added 2026-11-21) trade the price
+rules that survived five years of Kalshi history, with no Claude at all: buy NO against a cheap YES in markets that
+have already traded a lot, with a resting order at the best NO bid (72 hours), and hold to settlement. 1% of the
+account a bet (0.5% in the combined account), 3% per event, 50% at work at most; each has its own $1,000 and its
+own ledger in `data\rules\`; the paper loop runs them after every cycle.
+
+| Account | Rule (buy NO) | Backtest, out of sample |
+|---|---|---|
+| `rule_5c_busy` | YES 5c or less, 30 days or less, spread 5c or less, nine categories, 45,000+ contracts traded | +2.07% a bet |
+| `rule_ent_band` | YES at 5-35c, Entertainment, 5,000+ contracts | +7.28% a bet |
+| `rule_combined` | the four legs of `research/combined.py` in one account, 0.5% a bet | +15.3% a year |
+| `rule_5c_busy_taker`, `rule_ent_band_taker` | the same two, paying the ask | taking failed / passed |
+| `rule_ent_fall` | Entertainment YES at 10-25c that fell 3c+ in 7 days | +8.95% a bet |
+| `rule_climate_band` | YES at 5-35c, Climate and Weather, 5,000+ contracts | +8.17% a bet (71 bets) |
+| `control_5c_quiet`, `control_ent_quiet` | **Controls:** the same rules on quiet markets, where the history says they lose | lose |
+
+`scripts\run_rules.py --report` prints them; `scripts\shadow_longshot.py --band ent` logs whether the Entertainment
+band's resting bids would really have filled, as the 5-cent log does for its rule.
 
 Paper results will flatter reality. The simulator is deliberately pessimistic (resting orders fill only when the
 price moves against them, and an order left resting in a market that closes against it is counted as filled;

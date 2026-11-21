@@ -693,13 +693,15 @@ def scripts_called(st):
     return [Path(next(a for a in cmd if a.endswith(".py"))).name for cmd, _ in st.calls]
 
 
-def test_loop_runs_the_four_steps_and_widens_after_a_limit(tmp_path, loop, capsys):
+def test_loop_runs_the_six_steps_and_widens_after_a_limit(tmp_path, loop, capsys):
     loop.on_cycle = lambda: add_run(loop.db, "r1", HIT)
     loop.go()
-    assert scripts_called(loop) == ["run_cycle.py", "run_variants.py", "export_forecasts.py", "shadow_longshot.py"]
+    assert scripts_called(loop) == ["run_cycle.py", "run_variants.py", "run_rules.py", "export_forecasts.py",
+                                    "shadow_longshot.py", "shadow_longshot.py"]
     cmds = [cmd for cmd, _ in loop.calls]
-    assert cmds[0][-2:] == ["--config", str(loop.cfg)] and cmds[1][-2:] == ["--config", str(loop.cfg)]
-    assert "--config" not in cmds[2] and "--config" not in cmds[3]
+    assert all(c[-2:] == ["--config", str(loop.cfg)] for c in cmds[:3])
+    assert all("--config" not in c for c in cmds[3:])
+    assert cmds[5][-2:] == ["--band", "ent"] and "--band" not in cmds[4]
     assert cmds[0][:2] == [sys.executable, "-u"]
     assert all(cwd == str(tmp_path) for _, cwd in loop.calls)
     assert all(str(tmp_path / "scripts") in " ".join(c) for c in cmds)
@@ -733,7 +735,7 @@ def test_a_skipped_cycle_decides_nothing(tmp_path, loop, capsys):
     add_run(loop.db, "r0", OK, ["claude-opus-5-5"], started=time.time() - 3 * H)
     loop.on_cycle = None                                               # the cycle exits 3: no new run row
     loop.go()
-    assert scripts_called(loop)[0] == "run_cycle.py" and len(loop.calls) == 4
+    assert scripts_called(loop)[0] == "run_cycle.py" and len(loop.calls) == 6
     assert not loop.state.exists() and "next cycle in" not in capsys.readouterr().out
 
 

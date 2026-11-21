@@ -55,6 +55,15 @@ def open_db(db):
     db.commit()
     return db
 RULE = {"max_mid": 0.05, "max_spread": 0.05, "max_days": 30.0, "min_days": 0.25}
+# A second band (2026-11-21, at the user's word): NO against YES at 5-35c in busy Entertainment markets, the lead of
+# report 3.24. Its own file (data/shadow_ent.db); the paper account rule_ent_band trades the same rule (rules.yaml).
+BANDS = {
+    "5c": {"rule": RULE, "db": "shadow.db", "categories": "economics,politics", "min_volume": 45000.0, "fill_note": "55% to 60%",
+           "listing": "kalshi_listing.json"},
+    "ent": {"rule": {"min_mid": 0.05, "max_mid": 0.345, "max_spread": 0.10, "max_days": 400.0, "min_days": 0.25},
+            "db": "shadow_ent.db", "categories": "entertainment", "min_volume": 5000.0, "fill_note": "69% to 80%",
+            "listing": "rules/kalshi_listing.json"},           # the rule accounts' listing covers Entertainment
+}
 
 
 def order_fee(rate: float, price: float, shares: float) -> float:
@@ -62,7 +71,8 @@ def order_fee(rate: float, price: float, shares: float) -> float:
     return math.ceil(rate * shares * price * (1 - price) * 100 - 1e-9) / 100.0
 
 
-def candidates(listing: dict, categories: set[str], category_of, min_volume: float, skip: set[str], now: float) -> list[dict]:
+def candidates(listing: dict, categories: set[str], category_of, min_volume: float, skip: set[str], now: float,
+               rule: dict = RULE) -> list[dict]:
     """Listed markets that might qualify, in a fixed pseudo-random order (not biggest first: that would make the
     observations a picture of the busiest markets only)."""
     out = []
@@ -73,10 +83,10 @@ def candidates(listing: dict, categories: set[str], category_of, min_volume: flo
             continue
         if m["ticker"] in skip or bid <= 0 or ask >= 1 or vol < min_volume:
             continue
-        if (bid + ask) / 2 > RULE["max_mid"] + 0.03:            # listed quotes are hours old: a loose first cut
+        if not rule.get("min_mid", 0.0) - 0.03 <= (bid + ask) / 2 <= rule["max_mid"] + 0.03:   # listed quotes are hours old
             continue
         end = parse_time(m.get("close_time"))
-        if end is None or not RULE["min_days"] < (end - now) / 86400.0 <= RULE["max_days"]:
+        if end is None or not rule["min_days"] < (end - now) / 86400.0 <= rule["max_days"]:
             continue
         if category_of(m.get("event_ticker")) not in categories:
             continue
@@ -85,7 +95,7 @@ def candidates(listing: dict, categories: set[str], category_of, min_volume: flo
     return out
 
 
-def look(venue: Kalshi, db, m: dict, now: float, stake: float, min_volume: float) -> str:
+def look(venue: Kalshi, db, m: dict, now: float, stake: float, min_volume: float, rule: dict = RULE) -> str:
     """Read one candidate's fresh detail and book; record it if the rule holds. Returns what happened."""
     ticker = m["ticker"]
     d = venue._detail(ticker)
@@ -97,14 +107,14 @@ def look(venue: Kalshi, db, m: dict, now: float, stake: float, min_volume: float
     vol = float(d.get("volume_fp") or 0)
     if mk.closed or days is None:
         return "closed"
-    if not RULE["min_days"] < days <= RULE["max_days"]:
+    if not rule["min_days"] < days <= rule["max_days"]:
         return f"{days:.0f} days to the end"
     if vol < min_volume:
         return "volume below the tested level"
     yes, no = books_from_kalshi(ticker, venue.http.get(f"/markets/{ticker}/orderbook") or {}, now=now)
     if yes.best_bid is None or yes.best_ask is None:
         return "one-sided book"
-    if yes.mid > RULE["max_mid"] + 1e-9 or yes.spread > RULE["max_spread"] + 1e-9:
+    if yes.mid > rule["max_mid"] + 1e-9 or yes.mid < rule.get("min_mid", 0.0) - 1e-9 or yes.spread > rule["max_spread"] + 1e-9:
         return f"mid {yes.mid:.3f}, spread {yes.spread:.3f}"
     ask = no.best_ask
     at_ask = sum(s for p, s in no.asks if p <= ask + 1e-9)
@@ -173,7 +183,8 @@ def track_resting(venue: Kalshi, db, now: float, max_checks: int = 30) -> int:
 
 
 def observe(venue: Kalshi, db, listing: dict, categories: set[str], now: float, max_new: int = 25, max_settle: int = 40,
-            stake: float = 20.0, min_volume: float = 45000.0, recheck_hours: float = 24.0, per_event: int = 2) -> dict:
+            stake: float = 20.0, min_volume: float = 45000.0, recheck_hours: float = 24.0, per_event: int = 2,
+            rule: dict = RULE) -> dict:
     open_db(db)
     out = {"recorded": 0, "looked": 0, "settled": 0, "resting_decided": 0}
     # 1. how did the finished ones settle?
@@ -191,7 +202,7 @@ def observe(venue: Kalshi, db, listing: dict, categories: set[str], now: float, 
     skip |= {r[0] for r in db.execute("SELECT ticker FROM checked WHERE ts > ?", (now - recheck_hours * 3600,))}
     per: dict[str, int] = {}
     info = lambda ev: ((venue._info(ev) or {}).get("category") or "").lower()          # noqa: E731
-    for m in candidates(listing, categories, info, min_volume, skip, now):
+    for m in candidates(listing, categories, info, min_volume, skip, now, rule):
         if out["looked"] >= max_new:
             break
         ev = m.get("event_ticker") or m["ticker"]
@@ -199,7 +210,7 @@ def observe(venue: Kalshi, db, listing: dict, categories: set[str], now: float, 
             continue
         per[ev] = per.get(ev, 0) + 1
         try:
-            what = look(venue, db, m, now, stake, min_volume)
+            what = look(venue, db, m, now, stake, min_volume, rule)
         except KalshiError as e:
             what = f"error {e.status_code}"
             if e.status_code == 429:
@@ -213,7 +224,7 @@ def observe(venue: Kalshi, db, listing: dict, categories: set[str], now: float, 
     return out
 
 
-def report(db) -> str:
+def report(db, fill_note: str = "55% to 60%") -> str:
     open_db(db)
     rows = db.execute("SELECT no_ask, ask_contracts, ask_usd_1c, fill_px, fill_shares, fee, stake, result, category FROM obs").fetchall()
     if not rows:
@@ -245,7 +256,7 @@ def report(db) -> str:
     if rest:
         hit = [r for r in rest if r[0]]
         line = (f"resting NO bid at the best bid, three days: {len(rest)} decided, {len(hit)} filled ({len(hit) / len(rest):.0%}; "
-                f"the backtest's model fills about 55% to 60%)")
+                f"the backtest's model fills about {fill_note})")
         done = [r for r in hit if r[3] in ("yes", "no")]
         if done:
             cost = sum(r[1] + (r[2] or 0) * r[1] * (1 - r[1]) for r in done)
@@ -260,28 +271,32 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--report", action="store_true")
     ap.add_argument("--max-new", type=int, default=25)
-    ap.add_argument("--min-volume", type=float, default=45000.0,
-                    help="contracts traded so far; keep it at the level the backtest was run at")
-    ap.add_argument("--categories", default="economics,politics", help="only categories the rule has been tested on")
+    ap.add_argument("--band", choices=sorted(BANDS), default="5c", help="5c: the 5-cent rule; ent: Entertainment NO vs YES 5-35c")
+    ap.add_argument("--min-volume", type=float, default=None,
+                    help="contracts traded so far; keep it at the level the backtest was run at (default: the band's)")
+    ap.add_argument("--categories", default=None, help="only categories the rule has been tested on (default: the band's)")
     ap.add_argument("--pace", type=float, default=2.0, help="seconds between requests")
     args = ap.parse_args()
-    db = sqlite3.connect(str(ROOT / "data" / "shadow.db"), timeout=60)
+    band = BANDS[args.band]
+    args.min_volume = band["min_volume"] if args.min_volume is None else args.min_volume
+    args.categories = band["categories"] if args.categories is None else args.categories
+    db = sqlite3.connect(str(ROOT / "data" / band["db"]), timeout=60)
     if args.report:
-        print(report(db))
+        print(report(db, band["fill_note"]))
         return 0
     try:
-        listing = json.loads((ROOT / "data" / "kalshi_listing.json").read_text(encoding="utf-8"))
+        listing = json.loads((ROOT / "data" / band["listing"]).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
-        print("no market listing yet (the paper bot writes data/kalshi_listing.json on its first cycle)")
+        print(f"no market listing yet (data/{band['listing']} is written by the paper bot or scripts/run_rules.py)")
         return 3
     cats = {c.strip().lower() for c in args.categories.split(",") if c.strip()}
     venue = Kalshi(min_interval=args.pace, cache_dir=ROOT / "data")
     proper = {"science and technology": "Science and Technology", "climate and weather": "Climate and Weather"}
     venue._load_series(sorted(proper.get(c, c.title()) for c in cats))
-    res = observe(venue, db, listing, cats, time.time(), max_new=args.max_new, min_volume=args.min_volume)
+    res = observe(venue, db, listing, cats, time.time(), max_new=args.max_new, min_volume=args.min_volume, rule=band["rule"])
     print(time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()), f"shadow longshot: looked at {res['looked']}, recorded {res['recorded']}, "
           f"settled {res['settled']}, resting orders decided {res['resting_decided']}; {venue.requests} requests")
-    print(report(db))
+    print(report(db, band["fill_note"]))
     return 0
 
 

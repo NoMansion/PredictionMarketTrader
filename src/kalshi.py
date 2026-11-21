@@ -79,6 +79,7 @@ def market_from_kalshi(m: dict, series_info: dict | None = None, event: dict | N
                                                                           "open_interest_fp", "volume_24h_fp", "market_type")}})
     mk.maker_fee_rate = MAKER_RATE * mult if "maker" in str(info.get("fee_type") or "") else 0.0
     mk.open_interest = _num(m.get("open_interest_fp"))
+    mk.contracts = vol                              # contracts traded so far (the research's "cumvol")
     return mk
 
 

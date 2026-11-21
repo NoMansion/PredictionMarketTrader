@@ -121,9 +121,12 @@ def main() -> int:
             subprocess.run(py + [str(ROOT / "scripts" / "run_cycle.py")] + extra, cwd=str(ROOT))
             # the variant accounts trade the forecasts this cycle has just made (no Claude calls): src/variants.py
             subprocess.run(py + [str(ROOT / "scripts" / "run_variants.py")] + extra, cwd=str(ROOT))
+            # the mechanical rule accounts (price rules from the history, no Claude): src/rules.py, rules.yaml
+            subprocess.run(py + [str(ROOT / "scripts" / "run_rules.py")] + extra, cwd=str(ROOT))
             subprocess.run([sys.executable, str(ROOT / "scripts" / "export_forecasts.py")], cwd=str(ROOT))
             # the mechanical rule under observation (no orders, its own file): see scripts/shadow_longshot.py
             subprocess.run([sys.executable, str(ROOT / "scripts" / "shadow_longshot.py")], cwd=str(ROOT))
+            subprocess.run([sys.executable, str(ROOT / "scripts" / "shadow_longshot.py"), "--band", "ent"], cwd=str(ROOT))
             run = last_run(db)
             if run.get("run_id") != before:         # a cycle that was skipped (quiet window, lock) decides nothing
                 new, why = next_gap(gap, base, ceiling, run, model)
