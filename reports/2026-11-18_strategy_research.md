@@ -1388,3 +1388,33 @@ bet). Capacity at 45,000: median $5,664 traded in the week before entry. The lar
 done. Two variants tried here (two levels, both fixed beforehand). **Verdict: not a new account.** The resting
 band stays the stronger form; the paper account `rule_ent_band_taker` (5,000+) already tests the taker side
 forward, and the paper broker's harsher resting fills are what decide between them.
+
+### 3.31 Where the 5-cent rule's money comes from: price and days to close at 45,000 (6:45 am CST, November 21)
+
+Ideas queue item 3. The busy sample at 45,000 contracts, the nine categories, family 25's pre-defined slices
+(`analyze_rule.py --sample liquid --min-cumvol 45000 --rule "NO at mid <p>, <d> to scheduled end, <early>"`):
+price 0-3c or 3-6c, 0-7 or 7-30 days, can close early or fixed date, resting and taker. 16 variants. These
+slices have no spread filter, so they are neighbours of the 5-cent rule, not pieces of it.
+
+| Slice (can close early) | Entry | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay 1%, in / out a year | Worst DD in / out |
+|---|---|---|---|---|---|---|---|
+| 0-3c, 0-7d | resting | 501 (341) | +0.71% | 8/233 / 1/111 | fails / fails | +0.2% / +5.5% | 2.1% / 1.0% |
+| 0-3c, 0-7d | taker | 774 (499) | +0.04% | 8/352 / 1/150 | fails / fails | -0.6% / +3.0% | 2.8% / 1.0% |
+| 0-3c, 7-30d | resting | 656 (438) | +1.79% | 5/326 / 1/124 | passes (3.20 vs 3.83%) / passes (3.77 vs 3.94%) | +1.0% / +7.3% | 2.0% / 1.0% |
+| 0-3c, 7-30d | taker | 880 (564) | +0.55% | 6/434 / 1/148 | fails / fails | +0.1% / +3.9% | 3.3% / 1.0% |
+| 3-6c, 0-7d | resting | 330 (248) | +3.32% | 6/167 / 1/83 | passes (6.97 vs 7.68%) / passes (5.59 vs 6.19%) | +1.7% / +9.6% | 1.9% / 1.0% |
+| 3-6c, 0-7d | taker | 438 (312) | +1.55% | 6/220 / 1/94 | fails / fails | +1.4% / +7.3% | 1.7% / 1.0% |
+| 3-6c, 7-30d | resting | 526 (369) | +3.21% | 10/282 / 2/91 | passes (5.94 vs 7.34%) / passes (6.76 vs 8.41%) | +1.7% / +11.6% | 2.6% / 1.0% |
+| 3-6c, 7-30d | taker | 660 (451) | +1.25% | 12/348 / 2/110 | fails / fails | -0.0% / +8.0% | 3.1% / 1.0% |
+
+Fixed-date markets are almost absent from the busy sample (3 to 16 events per slice, no losers, every tail test
+"not below break-even" for lack of events): no conclusion there.
+
+**Result: the money is in the 3-6c band, resting, at any horizon up to 30 days (+3.2-3.3% a bet, passes both
+halves); under 3c it is thin (+0.7% under a week, fails; +1.8% at 7-30 days, passes by a hair).** No taker slice
+passes: a taker pays about 1.3c more, which is most of a 0-3c bet's margin. Capacity: median $2,255 traded in
+the week before entry for 3-6c under a week, $1,345 for 3-6c at 7-30 days, $378-783 under 3c. The replays stay
+small (+1.7% a year in sample at 1% stakes; the account is mostly idle), so this is a sharpening, not a new
+strategy. 16 variants tried; nothing here is above t 3 on its own. **Verdict: no new account.** A pre-stated
+follow-up goes to the queue: the 5-cent rule without its 0-3c, 0-7 day corner (NO at 3-5c, spread <= 5c,
+<= 30 days), to be judged on both halves with the same tests.

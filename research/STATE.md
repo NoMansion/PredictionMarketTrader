@@ -602,6 +602,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   5,000, 20,000 and 45,000 contracts.
 - 6:25 am CST Nov 21: queue item 2 (report 3.30): the Entertainment band as a taker earns about half the resting
   version (+3.5% a bet) and fails the tail test in sample at 45,000. No new account. Jobs ok; cycle running.
+- 6:45 am CST Nov 21: queue item 3 (report 3.31): the 5-cent rule's edge sits at 3-6c resting; under 3c it is thin;
+  takers fail. No new account; item 15 added. Jobs ok; main $1,010.72, 0 settled.
 
 ## How to run a round
 
@@ -718,7 +720,8 @@ drawdown, capacity in dollars, and say how many variants were tried.
    out of sample +31% / +33% / +26% a year, worst drawdown 6.0% / 6.6% / 2.3%. Holds at the busiest level too.
 2. DONE 6:25 am CST Nov 21 (report 3.30): Entertainment band as a TAKER: +3.5% a bet at 20,000 and 45,000 (half
    the resting edge); passes both halves at 20,000, FAILS in sample at 45,000 (bound 29.0% vs 28.5%). No new account.
-3. The 5-cent rule at 45,000 split by days to the close (the "25 longshot NO" family: "NO at mid 0-3c, 0-7d to
+3. DONE 6:45 am CST Nov 21 (report 3.31): money is in 3-6c resting (+3.2-3.3% a bet, passes both halves at 0-7d
+   and 7-30d); 0-3c is thin (fails under 7d, +1.8% passes by a hair at 7-30d); no taker slice passes. Was: The 5-cent rule at 45,000 split by days to the close (the "25 longshot NO" family: "NO at mid 0-3c, 0-7d to
    scheduled end, fixed date" and its neighbours, both entries): where does the rule's money come from?
 4. The 5-cent rule on stand-alone questions only at 45,000 ("single-market event: NO where YES is 5c or less,
    spread <= 5c", mk and tk): report 3.19 asked this.
@@ -742,3 +745,5 @@ drawdown, capacity in dollars, and say how many variants were tried.
     by the user's word above), and say so in the report.
 14. The Entertainment band (resting) by days to close (0-7, 7-30, 30+ days) at 20,000: taker results (3.30) are
     thin in 2025; is the edge in the short-dated markets, where capital turns over fastest?
+15. The 5-cent rule without its 0-3c corner (report 3.31): NO at mid 3-5c, spread <= 5c, <= 30d, resting and taker, at
+    45,000 and the default level. Needs a new rule name in research/families.py (add, do not rename) and a test.
