@@ -604,6 +604,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   version (+3.5% a bet) and fails the tail test in sample at 45,000. No new account. Jobs ok; cycle running.
 - 6:45 am CST Nov 21: queue item 3 (report 3.31): the 5-cent rule's edge sits at 3-6c resting; under 3c it is thin;
   takers fail. No new account; item 15 added. Jobs ok; main $1,010.72, 0 settled.
+- 9:15 am CST Nov 21: queue item 4 (report 3.32): the 5-cent rule on stand-alone questions at 45,000 passes in
+  sample, too thin out of sample (27-35 events). No new account. Jobs ok; main $1,010.72, 0 settled.
 
 ## How to run a round
 
@@ -723,7 +725,8 @@ drawdown, capacity in dollars, and say how many variants were tried.
 3. DONE 6:45 am CST Nov 21 (report 3.31): money is in 3-6c resting (+3.2-3.3% a bet, passes both halves at 0-7d
    and 7-30d); 0-3c is thin (fails under 7d, +1.8% passes by a hair at 7-30d); no taker slice passes. Was: The 5-cent rule at 45,000 split by days to the close (the "25 longshot NO" family: "NO at mid 0-3c, 0-7d to
    scheduled end, fixed date" and its neighbours, both entries): where does the rule's money come from?
-4. The 5-cent rule on stand-alone questions only at 45,000 ("single-market event: NO where YES is 5c or less,
+4. DONE 9:15 am CST Nov 21 (report 3.32): resting +3.7% a bet, taker +1.9%; both pass the tail test in sample, out of
+   sample 27/35 events with no loss is too few to pass; median $492-680 a week traded. No new account. Was: The 5-cent rule on stand-alone questions only at 45,000 ("single-market event: NO where YES is 5c or less,
    spread <= 5c", mk and tk): report 3.19 asked this.
 5. The wide band (NO vs YES 5-35c, resting) in each of the nine categories ALONE at 45,000: pooled it lost
    (-2.32% a bet, report 3.28), but one category may carry it as Entertainment does.

@@ -1418,3 +1418,23 @@ small (+1.7% a year in sample at 1% stakes; the account is mostly idle), so this
 strategy. 16 variants tried; nothing here is above t 3 on its own. **Verdict: no new account.** A pre-stated
 follow-up goes to the queue: the 5-cent rule without its 0-3c, 0-7 day corner (NO at 3-5c, spread <= 5c,
 <= 30 days), to be judged on both halves with the same tests.
+
+
+### 3.32 The 5-cent rule on stand-alone questions at 45,000 (9:15 am CST, November 21)
+
+Ideas queue item 4, the question 3.19 and 3.20 left open: family 28's "single-market event: NO where YES is 5c
+or less, spread <= 5c" on the busy sample at 45,000 contracts, nine categories
+(`analyze_rule.py --sample liquid --min-cumvol 45000`), resting and taker. 2 variants.
+
+| Entry | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay 1%, in / out a year | Worst DD in / out |
+|---|---|---|---|---|---|---|
+| resting | 330 (330) | +3.72% | 3/303 / 0/27 | passes (2.54 vs 4.53%) / not below break-even (10.5 vs 3.77%) | +1.7% / +1.3% | 1.0% / 0.0% |
+| taker | 366 (366) | +1.86% | 3/331 / 0/35 | passes (2.33 vs 2.67%) / not below break-even (8.2 vs 2.23%) | +0.9% / +0.9% | 1.0% / 0.0% |
+
+**Result: strong in sample, too thin out of sample to judge.** Both entries pass the tail test before April 2026
+(the taker only by a hair) and have lost nothing since, but on 27 and 35 events an exact bound cannot get under
+a break-even loss rate of 2-4%: 100+ events are needed. No series has more than 4% of the bets. Capacity is
+small: median $492 (resting) / $680 (taker) traded in the week before entry, a fifth of entry days under 100
+contracts. The replay barely uses the account (2-7% at work), so a year earns about 1-2% at 1% stakes. Same
+reading as 3.20 at the busier level: well supported, consistent, not proven, and tiny. **Verdict: no new
+account.** The shadow log already records event size; stand-alone questions are counted there as they come.
