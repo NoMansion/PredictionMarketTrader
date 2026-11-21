@@ -203,8 +203,8 @@ the two controls and against each other, and expect nothing meaningful before do
 
 ### Rule accounts: the backtest's own rules, traded forward
 
-Nine more paper accounts (`rules.yaml`, `src/rules.py`, `scripts/run_rules.py`, added 2026-11-21) trade the price
-rules that survived five years of Kalshi history, with no Claude at all: buy NO against a cheap YES in markets that
+Ten more paper accounts (`rules.yaml`, `src/rules.py`, `scripts/run_rules.py`, added 2026-11-21) trade the price
+rules that survived five years of Kalshi history, with no Claude (one uses Claude as a veto): buy NO against a cheap YES in markets that
 have already traded a lot, with a resting order at the best NO bid (72 hours), and hold to settlement. 1% of the
 account a bet (0.5% in the combined account), 3% per event, 50% at work at most; each has its own $1,000 and its
 own ledger in `data\rules\`; the paper loop runs them after every cycle.
@@ -217,6 +217,7 @@ own ledger in `data\rules\`; the paper loop runs them after every cycle.
 | `rule_5c_busy_taker`, `rule_ent_band_taker` | the same two, paying the ask | taking failed / passed |
 | `rule_ent_fall` | Entertainment YES at 10-25c that fell 3c+ in 7 days | +8.95% a bet |
 | `rule_climate_band` | YES at 5-35c, Climate and Weather, 5,000+ contracts | +8.17% a bet (71 bets) |
+| `rule_5c_busy_claude` | the 5-cent busy rule with Claude as a veto (no price shown; at most 2 questions a cycle) | forward only |
 | `control_5c_quiet`, `control_ent_quiet` | **Controls:** the same rules on quiet markets, where the history says they lose | lose |
 
 `scripts\run_rules.py --report` prints them; `scripts\shadow_longshot.py --band ent` logs whether the Entertainment

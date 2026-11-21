@@ -15,6 +15,7 @@ from _bootstrap import ROOT
 
 from src import runtime
 from src.config import load_config
+from src.forecast import make_backend
 from src.kalshi import Kalshi
 from src.ledger import Ledger
 from src.rules import kalshi_candles, load_rules, run_rules
@@ -88,7 +89,13 @@ def main() -> int:
     try:
         with runtime.Lock(ROOT / "data" / "cycle.lock", float(rt.get("lock_stale_hours", 1))):
             only = [s.strip() for s in args.only.split(",") if s.strip()] or None
-            out = run_rules(cfg, accounts, venue, ROOT, now=t0, only=only, candles=kalshi_candles(venue))
+            built = {}
+
+            def asker():                            # the paper bot's own forecaster, for the Claude-filtered accounts
+                if "fc" not in built:
+                    built["fc"] = make_backend(cfg, ROOT)
+                return built["fc"]
+            out = run_rules(cfg, accounts, venue, ROOT, now=t0, only=only, candles=kalshi_candles(venue), asker=asker)
     except runtime.Busy as e:
         print(f"rule accounts skipped: {e}")
         return 3
@@ -96,7 +103,8 @@ def main() -> int:
         print(f"[{s['account']}] {s['status']}: {s.get('qualifying', 0)} qualifying, {s.get('orders', 0)} orders, "
               f"equity ${s.get('equity', 0):,.2f}, {s.get('positions', 0)} positions, {s.get('resting', 0)} resting")
         for line in s["log"]:
-            if any(k in line for k in ("BUY", "listed", "settled", "filled", "expired", "Error", "failed", "unavailable")):
+            if any(k in line for k in ("BUY", "listed", "settled", "filled", "expired", "Error", "failed", "unavailable",
+                                       "VETO", "Claude", "forecast")):
                 print(f"    {line}")
     print(f"rule accounts: {len(out)} in {time.time() - t0:,.0f} s, {venue.requests} requests")
     return 1 if out and all(s["status"] == "error" for s in out) else 0

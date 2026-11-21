@@ -1326,3 +1326,45 @@ only when a fresh forecast says the bid is worth more than holding; no price sto
 the history says: hold to settlement, rest the entry, and trade only markets that are already busy. Open for the
 user: a second paper account for the 5-cent rule restricted to markets with 45,000+ contracts traded, and a
 forward observation band (no orders) for NO against YES at 5-35c in busy Entertainment markets.
+
+
+### 3.29 The backtest's rules as paper accounts; Claude as a filter; the Entertainment band at the busiest level (5:40 am CST, November 21)
+
+**What was new.** The user said yes to both open questions and asked for "anything else possible for testing",
+then: "Keep testing and trying things indefinitely". So:
+
+- **Ten mechanical paper accounts** (`rules.yaml`, `src/rules.py`, `scripts/run_rules.py`), run by the paper loop
+  after every cycle, each with $1,000 and its own ledger: the 5-cent rule on busy markets (45,000+ contracts) and
+  the Entertainment band (NO vs YES 5-35c, 5,000+ contracts), the four-leg combined account at 0.5% a bet, taker
+  twins of the first two, the Entertainment 7-day-fall rule, the Climate band, two quiet-market CONTROLS (the same
+  rules where the history says they lose), and `rule_5c_busy_claude`: the 5-cent rule with Claude as a filter
+  (the paper bot's own forecaster, no price shown; a veto when Claude gives NO less than the price or calls the
+  rules unclear; at most 2 questions a cycle; vetoed markets' outcomes are recorded too). Entries rest at the best
+  NO bid for 72 hours (the backtest's resting entry) and are held to settlement (report 3.28). The paper broker
+  fills a resting order only when the market trades through it, which is harsher than the backtest's fill model.
+- **Five stricter Claude accounts** in `variants.yaml` (5 and 8 points of edge, high confidence only, the side
+  priced 50c+ only, NO only): 23 Claude accounts in all.
+- **A second observation log**: `scripts/shadow_longshot.py --band ent` records the Entertainment band's books and
+  whether a resting NO bid would really have filled (data/shadow_ent.db; 17 markets on the first pass).
+- First run of the rule accounts, 5:01 am: 152 paper orders across nine accounts (7 in the 5-cent busy account,
+  24 in the Entertainment band, 26 in the combined account, 23 in each control). Nothing has filled or settled.
+
+**Ideas queue, item 1: the Entertainment band at the busiest level.** Report 3.24 found the band on markets seen
+from 5,000 contracts. Is it still there where markets are busiest? NO where YES is at 5-35c, resting:
+
+| Contracts traded so far | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay at 1%, in / out a year | Worst drawdown in / out |
+|---|---|---|---|---|---|---|
+| 5,000 | 1,937 (846) | +7.28% | 144 of 584 / 58 of 267 | passes / passes | +10.9% / +31.4% | 4.0% / 6.0% |
+| 20,000 | 1,526 (691) | +7.39% | 106 of 474 / 47 of 220 | passes / passes | +9.1% / +33.0% | 6.5% / 6.6% |
+| 45,000 | 815 (402) | +7.14% | 68 of 282 / 19 of 121 | passes / passes (bound 22.2% against 35.9%) | +9.9% / +25.5% | 8.1% / 2.3% |
+
+At 0.5% a bet the 45,000 level's out-of-sample replay is +14.3% a year with a worst drawdown of 1.2%. Capacity
+grows with the level: a median $5,663 traded in the week before entry at 45,000 (against $2,140 at 5,000). **The
+band holds at every level**, unlike the 5-cent rule, whose quiet markets carried its losses. Three levels are
+three variants of one rule, all fixed before this look (5,000 is the census level, 20,000 and 45,000 the levels of
+report 3.28). It is still one category of eleven, found on its own data: the forward accounts are the test.
+
+**What this changes.** Nothing reaches the paper bot. A check-in with nothing new now takes the next item of the
+ideas queue in STATE.md (13 items: taker and days-window splits, stand-alone questions, the band per category,
+calibration at 45,000, risk-averse sizing, exits at the busy level, momentum, hourly bars, event sums, and the
+forward comparisons) instead of stopping.

@@ -22,6 +22,19 @@ reads first. Keep it short and current. Findings go in the report; this is the c
   Windows check-in ran, and at about 12:23 pm write the user a morning summary. They live only in that session.
 **Report:** `reports/2026-11-18_strategy_research.md` (create on first results; add a dated section per check-in).
 
+## KEEP TRYING THINGS (the user, 5:25 am CST 2026-11-21: "Keep testing and trying things indefinitely")
+
+Before that: "Yes make both of those and anything else possible for testing. We ar under no time constraint and
+want to to find the best possible source of risk averse money making". So a check-in with nothing new to report
+does NOT stop early any more: it takes the first open item of the "Ideas queue" (below "Next actions"), runs it,
+writes the result (pass or fail) in the report and the queue, and adds any new idea the result suggests. One item
+per check-in, backtests and cheap code only. New PAPER accounts (rules.yaml, variants.yaml) are covered by this
+instruction when the backtest supports them: add a new name, never change an old one, write the reason here.
+Still NOT covered: the main account's config, the forecaster's settings, real money, standing PC changes, and
+more Claude usage than the paper loop's own plus the capped filter account (rule_5c_busy_claude, 2 questions a
+cycle). If the paper loop's gap has widened (data\paper_loop_state.json above 2 h: Claude's limit was hit), do
+health only.
+
 ## Standing instruction (2026-11-19, about 3:50 am CST, on the PC)
 
 The user: "are you prepared to download data, run tests, and determine the best strategy you can to make as
@@ -581,6 +594,12 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   logs the Entertainment band's books and resting fills (data\shadow_ent.db; first pass 17 recorded). The paper
   loop runs both after every cycle (restarted 5:13 am). 470 tests, all pass. With 9 + 23 accounts one will look
   good by luck: read the controls first.
+- 5:45 am CST Nov 21: "Keep testing and trying things indefinitely": standing section "KEEP TRYING THINGS" at
+  the top and an "Ideas queue" at the end (13 items); the check-in now works one queue item when nothing new has
+  landed instead of stopping. Tenth rule account `rule_5c_busy_claude` (Claude as a veto on the 5-cent busy rule,
+  at most 2 questions a cycle; usage at 5:17 am: weekly all models 63% with 79% of the week gone, Fable 84%,
+  unchanged). Queue item 1 done (report 3.29): the Entertainment band passes the tail test in both halves at
+  5,000, 20,000 and 45,000 contracts.
 
 ## How to run a round
 
@@ -620,8 +639,9 @@ Status: `todo`, `running`, `done` (with the report section), or `dropped` (with 
 
 Forward-only (cannot be backtested):
 
-17. todo: Claude forecasts on Kalshi through the paper bot (needs the Kalshi venue adapter, `src/kalshi.py`).
-18. todo: Claude as a filter on a mechanical rule (trade the rule only where Claude does not object).
+17. DONE: Claude forecasts on Kalshi through the paper bot (since 2026-11-18).
+18. RUNNING since 2026-11-21: Claude as a filter on a mechanical rule: the paper account `rule_5c_busy_claude`
+    (rules.yaml; pair `rule_5c_busy`). Read it once 20+ of its markets (kept and vetoed) have settled.
 
 ## Next actions
 
@@ -683,3 +703,38 @@ Forward-only (cannot be backtested):
    The nine-category
    list for pooled rounds: Economics, Politics, Companies, Science and Technology, Elections, Health, World,
    Commodities, Financials.
+
+## Ideas queue (work the first open item each check-in; see "KEEP TRYING THINGS" at the top)
+
+Rule names must match `research/families.py` exactly (`analyze_rule.find_rule` says when one does not). Write
+every result, pass or fail, into the report and mark the item here with the date and one line. Add new items at
+the end when a result suggests one. Judge by the rules above: tail test both halves, account replay, worst
+drawdown, capacity in dollars, and say how many variants were tried.
+
+1. DONE 5:40 am CST Nov 21 (report 3.29): Entertainment band (NO vs YES 5-35c, resting) at 5,000 / 20,000 /
+   45,000 contracts: passes the tail test in both halves at all three; +7.3% / +7.4% / +7.1% a bet; replay at 1%
+   out of sample +31% / +33% / +26% a year, worst drawdown 6.0% / 6.6% / 2.3%. Holds at the busiest level too.
+2. Entertainment band as a TAKER at 20,000 and 45,000 (`--entry tk`): does the taker version pass where markets
+   are busiest? If it does, a taker account needs no fill luck.
+3. The 5-cent rule at 45,000 split by days to the close (the "25 longshot NO" family: "NO at mid 0-3c, 0-7d to
+   scheduled end, fixed date" and its neighbours, both entries): where does the rule's money come from?
+4. The 5-cent rule on stand-alone questions only at 45,000 ("single-market event: NO where YES is 5c or less,
+   spread <= 5c", mk and tk): report 3.19 asked this.
+5. The wide band (NO vs YES 5-35c, resting) in each of the nine categories ALONE at 45,000: pooled it lost
+   (-2.32% a bet, report 3.28), but one category may carry it as Entertainment does.
+6. Calibration curve at 45,000 for every category (`research/calibration_curve.py --sample liquid --min-cumvol
+   45000 --categories <Cat>`): any other band where YES is overpriced in both halves, per event?
+7. Risk-averse sizing for the combined account: `research/combined.py --stakes 0.0025,0.005,0.0075` and the
+   worst drawdown of each; does a smaller stake buy a much smaller drawdown?
+8. The Entertainment band with "take at 0.98, resting" at 45,000 (`research/exit_study.py`): report 3.28 found
+   capital time helps the account replay there; check it at the busy level.
+9. The momentum lead (NO at 3-10c after a fall of 3c+, resting) on the busy sample pooled, now that every category
+   is in.
+10. Code: hourly bars for the last two days of markets the exit study holds (its one real caveat).
+11. Code: sums over mutually exclusive events (Kalshi's flag on `/events`): an event whose YES prices sum well
+    above 1 is a basket of NO bets with a known floor.
+12. Forward, when there is data: each rule account against its control and its backtest per-bet figure (30+
+    settled bets); `rule_5c_busy_claude`: loss rate of kept against vetoed markets (20+ settled); the shadow logs'
+    resting fill rates against the backtest's 55-80% model (50+ decided).
+13. When a queue item passes all the tests, add a paper account for it under a new name in rules.yaml (allowed
+    by the user's word above), and say so in the report.

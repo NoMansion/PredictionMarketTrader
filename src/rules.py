@@ -117,6 +117,12 @@ class RuleAccount:
     max_books: int = 40                 # fresh order books read per cycle for this account
     control: bool = False
     config: dict = field(default_factory=dict)      # laid over config.yaml (safety stops, fees)
+    # Claude as a filter on the rule (forward-only idea 18 of STATE.md): each qualifying market is put to the paper
+    # bot's own forecaster (the market price is not shown to it), and the bet is vetoed when Claude's probability
+    # of our side is below the price paid, or Claude says the rules are unclear. At most max_asks questions a
+    # cycle: the rest wait for the next cycle. A vetoed market is not asked again; its outcome is still recorded.
+    claude_filter: bool = False
+    max_asks: int = 2
 
 
 LEG_KEYS = {f.name for f in fields(Leg)}
@@ -200,13 +206,65 @@ class RuleTrader(Trader):
     equity, the account safety stops and the run record are the Trader's own."""
 
     def __init__(self, cfg: dict, ledger: Ledger, venue, acct: RuleAccount, listing: list[Market], root=".",
-                 candles=None):
-        super().__init__(cfg, ledger, venue, forecaster=None, root=root)
+                 candles=None, asker=None):
+        super().__init__(cfg, ledger, venue, forecaster=asker, root=root)
         self.acct, self.listing = acct, listing
         self.candles = candles or (lambda m, now: [])
+        if acct.claude_filter and asker is None:
+            raise ValueError(f"rule account {acct.name!r} filters with Claude but no forecaster was given")
+        self._fids: dict[str, tuple[int, float]] = {}
 
     def _tried(self) -> set[str]:
-        return {r["market_id"] for r in self.ledger.q("SELECT DISTINCT market_id FROM orders WHERE side='BUY'")}
+        return {r["market_id"] for r in self.ledger.q("SELECT DISTINCT market_id FROM orders WHERE side='BUY' "
+                                                      "UNION SELECT DISTINCT market_id FROM decisions WHERE action='VETO'")}
+
+    def _claude_filter(self, cands: list, res: CycleResult, now: float) -> list:
+        """Keep the candidates Claude does not object to; ask about at most max_asks of them."""
+        keep, asks, waiting = [], 0, 0
+        for m, leg, yes, no in cands:
+            if asks >= self.acct.max_asks:
+                waiting += 1
+                continue
+            try:
+                full = self.venue.enrich(m) or m                 # the rules text, for the question packet
+            except Exception as e:
+                res.say(f"{m.market_id}: detail unavailable for Claude ({brief(e)})")
+                continue
+            self.ledger.upsert_market(full.ledger_row(), ts=now)
+            asks += 1
+            try:
+                f = self.forecaster.forecast(full, now)
+            except Exception as e:
+                res.say(f"{m.market_id}: forecaster failed ({brief(e)})")
+                continue
+            finally:
+                self.heartbeat()
+            if f is None:
+                res.say(f"{m.market_id}: no usable forecast ({getattr(self.forecaster, 'last_error', '') or 'no answer'}): "
+                        "asked again next cycle")
+                continue
+            fid = self.ledger.add_forecast(f.ledger_row(res.run_id, yes.mid))
+            book = no if leg.side == "NO" else yes
+            price = book.best_bid if self.acct.entry == "resting" else book.best_ask
+            ours = 1.0 - f.p_yes if leg.side == "NO" else f.p_yes
+            why = ""
+            if not f.rules_clear:
+                why = "Claude says the resolution rules are not clear"
+            elif price is not None and ours < price - 1e-9:
+                why = f"Claude gives {leg.side} {ours:.3f}, under the {price:.3f} it would cost"
+            if why:
+                self.ledger.add_decision({"ts": now, "run_id": res.run_id, "market_id": m.market_id, "forecast_id": fid,
+                                          "action": "VETO", "reason": f"{leg.label}: {why}", "p_model": f.p_yes,
+                                          "p_market": yes.mid})
+                res.say(f"{m.market_id}: VETO ({why})")
+                continue
+            self._fids[m.market_id] = (fid, f.p_yes)
+            res.say(f"{m.market_id}: Claude agrees ({leg.side} {ours:.3f} against {price:.3f}, {f.confidence})")
+            keep.append((m, leg, yes, no))
+        res.stats.update(claude_asked=asks, claude_waiting=waiting)
+        if waiting:
+            res.say(f"{waiting} qualifying markets wait for Claude until the next cycle (at most {self.acct.max_asks} a cycle)")
+        return keep
 
     def forecast(self, res: CycleResult, now: float) -> list:
         """Here: the scan. Returns (market, leg, yes book, no book) for every market where the rule holds now."""
@@ -264,14 +322,15 @@ class RuleTrader(Trader):
         res.stats.update(listed=len(self.listing), passed_listing=len(picked), books_read=looked, qualifying=len(out))
         res.say(f"{len(self.listing)} markets listed, {len(picked)} fit the rule loosely, {looked} books read, "
                 f"{len(out)} qualify now" + (f"; not now: {why_not}" if why_not else ""))
-        return out
+        return self._claude_filter(out, res, now) if self.acct.claude_filter else out
 
     def entries(self, cands: list, equity: float, acct, res: CycleResult, now: float) -> None:
         a = self.acct
         for m, leg, yes, no in cands:
             book = no if leg.side == "NO" else yes
             price = book.best_bid if a.entry == "resting" else book.best_ask
-            base = {"ts": now, "run_id": res.run_id, "market_id": m.market_id, "forecast_id": None, "p_model": None,
+            fid, p_model = self._fids.get(m.market_id, (None, None))
+            base = {"ts": now, "run_id": res.run_id, "market_id": m.market_id, "forecast_id": fid, "p_model": p_model,
                     "p_market": yes.mid}
             self.ledger.upsert_market(m.ledger_row(), ts=now)
             if price is None or not 0 < price < 1:
@@ -313,9 +372,11 @@ def scan_window(accounts: dict[str, RuleAccount]) -> tuple[list[str], float, flo
 
 
 def run_rules(main_cfg: dict, accounts: dict[str, RuleAccount], venue, root: str | Path, now: float | None = None,
-              only: list[str] | None = None, listing: list[Market] | None = None, candles=None) -> list[dict]:
+              only: list[str] | None = None, listing: list[Market] | None = None, candles=None,
+              asker=None) -> list[dict]:
     """One cycle of every rule account on one listing and one set of order books. A failing account is reported
-    and does not stop the others."""
+    and does not stop the others. `asker`: a forecaster, or a function returning one, for the accounts that
+    filter with Claude (built only when one of them runs)."""
     now = now or time.time()
     root = Path(root)
     accounts = {n: a for n, a in accounts.items() if not only or n in only}
@@ -342,7 +403,11 @@ def run_rules(main_cfg: dict, accounts: dict[str, RuleAccount], venue, root: str
             ledger = Ledger(root / "data" / "rules" / f"{name}.db")
             if ledger.deposits() == 0:
                 ledger.deposit(float((cfg.get("account") or {}).get("paper_bankroll", 1000.0)), "deposit: paper bankroll")
-            trader = RuleTrader(cfg, ledger, shared, acct, [copy.copy(m) for m in listing], root=root, candles=cached_candles)
+            fc = None
+            if acct.claude_filter:
+                fc = asker() if callable(asker) and not hasattr(asker, "forecast") else asker
+            trader = RuleTrader(cfg, ledger, shared, acct, [copy.copy(m) for m in listing], root=root,
+                                candles=cached_candles, asker=fc)
             res = trader.run(now=now)
             summary.update(status=res.status, log=res.log, run_id=res.run_id, **res.stats)
         except Exception as e:                      # written down, and the next account still runs

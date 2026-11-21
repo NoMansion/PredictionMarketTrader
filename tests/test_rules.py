@@ -393,3 +393,60 @@ def test_each_cycle_reads_a_fresh_sample_of_books(tmp_path):
     assert led.one("SELECT COUNT(*) AS n FROM orders")["n"] == 0 and int(led.get_meta("scan_round")) == 3
     led.close()
     assert all(len(r) == 5 for r in read) and len(read[0] | read[1] | read[2]) > 5     # not the same five each time
+
+
+# ---- Claude as a filter -------------------------------------------------------------------------------------------
+def test_claude_filter_keeps_vetoes_and_waits(tmp_path):
+    from fakes import TableForecaster
+    http = Http(NOW)
+    for t in ("A", "B", "C", "D"):
+        http.add(f"KXCPIYOY-26NOV-{t}", bid=0.03, ask=0.04, volume=50000, days=10)
+    acct = five_cent(name="cl", claude_filter=True, max_asks=3)
+    fc = TableForecaster({"KXCPIYOY-26NOV-A": 0.01, "KXCPIYOY-26NOV-B": 0.10,
+                          "KXCPIYOY-26NOV-C": {"p_yes": 0.01, "rules_clear": False}})
+    out = run_rules(cfg(), {"cl": acct}, venue_for(http), tmp_path, now=NOW, asker=lambda: fc)
+    led = ledger(tmp_path, "cl")
+    asked = set(fc.asked)
+    assert len(asked) == 3 and out[0]["claude_asked"] == 3 and out[0]["claude_waiting"] == 1
+    orders = [r["market_id"] for r in led.q("SELECT market_id FROM orders")]
+    vetoes = {r["market_id"]: r["reason"] for r in led.q("SELECT market_id, reason FROM decisions WHERE action='VETO'")}
+    if "KXCPIYOY-26NOV-A" in asked:
+        assert orders == ["KXCPIYOY-26NOV-A"]
+        d = led.one("SELECT * FROM decisions WHERE action='BUY_NO'")
+        assert d["forecast_id"] is not None and d["p_model"] == pytest.approx(0.01)
+    if "KXCPIYOY-26NOV-B" in asked:
+        assert "Claude gives NO 0.900, under the 0.960" in vetoes["KXCPIYOY-26NOV-B"]
+    if "KXCPIYOY-26NOV-C" in asked:
+        assert "not clear" in vetoes["KXCPIYOY-26NOV-C"]
+    assert len(led.q("SELECT * FROM forecasts")) == len(asked & {"KXCPIYOY-26NOV-A", "KXCPIYOY-26NOV-B", "KXCPIYOY-26NOV-C"})
+    led.close()
+    # next cycle: the market that waited (or got no answer) is asked; vetoed and ordered ones are not asked again
+    fc.asked.clear()
+    run_rules(cfg(), {"cl": acct}, venue_for(http, NOW + 2 * H), tmp_path, now=NOW + 2 * H, asker=fc)
+    every = {f"KXCPIYOY-26NOV-{t}" for t in "ABCD"}
+    no_answer = {"KXCPIYOY-26NOV-D"} & asked                            # D is not in the table: asked again
+    assert set(fc.asked) == (every - asked) | no_answer
+
+
+def test_claude_filter_needs_a_forecaster_and_survives_its_failures(tmp_path):
+    from fakes import TableForecaster
+    http = Http(NOW).add("KXCPIYOY-26NOV-T5", bid=0.03, ask=0.04, volume=50000, days=10)
+    acct = five_cent(name="cl", claude_filter=True)
+    out = run_rules(cfg(), {"cl": acct}, venue_for(http), tmp_path, now=NOW)
+    assert out[0]["status"] == "error" and "no forecaster" in out[0]["log"][-1]
+
+    class Broken(TableForecaster):
+        def forecast(self, m, now=None):
+            raise RuntimeError("claude is down")
+    out = run_rules(cfg(), {"cl": acct}, venue_for(http), tmp_path, now=NOW, asker=Broken({}))
+    assert out[0]["status"] == "ok" and any("forecaster failed" in line for line in out[0]["log"])
+    out = run_rules(cfg(), {"cl": acct}, venue_for(http), tmp_path, now=NOW + H, asker=TableForecaster({}))
+    assert any("no usable forecast" in line and "asked again next cycle" in line for line in out[0]["log"])
+    led = ledger(tmp_path, "cl")
+    assert led.q("SELECT * FROM orders") == [] and led.q("SELECT * FROM decisions WHERE action='VETO'") == []
+    led.close()
+
+
+def test_the_real_file_has_the_claude_filtered_account():
+    a = load_rules(ROOT / "rules.yaml")["rule_5c_busy_claude"]
+    assert a.claude_filter and a.max_asks == 2 and a.legs[0].min_volume == 45000

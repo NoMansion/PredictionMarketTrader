@@ -100,3 +100,15 @@ accounts:
     control: true
     legs:
       - {label: "NO vs YES 5-35c, Entertainment, quiet", categories: [Entertainment], min_yes_mid: 0.05, max_yes_mid: 0.345, max_volume: 5000}
+
+  # ---- Claude as a filter on a mechanical rule (added 2026-11-21, 5:30 am CST: "Keep testing and trying things
+  # indefinitely"). Uses Claude usage: at most 2 questions a cycle (3 Opus runs each, as the paper bot). Pair:
+  # rule_5c_busy, the same rule without the filter. The vetoed markets' outcomes are recorded too: if the vetoed
+  # ones lose more often than the kept ones, Claude adds something to the rule. ---------------------------------
+  rule_5c_busy_claude:
+    about: "5-cent busy rule, but Claude reads each market first (no price shown) and vetoes it when it gives NO less than the price; at most 2 questions a cycle"
+    entry: resting
+    stake_pct: 0.01
+    claude_filter: true
+    max_asks: 2
+    legs: [*five_cent_busy]
