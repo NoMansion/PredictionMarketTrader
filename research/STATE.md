@@ -610,6 +610,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   hair and not at 20,000; the nine pooled pass at 45,000 but earn almost only in 2026. No new account; item 16 added.
 - 12:25 pm CST Nov 21: queue item 6 (report 3.34): calibration at 45,000 per category finds no new band; Climate and Weather's
   5-cent rule: 0 losses in 89 events, fails the tail test (too few). Item 17 added. Jobs ok; main $1,010.72, 0 settled.
+- 12:35 pm CST Nov 21: queue item 7 (report 3.35): smaller stakes help the combined account out of sample (0.25%: +12.1%/y,
+  DD 4.0%); the 5-cent leg loses above 0.25% and the combined figure at 0.5% fell from 15.3% to 8.8% on the larger download.
+  Item 18 added. Jobs ok; main $1,010.72, 0 settled.
 
 ## How to run a round
 
@@ -740,7 +743,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
    are off in both halves with 30+ events; Climate's 5-cent rule at 45,000: 0 losses in 89 events but fails the tail test
    both halves (too few). No account; item 17 added. Was: Calibration curve at 45,000 for every category (`research/calibration_curve.py --sample liquid --min-cumvol
    45000 --categories <Cat>`): any other band where YES is overpriced in both halves, per event?
-7. Risk-averse sizing for the combined account: `research/combined.py --stakes 0.0025,0.005,0.0075` and the
+7. DONE 12:35 pm CST Nov 21 (report 3.35): out of sample 0.25% a bet earns MORE and draws down less (+12.1%/y, DD 4.0%) than
+   0.5% (+8.8%, 6.7%) or 1% (+2.3%, 10.2%): the 5-cent leg turns negative with size; in sample the order reverses. Was:
+   Risk-averse sizing for the combined account: `research/combined.py --stakes 0.0025,0.005,0.0075` and the
    worst drawdown of each; does a smaller stake buy a much smaller drawdown?
 8. The Entertainment band with "take at 0.98, resting" at 45,000 (`research/exit_study.py`): report 3.28 found
    capital time helps the account replay there; check it at the busy level.
@@ -762,3 +767,6 @@ drawdown, capacity in dollars, and say how many variants were tried.
     (0-7, 7-30, 30+) to see whether 2026 is a change in the market or a shift to short-dated markets.
 17. Climate and Weather 5-cent rule at 45,000 (report 3.34: 0 losing in 89 events, too few): re-run analyze_rule mk/tk
     once the download has added Climate and Weather markets; also pool it with Politics only (both pass/near-pass alone).
+18. Combined account (research/combined.py) without the 5-cent nine-category leg, and with that leg at 45,000 instead of
+    the default level (report 3.35: the leg's out-of-sample edge fell to +0.29% a bet and it loses money above 0.25%).
+    Needs a leg option in combined.py (add, with a test).

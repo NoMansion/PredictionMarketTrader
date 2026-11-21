@@ -1495,3 +1495,29 @@ is YES overpriced (or underpriced) in some band in BOTH halves, per event, beyon
   (At the random sample the 5-cent rule FAILED in Climate and Weather, r24.) 2 variants tried (mk, tk).
 - Verdict: no new band. Climate and Weather's 5-cent rule at 45,000 is a lead that needs more events; not an
   account. Queue item 17 added: re-test it when the download has added Climate and Weather markets.
+
+### 3.35 Smaller stakes for the combined account (12:35 pm CST, November 21)
+
+Ideas queue item 7. `research/combined.py --stakes 0.0025,0.005,0.0075,0.01`, hold to settlement, default census
+level, on the data downloaded as of today (larger than in 3.28). Out of sample (0.93 years), the four legs in one account:
+
+| Stake a bet | Return a year | Worst drawdown | Sharpe | At work |
+|---|---|---|---|---|
+| 0.25% | +12.1% | 4.0% | 2.67 | 21% |
+| 0.50% | +8.8% | 6.7% | 1.59 | 26% |
+| 0.75% | +4.1% | 10.3% | 0.51 | 28% |
+| 1.00% | +2.3% | 10.2% | 0.27 | 29% |
+
+In sample (4.7 years): +5.2%, +7.2%, +8.8%, +9.9% a year, drawdowns 4.5%, 8.9%, 11.7%, 12.2%.
+- **Yes, a smaller stake buys a much smaller drawdown, and out of sample it also earns MORE.** The return falls as
+  the stake rises because the 5-cent leg's out-of-sample result turns negative with size (alone: +2.4%/y at 0.25%,
+  -1.2% at 0.5%, -7.7% at 0.75%, -11.9% at 1%, drawdown 3.1% to 10.6%): its per-bet edge out of sample is now only
+  +0.29% (was larger in 3.28), so the occasional full loss of a 5-cent NO costs more than the decay earns once the
+  event cap and cash limit bind. The Entertainment leg alone scales cleanly (+12.7% / +24.5% / +34.1% / +32.6% a
+  year, drawdown 1.4% to 5.9%).
+- **The 0.5% figure moved since 3.28** (+15.3%/y, DD 5.4% then; +8.8%, DD 6.7% now) with no code change: the
+  download added markets, and the new ones are worse for the 5-cent leg. The combined result is not stable yet.
+- In sample the order is the reverse (bigger stake, more return, bigger drawdown), so the out-of-sample ranking is
+  one half-sample's evidence. 4 stakes tried. The paper rule accounts already stake small; no account change.
+- Suggests: the Entertainment band without the 5-cent leg carries the account; queue item 18 added (combined
+  account without the 5-cent nine-category leg, and the 5-cent leg at 45,000 instead of the default level).
