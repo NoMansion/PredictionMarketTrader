@@ -615,6 +615,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   Item 18 added. Jobs ok; main $1,010.72, 0 settled.
 - 3:15 pm CST Nov 21: queue item 8 (report 3.36): Entertainment band exits at 45,000: take at 98c resting does not beat holding
   out of sample; holding stays. Jobs ok; main $1,010.72, 0 settled.
+- 3:45 pm CST Nov 21: queue item 9 (report 3.37): the momentum lead (NO at 3-10c after a 3c+ fall) fails out of sample in all
+  6 variants on the nine pooled busy markets. No account. Jobs ok; main $1,010.72, 0 settled.
 
 ## How to run a round
 
@@ -753,8 +755,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
    (+24.9%/y vs +25.5%, per bet +9.73% vs +9.96%); the in-sample pick (take 0.97 taker) +27.8%/y, inside the noise of 25
    policies and 242 bets. Holding stays. Was: The Entertainment band with "take at 0.98, resting" at 45,000 (`research/exit_study.py`): report 3.28 found
    capital time helps the account replay there; check it at the busy level.
-9. The momentum lead (NO at 3-10c after a fall of 3c+, resting) on the busy sample pooled, now that every category
-   is in.
+9. DONE 3:45 pm CST Nov 21 (report 3.37): FAILS. NO at 3-10c after a 3c+ fall in 1/3/7 days, nine pooled, busy: resting
+   passes in sample, fails out of sample in all three; taker fails both and loses in the replay. Thin ($71-142 a week). Was:
+   The momentum lead (NO at 3-10c after a fall of 3c+, resting) on the busy sample pooled.
 10. Code: hourly bars for the last two days of markets the exit study holds (its one real caveat).
 11. Code: sums over mutually exclusive events (Kalshi's flag on `/events`): an event whose YES prices sum well
     above 1 is a basket of NO bets with a known floor.
@@ -774,3 +777,5 @@ drawdown, capacity in dollars, and say how many variants were tried.
 18. Combined account (research/combined.py) without the 5-cent nine-category leg, and with that leg at 45,000 instead of
     the default level (report 3.35: the leg's out-of-sample edge fell to +0.29% a bet and it loses money above 0.25%).
     Needs a leg option in combined.py (add, with a test).
+19. The momentum lead (report 3.37) failed pooled; one last look in Entertainment alone (busy, 20,000 and 45,000),
+    where the wide NO band works: does a recent fall add anything over the band itself (compare with 3.29)?

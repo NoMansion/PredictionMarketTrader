@@ -1542,3 +1542,25 @@ In sample (4.7 years): +5.2%, +7.2%, +8.8%, +9.9% a year, drawdowns 4.5%, 8.9%, 
   out of sample by 2.4 points a year with the same drawdown, the gap is far inside the noise of 242 bets, and it
   was the best of 25 policies tried. Holding stays the rule. Stops and early sales cost, as everywhere in 3.28.
 - Holding passes the tail test in both halves here (as in 3.29). No new account; nothing for the paper config.
+
+### 3.37 Ideas queue 9: the momentum lead pooled over the nine categories, busy sample (3:45 pm CST, November 21)
+
+`research/analyze_rule.py --sample liquid --categories <the nine> --rule "mid 3-10c, down 3c+ in Nd" --side no`,
+N = 1, 3, 7 days, resting and taker (6 variants), default census level, on the data downloaded as of today.
+
+| Fall in | Entry | Events in / out | Losing in / out | Tail test in / out (bound vs break-even) | Replay at 0.5%, a year, in / out | Worst drawdown in / out |
+|---|---|---|---|---|---|---|
+| 1 day | resting | 1,647 / 1,300 | 10.6% / 12.7% | passes / FAILS (14.3% vs 12.6%) | +0.5% / -0.3% | 4.7% / 2.8% |
+| 1 day | taker | 2,522 / 1,916 | 8.4% / 11.5% | fails / fails | -2.8% / -4.6% | 14.1% / 7.0% |
+| 3 days | resting | 1,828 / 1,365 | 10.7% / 13.5% | passes / FAILS (15.1% vs 13.5%) | -0.7% / +2.5% | 9.8% / 2.7% |
+| 3 days | taker | 2,649 / 1,903 | 8.4% / 11.9% | fails / fails | -3.3% / -3.3% | 16.7% / 5.1% |
+| 7 days | resting | 1,518 / 1,074 | 10.1% / 14.0% | passes / FAILS (15.8% vs 14.1%) | +0.7% / +0.2% | 4.9% / 3.5% |
+| 7 days | taker | 2,013 / 1,486 | 8.5% / 11.8% | fails / fails | -1.6% / -5.6% | 9.1% / 8.4% |
+
+- **The lead is dead in the pooled busy sample.** Every resting version passes in sample and fails out of sample
+  (losing rate rises 2 to 4 points after April 2026); every taker version fails both halves and loses money in
+  the replay. Larger stakes make it worse (resting 3 days at 2%: -4.7%/y in sample, drawdown 34.8%).
+- Capacity is thin anyway: median $71 to $142 traded in the week before entry; 30% to 60% of entry days under
+  100 contracts. The largest series (KXAPRPOTUS, approval ratings) loses money in every variant.
+- Verdict: not an account, nothing for the paper config. The existing fall-rule account (YES at 10-25c, down 3c+
+  in 7 days, report 3.27) is a different rule and is not affected.
