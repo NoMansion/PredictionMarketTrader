@@ -563,6 +563,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   market's remaining runs; the "only N of M runs valid" count was wrong. checkin.ps1: the exit code of a
   failed claude run was never logged; an answer reporting no model is now flagged "NO MODEL REPORTED";
   -ClaudeExe, -DataDir and -NoNote added for the tests only. replay_wide crashed without a main ledger.
+- 3:25 am CST Nov 21: RESUMED at the user's word ("resume"). Both Windows tasks enabled again (next Opus
+  check-in 6:11 am), download and paper loop restarted with the fixed downloader; a paper cycle began at once.
 
 ## How to run a round
 
