@@ -613,6 +613,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 12:35 pm CST Nov 21: queue item 7 (report 3.35): smaller stakes help the combined account out of sample (0.25%: +12.1%/y,
   DD 4.0%); the 5-cent leg loses above 0.25% and the combined figure at 0.5% fell from 15.3% to 8.8% on the larger download.
   Item 18 added. Jobs ok; main $1,010.72, 0 settled.
+- 3:15 pm CST Nov 21: queue item 8 (report 3.36): Entertainment band exits at 45,000: take at 98c resting does not beat holding
+  out of sample; holding stays. Jobs ok; main $1,010.72, 0 settled.
 
 ## How to run a round
 
@@ -747,7 +749,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
    0.5% (+8.8%, 6.7%) or 1% (+2.3%, 10.2%): the 5-cent leg turns negative with size; in sample the order reverses. Was:
    Risk-averse sizing for the combined account: `research/combined.py --stakes 0.0025,0.005,0.0075` and the
    worst drawdown of each; does a smaller stake buy a much smaller drawdown?
-8. The Entertainment band with "take at 0.98, resting" at 45,000 (`research/exit_study.py`): report 3.28 found
+8. DONE 3:15 pm CST Nov 21 (report 3.36): at 45,000 the 98c resting exit earns slightly LESS than holding out of sample
+   (+24.9%/y vs +25.5%, per bet +9.73% vs +9.96%); the in-sample pick (take 0.97 taker) +27.8%/y, inside the noise of 25
+   policies and 242 bets. Holding stays. Was: The Entertainment band with "take at 0.98, resting" at 45,000 (`research/exit_study.py`): report 3.28 found
    capital time helps the account replay there; check it at the busy level.
 9. The momentum lead (NO at 3-10c after a fall of 3c+, resting) on the busy sample pooled, now that every category
    is in.

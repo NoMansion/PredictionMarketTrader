@@ -1521,3 +1521,24 @@ In sample (4.7 years): +5.2%, +7.2%, +8.8%, +9.9% a year, drawdowns 4.5%, 8.9%, 
   one half-sample's evidence. 4 stakes tried. The paper rule accounts already stake small; no account change.
 - Suggests: the Entertainment band without the 5-cent leg carries the account; queue item 18 added (combined
   account without the 5-cent nine-category leg, and the 5-cent leg at 45,000 instead of the default level).
+
+### 3.36 Ideas queue 8: selling the Entertainment band early, at the 45,000-contract level (3:15 pm CST, November 21)
+
+`research/exit_study.py --categories Entertainment --sample liquid --min-cumvol 45000 --rules "NO where YES is at
+5-35c|no|mk"` (the 25-policy grid of 3.28, unchanged). Data: 3,178 markets, 942 events, closes 2022-02-07 to
+2026-09-18; 573 bets in sample, 242 out of sample. Output: `research/results/exit_ent_liquid_45000.csv`.
+
+| Policy | Per bet in / out | Replay at 1%, a year, in / out | Worst drawdown in / out | Losing events out |
+|---|---|---|---|---|
+| hold to settlement | +5.94% / +9.96% | +9.9% / +25.5% | 8.1% / 2.3% | 19 |
+| take at 0.98, resting (the 3.28 lead) | +6.00% / +9.73% | +10.1% / +24.9% | 8.4% / 2.4% | 19 |
+| take at 0.97, taker (chosen in sample) | +5.56% / +10.01% | +11.3% / +27.8% | 6.8% / 2.3% | 17 |
+| stop at -10 points | +3.15% / +6.44% | +4.6% / +14.1% | 9.8% / 3.1% | 31 |
+| sell 3 days before the end | +2.71% / +9.96% | +4.7% / +26.5% | 8.6% / 1.5% | 23 |
+
+- **At the busy level the 98-cent resting exit does not help**: it earns slightly less than holding in both the
+  per-bet and the account figures out of sample (3.28's gain at the default level came from capital time, and at
+  45,000 the band's bets are already short). The policy picked in sample (take at 0.97 as a taker) beats holding
+  out of sample by 2.4 points a year with the same drawdown, the gap is far inside the noise of 242 bets, and it
+  was the best of 25 policies tried. Holding stays the rule. Stops and early sales cost, as everywhere in 3.28.
+- Holding passes the tail test in both halves here (as in 3.29). No new account; nothing for the paper config.
