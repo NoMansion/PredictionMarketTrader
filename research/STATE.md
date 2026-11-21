@@ -606,6 +606,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   takers fail. No new account; item 15 added. Jobs ok; main $1,010.72, 0 settled.
 - 9:15 am CST Nov 21: queue item 4 (report 3.32): the 5-cent rule on stand-alone questions at 45,000 passes in
   sample, too thin out of sample (27-35 events). No new account. Jobs ok; main $1,010.72, 0 settled.
+- 9:45 am CST Nov 21: queue item 5 (report 3.33): the wide band per category at 45,000: only Politics passes alone, by a
+  hair and not at 20,000; the nine pooled pass at 45,000 but earn almost only in 2026. No new account; item 16 added.
 
 ## How to run a round
 
@@ -728,8 +730,10 @@ drawdown, capacity in dollars, and say how many variants were tried.
 4. DONE 9:15 am CST Nov 21 (report 3.32): resting +3.7% a bet, taker +1.9%; both pass the tail test in sample, out of
    sample 27/35 events with no loss is too few to pass; median $492-680 a week traded. No new account. Was: The 5-cent rule on stand-alone questions only at 45,000 ("single-market event: NO where YES is 5c or less,
    spread <= 5c", mk and tk): report 3.19 asked this.
-5. The wide band (NO vs YES 5-35c, resting) in each of the nine categories ALONE at 45,000: pooled it lost
-   (-2.32% a bet, report 3.28), but one category may carry it as Entertainment does.
+5. DONE 9:45 am CST Nov 21 (report 3.33): no second Entertainment. Only Politics passes both halves alone at 45,000,
+   by 0.4 pt out of sample, and fails at 20,000 / loses at 5,000; Economics fails out of sample. The nine pooled at
+   45,000 pass both (+4.2% a bet) but the money is 2026 (2025 +1.3%), in-sample replay +1.0%/y, DD 11.2%. No account.
+   Was: the wide band (NO vs YES 5-35c, resting) in each of the nine categories ALONE at 45,000.
 6. Calibration curve at 45,000 for every category (`research/calibration_curve.py --sample liquid --min-cumvol
    45000 --categories <Cat>`): any other band where YES is overpriced in both halves, per event?
 7. Risk-averse sizing for the combined account: `research/combined.py --stakes 0.0025,0.005,0.0075` and the
@@ -750,3 +754,5 @@ drawdown, capacity in dollars, and say how many variants were tried.
     thin in 2025; is the edge in the short-dated markets, where capital turns over fastest?
 15. The 5-cent rule without its 0-3c corner (report 3.31): NO at mid 3-5c, spread <= 5c, <= 30d, resting and taker, at
     45,000 and the default level. Needs a new rule name in research/families.py (add, do not rename) and a test.
+16. The nine-category wide band at 45,000 (report 3.33) earns almost only in 2026: split by year AND days to close
+    (0-7, 7-30, 30+) to see whether 2026 is a change in the market or a shift to short-dated markets.

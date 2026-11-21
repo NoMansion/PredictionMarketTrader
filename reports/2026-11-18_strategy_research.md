@@ -1438,3 +1438,37 @@ small: median $492 (resting) / $680 (taker) traded in the week before entry, a f
 contracts. The replay barely uses the account (2-7% at work), so a year earns about 1-2% at 1% stakes. Same
 reading as 3.20 at the busier level: well supported, consistent, not proven, and tiny. **Verdict: no new
 account.** The shadow log already records event size; stand-alone questions are counted there as they come.
+
+### 3.33 The wide band category by category at 45,000 (9:45 am CST, November 21)
+
+Ideas queue item 5. Pooled over the nine categories at the default census level the wide band (NO where YES is at
+5-35c, resting) lost (-2.32% a bet, report 3.28); Entertainment alone carries it (3.29). Does another category?
+`analyze_rule.py --sample liquid --min-cumvol 45000 --categories <Cat> --rule "NO where YES is at 5-35c" --side no
+--entry mk`, each category alone, then the nine pooled at 45,000 and Politics at 5,000 and 20,000 as checks.
+12 variants in all, the nine single-category runs fixed beforehand.
+
+| Sample | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay 1%, in / out a year | Worst DD in / out |
+|---|---|---|---|---|---|---|
+| Economics | 500 (263) | +7.54% | 41/203 / 15/61 | passes / **fails** (35.3 vs 34.6%) | +5.7% / +9.8% | 7.0% / 4.4% |
+| Politics | 759 (366) | +4.98% | 56/283 / 23/98 | passes (24.1 vs 26.1%) / passes by a hair (31.6 vs 32.0%) | +2.3% / +14.2% | 7.5% / 4.8% |
+| Companies | 24 (10) | +14.9% | 2/8 / 0/2 | too few | -0.1% / +2.2% | 1.6% / 0.0% |
+| Science and Technology | 151 (91) | +5.72% | 10/58 / 6/34 | fails / fails | +3.4% / +5.5% | 3.1% / 1.3% |
+| Elections | 667 (302) | +0.99% | 45/181 / 34/124 | fails / fails | -3.3% / +7.6% | 9.6% / 3.7% |
+| Health | 18 (16) | +14.9% | 2/16 / none | too few | +0.6% / - | 1.0% / - |
+| World | 5 (5) | -11.3% | 1/5 / none | too few | -0.1% / - | 1.0% / - |
+| Commodities | 79 (33) | +9.96% | 1/4 / 6/29 | too few / passes | - / +10.3% | 1.0% / 1.0% |
+| Financials | 152 (59) | -3.76% | 10/35 / 7/24 | fails / fails | -0.5% / -9.8% | 5.9% / 6.9% |
+| nine pooled, 45,000 | 2,355 (1,145) | +4.18% | 168/793 / 91/372 | passes (23.7 vs 28.0%) / passes (28.4 vs 31.0%) | +1.0% / +15.2% | 11.2% / 6.2% |
+| Politics, 20,000 | 1,202 (584) | +3.11% | 92/427 / 51/179 | passes / **fails** (34.6 vs 31.2%) | +1.7% / -2.3% | 11.9% / 7.3% |
+| Politics, 5,000 | 5,972 (1,960) | -0.23% | 508/1369 / 219/637 | fails / fails | -2.6% / -5.4% | 24.7% / 12.4% |
+
+**Result: no second Entertainment.** Only Politics passes both halves on its own, and only at 45,000 and by 0.4
+points out of sample; at 20,000 it fails out of sample and at 5,000 it loses, so its pass is one level of three and
+not a stable effect. Economics is strong in sample and fails out of sample by a point. The nine pooled at 45,000
+do pass both tail tests (+4.2% a bet), which is the reverse of the 5,000-level result: the band's losses sit in
+quieter markets, as with the 5-cent rule. But the pooled money is almost all 2026 (by year of close: 2024 +0.1%,
+2025 +1.3%, 2026 +6.8% a bet), and the in-sample replay at 1% earns +1.0% a year with an 11.2% worst drawdown:
+not risk-averse on its in-sample record. Capacity at 45,000: median $4,799 traded in the week before entry (nine
+pooled), $5,043 Politics. With 12 variants and nothing above the tail test by a clear margin out of sample,
+**verdict: no new account.** Follow-up to the queue (item 16): is the pooled band's 2026 jump a change in the
+market or a horizon effect (days to close by year)?
