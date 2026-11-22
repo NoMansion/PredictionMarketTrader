@@ -619,6 +619,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   6 variants on the nine pooled busy markets. No account. Jobs ok; main $1,010.72, 0 settled.
 - 6:30 pm CST Nov 21: queue item 10 (report 3.38): research/hourly_bars.py fetches hourly bars for the last 48 h of a rule's
   markets (own database); 400 of 815 Entertainment-band markets fetched. Item 20 added. Jobs ok; main $1,010.72, 0 settled.
+- 6:35 pm CST Nov 21: queue item 11 (report 3.39): event baskets on all eleven busy categories; flagged-exclusive still no
+  edge; Kalshi flags for ~3,700 more events being fetched (detached, ~1.5 h). Jobs ok; main $1,010.72, 0 settled.
 
 ## How to run a round
 
@@ -763,8 +765,11 @@ drawdown, capacity in dollars, and say how many variants were tried.
 10. DONE 6:30 pm CST Nov 21 (report 3.38): research/hourly_bars.py (+3 tests) fetches 60-min bars for the last 48 h of a
     rule's markets into data\kalshi_hourly.db; Entertainment band at 45,000: 400 of 815 markets fetched (398 with bars).
     Was: Code: hourly bars for the last two days of markets the exit study holds (its one real caveat).
-11. Code: sums over mutually exclusive events (Kalshi's flag on `/events`): an event whose YES prices sum well
-    above 1 is a basket of NO bets with a known floor.
+11. RUNNING 6:35 pm CST Nov 21 (report 3.39): already coded as research/event_baskets.py (3.15, two categories). Re-run on
+    all eleven busy categories: flagged-exclusive baskets still nothing (1.00+: -0.9% / +0.8%); ~3,700 candidates unflagged, so
+    a detached `event_baskets.py --fetch-flags` run (started 6:34 pm, log data\event_baskets_all.log, ~1.5 h) is fetching the
+    flags. NEXT CHECK-IN: if that python (event_baskets) is gone, read the log's table and write the result into 3.39; if it
+    stopped on a 429, re-run the same command (it resumes). Then mark this done.
 12. Forward, when there is data: each rule account against its control and its backtest per-bet figure (30+
     settled bets); `rule_5c_busy_claude`: loss rate of kept against vetoed markets (20+ settled); the shadow logs'
     resting fill rates against the backtest's 55-80% model (50+ decided).

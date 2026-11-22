@@ -1580,3 +1580,19 @@ retried next run. 3 tests (fake client), 476 in all pass.
 - Forward: nothing settled. Main account $1,010.72, 0 settled; rule accounts 0 settled (equity $980 to $1,000,
   the Entertainment taker lowest at -$20 marked at the bid); shadow logs: resting NO bids filled 11 of 14
   (busy 5-cent) and 8 of 8 (Entertainment band) decided so far.
+
+### 3.39 Ideas queue 11: event baskets on every busy category (6:35 pm CST, November 21)
+
+Item 11 asked for code that was already written: `research/event_baskets.py` (family 27, report 3.15, tried then on
+Economics and Politics only). This round runs it on the busy sample of all eleven categories with a census
+(the nine, Entertainment, Climate and Weather), same thresholds (YES bids adding up to 0.90 / 1.00 / 1.02 / 1.05 /
+1.10 / 1.20), taker entry at the next open with fees, one basket per event. 6 thresholds, 3 splits each.
+- With only the 405 events flagged in 3.15 known, the events Kalshi flags as EXCLUSIVE still show no free money:
+  at 1.00+ 49 / 46 baskets in / out of sample, -0.9% / +0.8% (t +0.7), worst -3.3%; at 1.02+ 8 / 22, -0.3% /
+  +0.4%; at 1.05+ 2 / 5, +0.1% / +2.7% (t 1.8, 5 baskets, 0 losing, locked at entry only +0.2%). None passes.
+- Events flagged NOT exclusive lose, as before: -10% in sample, -18% to -20% out of sample, worst -100%.
+- About 3,700 of the 4,100 candidate baskets are on events with no flag yet. Their "locked at entry" figure
+  (+14% to +78%) is meaningless until the flag is known (3.15: never infer it). The flags are being fetched now
+  (one request every 1.5 s, about 1.5 hours, `data\event_baskets_all.log`); the next check-in reads the table again
+  with the flags known and writes the result here.
+- Forward: nothing settled. Main account $1,010.72, 0 settled; a cycle is running (started 6:25 pm).
