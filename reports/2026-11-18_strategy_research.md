@@ -1596,3 +1596,19 @@ Economics and Politics only). This round runs it on the busy sample of all eleve
   (one request every 1.5 s, about 1.5 hours, `data\event_baskets_all.log`); the next check-in reads the table again
   with the flags known and writes the result here.
 - Forward: nothing settled. Main account $1,010.72, 0 settled; a cycle is running (started 6:25 pm).
+
+### 3.40 Ideas queue 11, finished: event baskets with Kalshi's flags known (4:15 am CST, November 22)
+
+The detached flag fetch of 3.39 finished before the pause (flags for 3,706 of the 4,111 candidate events; the other
+405 had them already). Same run, same 6 thresholds x 3 splits (18 variants), taker entry with fees, one basket per event.
+- EXCLUSIVE events (the only case where "locked at entry" means anything) never pass in both halves:
+  1.00+ in sample 429 baskets -0.37% (t -1.4), out of sample 673 baskets +0.73% (t +2.1), worst -3.4%;
+  1.02+ 119 / 323 baskets, -0.09% (t -0.5) / +1.16% (t +2.3), worst -1.5%;
+  1.05+ 13 / 55 baskets, +0.16% / +1.75% (t 2.8), worst -0.2%: in sample far too few; 1.10+ and 1.20+ almost empty.
+  The "locked at entry" figure is negative or about zero at 1.00+ and 1.02+: after fees there is no lock; what
+  out of sample earns is ordinary price drift, not an arbitrage.
+- NOT exclusive and "all" lose in sample at every threshold (-2% to -5%, worst -100%) and are flat out of sample.
+- Verdict: FAILS (in sample negative). No account. The 1.05+ exclusive corner (8-leg baskets, 55 out of sample) is
+  a curiosity; noted as queue item 21, to look at only if the download adds many more exclusive events.
+- Forward: nothing settled. Main account $1,010.31, 0 settled, 6 resting orders; a paper cycle began at 4:07 am
+  after the resume.

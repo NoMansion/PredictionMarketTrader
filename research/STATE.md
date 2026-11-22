@@ -627,6 +627,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 4:07 am CST Nov 22: RESUMED at the user's word ("close all unnecessary tasks and resume"). Nine old idle check-in
   sessions (Nov 19-20) archived in the Claude app; both Windows tasks enabled again (next Opus check-in 6:11 am);
   download and paper loop restarted, a paper cycle began at once. The app's own scheduled check-in stays OFF (Fable).
+- 4:15 am CST Nov 22: queue item 11 finished (report 3.40): event baskets with the flags known fail (exclusive in sample
+  negative at every threshold). Item 21 added. Jobs ok (cycle running since 4:07 am); main $1,010.31, 0 settled.
 
 ## How to run a round
 
@@ -771,11 +773,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
 10. DONE 6:30 pm CST Nov 21 (report 3.38): research/hourly_bars.py (+3 tests) fetches 60-min bars for the last 48 h of a
     rule's markets into data\kalshi_hourly.db; Entertainment band at 45,000: 400 of 815 markets fetched (398 with bars).
     Was: Code: hourly bars for the last two days of markets the exit study holds (its one real caveat).
-11. RUNNING 6:35 pm CST Nov 21 (report 3.39): already coded as research/event_baskets.py (3.15, two categories). Re-run on
-    all eleven busy categories: flagged-exclusive baskets still nothing (1.00+: -0.9% / +0.8%); ~3,700 candidates unflagged, so
-    a detached `event_baskets.py --fetch-flags` run (started 6:34 pm, log data\event_baskets_all.log, ~1.5 h) is fetching the
-    flags. NEXT CHECK-IN: if that python (event_baskets) is gone, read the log's table and write the result into 3.39; if it
-    stopped on a 429, re-run the same command (it resumes). Then mark this done.
+11. DONE 4:15 am CST Nov 22 (reports 3.39, 3.40): event baskets on all eleven busy categories with Kalshi's flags known
+    (3,706 fetched): exclusive baskets never pass both halves (1.00+: -0.37% / +0.73%; 1.02+: -0.09% / +1.16%); after
+    fees nothing is locked at entry. FAILS, no account; item 21 added.
 12. Forward, when there is data: each rule account against its control and its backtest per-bet figure (30+
     settled bets); `rule_5c_busy_claude`: loss rate of kept against vetoed markets (20+ settled); the shadow logs'
     resting fill rates against the backtest's 55-80% model (50+ decided).
@@ -797,3 +797,5 @@ drawdown, capacity in dollars, and say how many variants were tried.
 20. Finish the hourly fetch (`research/hourly_bars.py --sample liquid --min-cumvol 45000 --categories Entertainment`,
     same command, resumes), then replay the band's stop exits (exits.py stop_drop / stop_px) on the hourly bars in the
     last 48 h instead of the next daily open: does any verdict of 3.28 / 3.36 change? Needs an hourly option in exits.py.
+21. The exclusive 1.05+ basket corner (report 3.40: 13 in sample, 55 out of sample, +1.75%, worst -0.2%): re-run
+    `research/event_baskets.py` only once the download has added many more exclusive events; low priority.
