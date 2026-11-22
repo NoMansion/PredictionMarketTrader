@@ -644,6 +644,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   of sample). Found: the random pass has finished for 8 categories, so the liquid DEFAULT level is now 1 contract (all markets):
   ALWAYS pass --min-cumvol from now on. The Entertainment band is weaker on the larger download (item 25, next). Jobs ok; main
   $1,010.18, 1 settled (+$8.57).
+- 4:45 pm CST Nov 22: queue item 20 (report 3.48): hourly stops on the Entertainment band: every stop worse than on daily bars; hold
+  stays, no verdict changes; exits.py --hourly + 1 test (479 pass); item 29 added. Jobs ok; main $1,010.18, 1 settled.
 
 ## How to run a round
 
@@ -831,7 +833,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
     +7.1%), all falling versions pass both halves at 20,000 and 45,000, a RISE fails in sample; but the 1% replay earns less a
     year than the band (fewer bets). No new account (rule_ent_fall already tests it). Item 28 added. Was: The momentum lead (report 3.37) failed pooled; one last look in Entertainment alone (busy, 20,000 and 45,000),
     where the wide NO band works: does a recent fall add anything over the band itself (compare with 3.29)?
-20. Finish the hourly fetch (`research/hourly_bars.py --sample liquid --min-cumvol 45000 --categories Entertainment`,
+20. DONE 4:45 pm CST Nov 22 (report 3.48): all 815 band markets fetched; exits.py --hourly: every stop gets WORSE on hourly
+    bars (stopped out a third to a half more often; 4 of 6 fail the tail test out of sample); hold stays; no verdict of 3.28 /
+    3.36 changes. Item 29 added. Was: Finish the hourly fetch (`research/hourly_bars.py --sample liquid --min-cumvol 45000 --categories Entertainment`,
     same command, resumes), then replay the band's stop exits (exits.py stop_drop / stop_px) on the hourly bars in the
     last 48 h instead of the next daily open: does any verdict of 3.28 / 3.36 change? Needs an hourly option in exits.py.
 21. The exclusive 1.05+ basket corner (report 3.40: 13 in sample, 55 out of sample, +1.75%, worst -0.2%): re-run
@@ -860,3 +864,8 @@ drawdown, capacity in dollars, and say how many variants were tried.
 28. Isolate the fall effect in Entertainment (report 3.47): the band's 10-25c bets WITHOUT a 3c+ fall in 7 days against those
     with one, at 20,000 and 45,000, resting. Needs a new rule name in research/families.py (add, do not rename) and a test. If
     the no-fall bets lose or are flat in both halves, the band's money is the fall, worth writing for the user.
+29. The 5-cent rule's stops on hourly bars (report 3.48 found hourly bars make every Entertainment-band stop worse): fetch
+    hourly bars for its markets at 45,000 on the nine (`research/hourly_bars.py --sample liquid --min-cumvol 45000 --categories
+    <nine> --rules "NO at mid <= 5c, <= 30d, spread <= 5c|no|mk" --max-markets 1000`, resumes), then `research/exit_study.py
+    --tag nine_liquid_45000_hourly --hourly data\kalshi_hourly.db` against the same run without --hourly. Low priority: hold
+    already beat its stops on daily bars (3.28).

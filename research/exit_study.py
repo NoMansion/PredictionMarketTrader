@@ -16,6 +16,8 @@ For each rule and each policy, both halves (in sample = markets closing before 2
 The grid was fixed before any exit result was seen. With ~25 policies per rule, the best one looks good by luck:
 the policy is chosen IN SAMPLE (best replay return a year at 1%), and only its out-of-sample figures count.
 Writes research/results/exit_<tag>.csv.
+
+--hourly data/kalshi_hourly.db: stops are also tested on the hourly bars of the last hours (exits.py, queue item 20).
 """
 import argparse
 import sys
@@ -31,7 +33,7 @@ import panel  # noqa: E402
 import portfolio  # noqa: E402
 from analyze_rule import find_rule, tail  # noqa: E402
 from backtest import Panel  # noqa: E402
-from exits import Exits, bets, policies, rule_rows, stats  # noqa: E402
+from exits import Exits, bets, load_hourly, policies, rule_rows, stats  # noqa: E402
 from families import Features  # noqa: E402
 from run_sweep import titles_for  # noqa: E402
 
@@ -103,6 +105,7 @@ def main() -> int:
     ap.add_argument("--min-cumvol", type=float, default=None)
     ap.add_argument("--rules", default=DEFAULT_RULES, help="name|side|entry;...")
     ap.add_argument("--stake", type=float, default=0.01)
+    ap.add_argument("--hourly", default=None, help="hourly bars database (research/hourly_bars.py) for stops")
     args = ap.parse_args()
     cats = [c.strip() for c in args.categories.split(",") if c.strip()] or None
     df = panel.load(args.db, cats, sample=args.sample, min_cumvol=args.min_cumvol)
@@ -112,7 +115,10 @@ def main() -> int:
     p = Panel(df)
     f = Features(p)
     titles = titles_for(df, args.db)
-    ex = Exits(p)
+    hourly = load_hourly(args.hourly, set(df["ticker"].unique())) if args.hourly else None
+    if hourly is not None:
+        print(f"hourly bars for {len(hourly)} markets")
+    ex = Exits(p, hourly)
     pd.set_option("display.width", 260, "display.max_colwidth", 46)
     tables = []
     for spec in [s for s in args.rules.split(";") if s.strip()]:
@@ -133,6 +139,8 @@ def main() -> int:
                   f"{hold.get('oos_cagr', float('nan')):+.2%}/y, worst drawdown {best.get('oos_maxdd', float('nan')):.2%} "
                   f"vs {hold.get('oos_maxdd', float('nan')):.2%}, per bet {best.get('oos_ret', float('nan')):+.2%} vs "
                   f"{hold.get('oos_ret', float('nan')):+.2%}")
+    if hourly is not None:
+        print(f"stops sold on an hourly bar (all policies, all rules): {ex.hourly_stops}")
     out = pd.concat(tables, ignore_index=True)
     (HERE / "results").mkdir(exist_ok=True)
     path = HERE / "results" / f"exit_{args.tag}.csv"

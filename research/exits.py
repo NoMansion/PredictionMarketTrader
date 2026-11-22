@@ -21,6 +21,12 @@ Returns are per dollar staked, after fees on both legs. A sold bet also gives it
 account replay sees: `release` is the time the capital is free again (the exit, or the market's close).
 
 The resting exit is offered only for take-profit conditions: a stop wants out now, at the bid.
+
+Hourly stops (Ideas queue item 20): with `hourly` (load_hourly: 60-minute bars of research/hourly_bars.py, which
+cover only the last hours before a market's close), a stop is also tested on each hourly bar that ends inside the
+daily bar being looked at, BEFORE that daily bar's own test; when one holds, the bet is sold at the OPEN of the next
+hourly bar (our side's bid, taker fee), if that bar opens with a two-sided quote within an hour of the daily bar's
+end. Otherwise the daily rule applies as before. Take-profit and time exits stay daily.
 """
 from __future__ import annotations
 
@@ -66,9 +72,12 @@ class Result:
 class Exits:
     """Precomputed arrays for following bets after entry. Build once per Panel."""
 
-    def __init__(self, p: Panel):
+    def __init__(self, p: Panel, hourly: dict | None = None):
         self.p = p
         d = p.df
+        self.hourly = hourly or {}
+        self.tick = d["ticker"].to_numpy()
+        self.hourly_stops = 0           # stops sold on an hourly bar (counted over every follow() call)
         self.ts = d["ts"].to_numpy("float64")
         self.close = d["close_ts"].to_numpy("float64")
         self.bid = d["bid"].to_numpy("float64")
@@ -110,6 +119,35 @@ class Exits:
         filled_first = self.f1_yes[i] if side == "yes" else self.f1_no[i]
         return px, cost, i + (1 if filled_first else 3)
 
+    def hourly_stop(self, j: int, side: str, px: float, cost: float, pol: Policy):
+        """A stop on the hourly bars ending inside daily bar j (after bar j-1), sold at the next hourly open."""
+        h = self.hourly.get(self.tick[j])
+        if h is None or len(h) == 0:
+            return None
+        lo, hi = self.ts[j - 1], self.ts[j]
+        a, b = np.searchsorted(h[:, 0], lo, "right"), np.searchsorted(h[:, 0], hi, "right")
+        for k in range(a, b):
+            bid, ask = h[k, 1], h[k, 2]
+            if not (bid > 0 and ask < 1 and ask > bid):
+                continue
+            mid = (bid + ask) / 2
+            mine = mid if side == "yes" else 1 - mid
+            if not ((pol.stop_drop is not None and mine <= px - pol.stop_drop + 1e-9)
+                    or (pol.stop_px is not None and mine <= pol.stop_px + 1e-9)):
+                continue
+            for m in range(k + 1, len(h)):
+                if h[m, 0] > hi + 3600:
+                    break
+                bo, ao = h[m, 3], h[m, 4]
+                if bo > 0 and ao < 1 and ao > bo:
+                    q = bo if side == "yes" else ao
+                    got = q if side == "yes" else 1 - q
+                    net = got - self.tfee(j, q)
+                    self.hourly_stops += 1
+                    return (net - cost) / cost, float(h[m, 0]), "stop", got, cost
+            return None                                            # no tradable next hourly open: daily rule
+        return None
+
     def follow(self, i: int, side: str, entry: str, pol: Policy) -> tuple[float, float, str, float, float]:
         """(return, release time, reason, exit price, cost) for one bet entered on row i."""
         px, cost, start = self.entry(i, side, entry)
@@ -120,6 +158,10 @@ class Exits:
         e = self.end[i]
         j = start
         while j <= e:
+            if self.hourly and (pol.stop_drop is not None or pol.stop_px is not None):
+                hit = self.hourly_stop(j, side, px, cost, pol)
+                if hit is not None:
+                    return hit
             if not self.quoted[j]:
                 j += 1
                 continue
@@ -157,6 +199,21 @@ class Exits:
         r, rel, why, got, cost = (np.array(x) for x in zip(*out))
         return Result(rows, r.astype("float64"), rel.astype("float64"), why.astype(object), got.astype("float64"),
                       cost.astype("float64"))
+
+
+def load_hourly(path, tickers=None) -> dict:
+    """ticker -> float array (n, 5) of ts, bid, ask, bid_op, ask_op, sorted by ts, from candles_1h
+    (research/hourly_bars.py). Missing prices are NaN."""
+    import sqlite3
+    con = sqlite3.connect(f"file:{path}?mode=ro", uri=True, timeout=60)
+    rows = con.execute("SELECT ticker, ts, bid, ask, bid_op, ask_op FROM candles_1h ORDER BY ticker, ts").fetchall()
+    con.close()
+    keep = None if tickers is None else set(tickers)
+    out: dict = {}
+    for r in rows:
+        if keep is None or r[0] in keep:
+            out.setdefault(r[0], []).append([float("nan") if v is None else float(v) for v in r[1:]])
+    return {t: np.array(v, dtype="float64") for t, v in out.items()}
 
 
 def rule_rows(p: Panel, mask: np.ndarray, side: str, entry: str) -> np.ndarray:

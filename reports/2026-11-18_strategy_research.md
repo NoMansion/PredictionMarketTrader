@@ -1836,3 +1836,39 @@ All resting. Per bet is the mean over all bets; the tail test is per event, in s
   (controls control_fade -$27.26, control_coinflip -$34.86); 11 rule accounts, 0 settled (rule_ent_band -$2.27 against its
   control control_ent_quiet -$2.53; rule_5c_busy -$0.22 against control_5c_quiet $0.00). Shadow logs: resting fills 12 of 16
   (busy 5-cent) and 11 of 11 (Entertainment band) decided.
+
+### 3.48 Ideas queue 20: the Entertainment band's stops on hourly bars (4:45 pm CST, November 22)
+
+The hourly fetch of 3.38 is finished: all 815 markets the band (NO vs YES 5-35c, resting) bets on at 45,000 contracts,
+813 with bars, 34,278 hourly bars for the last 48 hours before each close. `research/exits.py` got an hourly option
+(`Exits(p, hourly)`, `load_hourly`; `research/exit_study.py --hourly data\kalshi_hourly.db`): a stop is also tested on
+every hourly bar that ends inside the daily bar being looked at, before the daily test, and is sold at the next hourly
+bar's opening bid (taker fee) if that bar opens two-sided within the hour; otherwise the daily rule stands. Take-profit
+and time exits stay daily. 1 new test (479 pass). Same 25 policies as 3.28 / 3.36, run on the same panel daily and hourly
+(3,178 markets, 942 events; 573 bets in sample, 242 out; 1,278 stop sales moved to an hourly bar over all policies).
+
+| stop policy | in/bet daily -> hourly | out/bet daily -> hourly | out 1% replay a year | out tail test | stopped out |
+|---|---|---|---|---|---|
+| -5 points | +1.80% -> -0.52% | +6.07% -> +1.11% | +14.0% -> +1.1% | passes -> FAILS | 29% -> 44% |
+| -10 points | +3.15% -> +1.28% | +6.44% -> +3.88% | +14.1% -> +8.8% | passes -> passes | 24% -> 33% |
+| -20 points | +4.54% -> +2.37% | +8.23% -> +7.44% | +19.8% -> +19.0% | passes -> passes | 15% -> 19% |
+| our mid <= 0.90 | -0.94% -> -1.58% | +2.50% -> -1.77% | +4.9% -> -6.0% | passes -> FAILS | 50% -> 71% |
+| our mid <= 0.85 | -0.18% -> -0.94% | +2.67% -> -1.36% | +4.9% -> -5.2% | passes -> FAILS | 42% -> 59% |
+| our mid <= 0.75 | +1.58% -> +0.61% | +5.08% -> +0.85% | +11.6% -> +1.4% | passes -> FAILS | 29% -> 43% |
+| hold to settlement (no stop) | +5.94% | +9.96% | +25.5%, worst drawdown 2.3% | passes | - |
+
+- **Every stop gets worse on hourly bars, in both halves.** The daily bars hid intraday dips that recover: on hourly bars
+  the stops fire a third to a half more often, sell near the low, and the bet then settles as a win. Four of the six stops
+  now fail the tail test out of sample and three lose money there. The daily caveat of 3.28 was flattering the stops, not
+  hurting them.
+- **No verdict of 3.28 / 3.36 changes:** holding to settlement was already ahead of every stop and stays the policy; the
+  in-sample pick is still "take at 0.97, taker" (+27.8%/y out of sample against hold +25.5%/y, inside the noise of 25
+  policies), and the take-profit rows are unchanged (they stay daily). 25 policies x 2 bar types tried; no t above 3 is claimed.
+- Caveat: hourly bars cover only the last 48 hours of each market; earlier stops are still daily. That can only add more
+  intraday stop-outs, not fewer, so the direction of the result is safe.
+- For the paper accounts: the Claude exit accounts with stops (claude_only_stop15, claude_only_take_stop) test stops on live
+  quotes each cycle; nothing settled yet. Item 29 added: the same on the 5-cent rule's markets.
+- Forward: main $1,010.18, 1 settled (+$8.57); 23 variant accounts, 0 settled (controls control_fade -$26.71,
+  control_coinflip -$35.08); 11 rule accounts, 0 settled (rule_ent_band -$2.37 against control_ent_quiet -$2.41;
+  rule_5c_busy -$0.22 against control_5c_quiet $0.00). Shadow logs: resting fills 12 of 16 (busy 5-cent) and 11 of 11
+  (Entertainment band) decided, none settled.

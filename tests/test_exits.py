@@ -170,3 +170,33 @@ def test_released_money_feeds_the_account_replay(fair):
 def test_the_policy_grid_is_fixed_and_named_once():
     names = [p.name for p in policies()]
     assert len(names) == len(set(names)) and names[0] == HOLD.name and len(names) >= 20
+
+
+def test_hourly_stop_sells_at_the_next_hourly_open_inside_the_day(tmp_path):
+    # NO bought by taker at bar 0 (YES bid ~0.10 -> NO ~0.90). Daily bars never show the stop (YES mid stays 0.11),
+    # but an hourly bar inside daily bar 3 has YES at 0.40/0.42 (NO mid 0.59): a 10-point stop holds there and the
+    # bet is sold at the NEXT hourly bar's open, YES ask 0.45 -> NO 0.55 less the taker fee.
+    p = one_market(tmp_path, [(0.10, 0.12)] * 6, name="H")
+    tk = p.df["ticker"].iloc[0]
+    ts = p.df["ts"].to_numpy("float64")
+    pol = Policy("s", stop_drop=0.10)
+    base = Exits(p).follow(0, "no", "tk", pol)
+    assert base[2] == "settle"                                      # daily bars alone: no stop
+    nan = float("nan")
+    h = np.array([[ts[3] - 7200, 0.10, 0.12, 0.10, 0.12],
+                  [ts[3] - 3600, 0.40, 0.42, 0.11, 0.13],           # the signal, known at this bar's end
+                  [ts[3], 0.44, 0.46, 0.43, 0.45],                  # sold at this bar's open: NO bid 1 - 0.45
+                  [ts[3] + 3600, nan, nan, nan, nan]])
+    ex = Exits(p, {tk: h})
+    r, rel, why, got, cost = ex.follow(0, "no", "tk", pol)
+    assert why == "stop" and got == pytest.approx(0.55) and rel == pytest.approx(ts[3])
+    assert r == pytest.approx((0.55 - 0.07 * 0.45 * 0.55 - cost) / cost, rel=1e-5)
+    assert ex.hourly_stops == 1
+    assert ex.follow(0, "no", "tk", HOLD)[2] == "settle"           # holding ignores hourly bars
+    # hourly bars before the bet's first exit bar are never used (the entry bar's own day)
+    early = np.array([[ts[0] - 1800, 0.40, 0.42, 0.40, 0.42], [ts[0], 0.44, 0.46, 0.43, 0.45]])
+    assert Exits(p, {tk: early}).follow(0, "no", "tk", pol)[2] == "settle"
+    # no tradable next open within the hour: the daily rule stands
+    dead = h.copy()
+    dead[2, 3:] = nan
+    assert Exits(p, {tk: dead[:3]}).follow(0, "no", "tk", pol)[2] == "settle"
