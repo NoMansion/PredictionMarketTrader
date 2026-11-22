@@ -1564,3 +1564,19 @@ N = 1, 3, 7 days, resting and taker (6 variants), default census level, on the d
   100 contracts. The largest series (KXAPRPOTUS, approval ratings) loses money in every variant.
 - Verdict: not an account, nothing for the paper config. The existing fall-rule account (YES at 10-25c, down 3c+
   in 7 days, report 3.27) is a different rule and is not affected.
+
+### 3.38 Ideas queue 10: hourly bars for the last two days (6:30 pm CST, November 21)
+
+Code only, no result yet. `research/hourly_bars.py` fetches 60-minute bid / ask / trade bars for the final 48 hours
+before the close of every market a rule bets on, into its own database (`data\kalshi_hourly.db`, table
+`candles_1h`, the same columns as the daily `candles`), so it never competes with the running history download
+for the main database. Paced at 1 s a request, resumable, a final 4xx is written off, a throttled answer is
+retried next run. 3 tests (fake client), 476 in all pass.
+- First run: the Entertainment band (NO vs YES 5-35c, resting) at 45,000 contracts: 815 markets in its bets;
+  the first 400 fetched in about 7 minutes, 398 with bars (18,048 hourly bars, about 45 a market), 2 empty, no
+  errors. The other 415 come with the next run of the same command.
+- Not yet used: the exit study still sells stops at the next DAILY open. Queue item 20 (added) replays the
+  band's stops on the hourly bars to see whether the daily caveat changes any verdict of 3.28 / 3.36.
+- Forward: nothing settled. Main account $1,010.72, 0 settled; rule accounts 0 settled (equity $980 to $1,000,
+  the Entertainment taker lowest at -$20 marked at the bid); shadow logs: resting NO bids filled 11 of 14
+  (busy 5-cent) and 8 of 8 (Entertainment band) decided so far.

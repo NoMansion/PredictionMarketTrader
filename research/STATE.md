@@ -617,6 +617,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   out of sample; holding stays. Jobs ok; main $1,010.72, 0 settled.
 - 3:45 pm CST Nov 21: queue item 9 (report 3.37): the momentum lead (NO at 3-10c after a 3c+ fall) fails out of sample in all
   6 variants on the nine pooled busy markets. No account. Jobs ok; main $1,010.72, 0 settled.
+- 6:30 pm CST Nov 21: queue item 10 (report 3.38): research/hourly_bars.py fetches hourly bars for the last 48 h of a rule's
+  markets (own database); 400 of 815 Entertainment-band markets fetched. Item 20 added. Jobs ok; main $1,010.72, 0 settled.
 
 ## How to run a round
 
@@ -758,7 +760,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
 9. DONE 3:45 pm CST Nov 21 (report 3.37): FAILS. NO at 3-10c after a 3c+ fall in 1/3/7 days, nine pooled, busy: resting
    passes in sample, fails out of sample in all three; taker fails both and loses in the replay. Thin ($71-142 a week). Was:
    The momentum lead (NO at 3-10c after a fall of 3c+, resting) on the busy sample pooled.
-10. Code: hourly bars for the last two days of markets the exit study holds (its one real caveat).
+10. DONE 6:30 pm CST Nov 21 (report 3.38): research/hourly_bars.py (+3 tests) fetches 60-min bars for the last 48 h of a
+    rule's markets into data\kalshi_hourly.db; Entertainment band at 45,000: 400 of 815 markets fetched (398 with bars).
+    Was: Code: hourly bars for the last two days of markets the exit study holds (its one real caveat).
 11. Code: sums over mutually exclusive events (Kalshi's flag on `/events`): an event whose YES prices sum well
     above 1 is a basket of NO bets with a known floor.
 12. Forward, when there is data: each rule account against its control and its backtest per-bet figure (30+
@@ -779,3 +783,6 @@ drawdown, capacity in dollars, and say how many variants were tried.
     Needs a leg option in combined.py (add, with a test).
 19. The momentum lead (report 3.37) failed pooled; one last look in Entertainment alone (busy, 20,000 and 45,000),
     where the wide NO band works: does a recent fall add anything over the band itself (compare with 3.29)?
+20. Finish the hourly fetch (`research/hourly_bars.py --sample liquid --min-cumvol 45000 --categories Entertainment`,
+    same command, resumes), then replay the band's stop exits (exits.py stop_drop / stop_px) on the hourly bars in the
+    last 48 h instead of the next daily open: does any verdict of 3.28 / 3.36 change? Needs an hourly option in exits.py.
