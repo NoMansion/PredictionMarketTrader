@@ -1612,3 +1612,28 @@ The detached flag fetch of 3.39 finished before the pause (flags for 3,706 of th
   a curiosity; noted as queue item 21, to look at only if the download adds many more exclusive events.
 - Forward: nothing settled. Main account $1,010.31, 0 settled, 6 resting orders; a paper cycle began at 4:07 am
   after the resume.
+
+### 3.41 Ideas queue 14: the Entertainment band by days to close, at 20,000 contracts (6:20 am CST, November 22)
+
+Question: the taker version (3.30) was thin in 2025; does the resting band's edge come from short-dated markets, where
+capital turns over fastest? `research/band_by_dte.py 20000`: busy Entertainment (5,802 markets, 1,570 events, closes
+Feb 2022 to Sep 2026; 2,141 markets out of sample), "NO where YES is at 5-35c", resting, sliced by days to the
+scheduled close; each slice enters at the first bar inside its window (a market can be in more than one slice).
+Three slices plus the whole, 4 variants.
+
+| slice | bets / events | per bet | tail test in / out of sample (loss rate, bound vs break-even) | replay at 1%, in / out |
+|---|---|---|---|---|
+| all | 1,526 / 691 | +7.39% | 22.4%, 25.7 < 35.3 pass / 21.4%, 26.4 < 33.8 pass | +9.1%/y DD 6.5% / +33.0%/y DD 6.6% |
+| 0-7 d | 831 / 442 | +6.15% | 22.4%, 26.8 < 33.2 pass / 22.2%, 28.5 > 26.9 FAIL | +14.5%/y DD 6.6% / +20.2%/y DD 7.8% |
+| 7-30 d | 422 / 242 | +7.08% | 20.3%, 25.8 < 30.0 pass / 23.2%, 34.4 < 34.9 pass (by a hair, 56 events) | +4.7%/y DD 3.6% / +15.6%/y DD 2.3% |
+| 30+ d | 558 / 213 | +8.15% | 22.6%, 28.6 < 35.7 pass / 12.0%, 22.3 < 48.8 pass | +5.0%/y DD 4.8% / +15.8%/y DD 2.1% |
+
+- The short-dated slice is NOT where the edge sits: it has the lowest per-bet return and fails the tail test out of
+  sample (winners there make only +0.35 against a 0.94 loss). It turns capital fastest (median hold 3.4 days) and is
+  the deepest (median 13,151 contracts on the entry day against 1,462 for 30+ days).
+- The 30+ day slice earns the most per bet, but its 2025 is +3.9% (185 bets) and its out-of-sample figure leans on
+  2026 (+10.8%, 6 losing of 50 events); the thinnest slice (14% of entry days under 100 contracts).
+- Verdict: no slice beats the whole band; the band is spread across horizons, so the paper account `rule_ent_band`
+  (all horizons) stays as it is. No new account.
+- Forward: rule accounts have almost nothing settled (control_ent_quiet 2 bets); main account $1,009.89, 0 settled,
+  5 resting orders; a paper cycle began at 6:09 am.

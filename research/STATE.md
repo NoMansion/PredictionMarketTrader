@@ -629,6 +629,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   download and paper loop restarted, a paper cycle began at once. The app's own scheduled check-in stays OFF (Fable).
 - 4:15 am CST Nov 22: queue item 11 finished (report 3.40): event baskets with the flags known fail (exclusive in sample
   negative at every threshold). Item 21 added. Jobs ok (cycle running since 4:07 am); main $1,010.31, 0 settled.
+- 6:20 am CST Nov 22: queue item 14 (report 3.41): the Entertainment band by days to close: the edge is spread across
+  horizons, short-dated markets the weakest (fail out of sample). No new account. Jobs ok; main $1,009.89, 0 settled.
 
 ## How to run a round
 
@@ -782,7 +784,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
     resting fill rates against the backtest's 55-80% model (50+ decided).
 13. STANDING (not an open item): when a queue item passes all the tests, add a paper account for it under a new name in rules.yaml (allowed
     by the user's word above), and say so in the report.
-14. The Entertainment band (resting) by days to close (0-7, 7-30, 30+ days) at 20,000: taker results (3.30) are
+14. DONE 6:20 am CST Nov 22 (report 3.41): no slice beats the whole band; 0-7d is the weakest (+6.2% a bet) and FAILS the
+    tail test out of sample; 7-30d passes by a hair, 30+d earns most (+8.2%) but leans on 2026. Account unchanged. Was:
+    The Entertainment band (resting) by days to close (0-7, 7-30, 30+ days) at 20,000: taker results (3.30) are
     thin in 2025; is the edge in the short-dated markets, where capital turns over fastest?
 15. The 5-cent rule without its 0-3c corner (report 3.31): NO at mid 3-5c, spread <= 5c, <= 30d, resting and taker, at
     45,000 and the default level. Needs a new rule name in research/families.py (add, do not rename) and a test.
