@@ -624,6 +624,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 8:20 pm CST Nov 21: EVERYTHING PAUSED at the user's word ("Pause"). Download and paper loop stopped (no cycle was
   running; the detached event-flag fetch had already ended), both Windows tasks (Check-in, Jobs) disabled. Next is
   queue item 12. To resume: enable both tasks and run `research\start_jobs.ps1 -PaperLoop`.
+- 4:07 am CST Nov 22: RESUMED at the user's word ("close all unnecessary tasks and resume"). Nine old idle check-in
+  sessions (Nov 19-20) archived in the Claude app; both Windows tasks enabled again (next Opus check-in 6:11 am);
+  download and paper loop restarted, a paper cycle began at once. The app's own scheduled check-in stays OFF (Fable).
 
 ## How to run a round
 
