@@ -637,6 +637,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 9:25 am CST Nov 22: queue item 16 (report 3.43): the nine-category band's weak 2025 is the long-dated slice; 0-7d passes
   both halves at 45,000 (by a hair out of sample). Lead only; item 23 (same at 20,000) added. Jobs ok; main $1,009.89, 0 settled.
 
+- 10:10 am CST Nov 22: queue item 17 (report 3.44): Climate 5-cent alone unchanged (89 events); with Politics passes both
+  halves but Politics carries it and the pair was picked after the fact; no account; item 24 added. Jobs ok; main $1,009.89, 0 settled.
+
 ## How to run a round
 
 ```
@@ -801,7 +804,10 @@ drawdown, capacity in dollars, and say how many variants were tried.
     (+5.97% a bet, out of sample by 0.75 pt on 135 events; replay 1% +5.5%/y DD 4.4% in, +19.1%/y DD 4.6% out); 7-30d and
     30+d fail out of sample. A lead, no account yet; item 23 added. Was: The nine-category wide band at 45,000 (report 3.33) earns almost only in 2026: split by year AND days to close
     (0-7, 7-30, 30+) to see whether 2026 is a change in the market or a shift to short-dated markets.
-17. Climate and Weather 5-cent rule at 45,000 (report 3.34: 0 losing in 89 events, too few): re-run analyze_rule mk/tk
+17. DONE 10:10 am CST Nov 22 (report 3.44): Climate alone unchanged (89 events, download has not added any); pooled
+    with Politics resting passes both halves (replay 1% +1.6%/y in, +12.6%/y out, DD 1.7%) but Politics alone already
+    passes and the pair was picked after the fact; no account (Politics is inside rule_5c_busy). Item 24 added. Was:
+    Climate and Weather 5-cent rule at 45,000 (report 3.34: 0 losing in 89 events, too few): re-run analyze_rule mk/tk
     once the download has added Climate and Weather markets; also pool it with Politics only (both pass/near-pass alone).
 18. Combined account (research/combined.py) without the 5-cent nine-category leg, and with that leg at 45,000 instead of
     the default level (report 3.35: the leg's out-of-sample edge fell to +0.29% a bet and it loses money above 0.25%).
@@ -818,3 +824,6 @@ drawdown, capacity in dollars, and say how many variants were tried.
 23. The nine-category wide band, 0-7 days to close (report 3.43, passed at 45,000 by 0.75 pt out of sample): re-run at 20,000
     and 5,000 (`research/band_by_dte.py 20000 nine`). If it passes both halves at 20,000 too, add a paper account under a
     new name in rules.yaml (check that rules.yaml supports a days-to-close window first; if not, code it with a test).
+24. Forward, once rule_5c_busy has 30+ settled bets: its Politics bets alone against report 3.44 (Politics 5-cent resting
+    at 45,000: +6.3% a winner, 2% of events losing in sample); and re-test Climate and Weather alone when the download
+    has added its markets at 45,000 (still 89 events on Nov 22).

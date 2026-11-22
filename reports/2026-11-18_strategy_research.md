@@ -1700,3 +1700,26 @@ variants here, 16 with report 3.33 on this band.
   census level (queue item 23: 0-7 d at 20,000), as Politics in 3.33 did not. No account added this round.
 - Forward: nothing settled in any account (main $1,009.89, 3 open, 4 resting; rule accounts flat to -$19 on open
   taker positions, controls flat). The paper cycle of 8:14 am is running.
+
+### 3.44 Ideas queue 17: the Climate and Weather 5-cent rule again, and pooled with Politics (10:10 am CST, November 22)
+
+The rule "NO at mid <= 5c, <= 30d, spread <= 5c" at 45,000 contracts, liquid sample, resting (mk) and taker (tk).
+4 runs (2 pools x 2 entries) plus Politics alone resting for comparison.
+
+- Climate and Weather alone: unchanged from 3.34 (89 events resting, 111 taker, 0 losing); the download has not
+  added Climate and Weather markets at this level yet. Still fails the tail test in both halves (too few events).
+- Climate and Weather + Politics, resting: passes both halves (in 252 events, 4 losing, bound 3.60% vs break-even
+  5.84%; out 115 events, 0 losing, bound 2.57% vs 5.53%). Replay at 1%: +1.6%/y in sample (DD 1.7%), +12.6%/y out
+  (DD 0.0%). Median $688 traded in the week before entry; 14% of entry days under 100 contracts. Largest series 3%.
+- Taker: fails in sample (bound 3.40% vs 3.40%), passes out; replay at 1% +0.4%/y in sample, DD 3.1%.
+- Politics alone, resting, already passes both halves (in 195 events bound 4.63% vs 6.12%; out 83 events 3.54% vs
+  6.01%; replay 1% +1.1%/y in, +10.8%/y out). Climate adds about half a point a year in sample and 1.8 out, no
+  drawdown, and narrows the bounds: it helps, but Politics carries the pool.
+- Verdict: a pass on the tests, but not a new account. The two categories were picked after the fact from per-category
+  results (3.33, 3.34), so the pool's pass is partly selection; the in-sample year is weak (+1.6%/y); and both
+  categories' 5-cent markets are already in paper: Politics inside rule_5c_busy (nine categories), so the forward
+  test of this pool can be read off rule_5c_busy's Politics bets plus a Climate split later. Re-test Climate alone
+  when the download adds its markets (item 17 stays as a standing re-test, low priority).
+- Forward: nothing settled in any account (main $1,009.89; 23 variant accounts, controls control_fade -$27.83 and
+  control_coinflip -$33.54; 10 rule accounts, 0 settled). Shadow logs: resting NO bids filled 12 of 16 (5-cent) and
+  11 of 11 (Entertainment band) decided so far, above the backtest's fill model; too few to judge (needs 50+).
