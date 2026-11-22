@@ -621,6 +621,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   markets (own database); 400 of 815 Entertainment-band markets fetched. Item 20 added. Jobs ok; main $1,010.72, 0 settled.
 - 6:35 pm CST Nov 21: queue item 11 (report 3.39): event baskets on all eleven busy categories; flagged-exclusive still no
   edge; Kalshi flags for ~3,700 more events being fetched (detached, ~1.5 h). Jobs ok; main $1,010.72, 0 settled.
+- 8:20 pm CST Nov 21: EVERYTHING PAUSED at the user's word ("Pause"). Download and paper loop stopped (no cycle was
+  running; the detached event-flag fetch had already ended), both Windows tasks (Check-in, Jobs) disabled. Next is
+  queue item 12. To resume: enable both tasks and run `research\start_jobs.ps1 -PaperLoop`.
 
 ## How to run a round
 
