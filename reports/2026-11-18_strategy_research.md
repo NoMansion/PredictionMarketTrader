@@ -1798,3 +1798,41 @@ entry (at 20,000: $2,805; at 45,000: $5,663).
   resting, 1% a bet, 20,000+ contracts only, the level that still passes everything. It is a subset of rule_ent_band's markets.
 - Forward: main $1,010.18, 1 settled; 23 variant accounts, 0 settled (controls control_fade -$27.22, control_coinflip
   -$34.86); 10 rule accounts (11 from the next cycle), 0 settled. Shadow logs: resting fills 12 of 16 and 11 of 11.
+
+### 3.47 Ideas queue 19: does a recent fall add anything to the Entertainment band? (3:30 pm CST, November 22)
+
+`research/analyze_rule.py --sample liquid --min-cumvol N --categories Entertainment --side no --entry mk`, N = 20,000 and
+45,000, on the finished download. Six rules at each level (12 variants): the band itself (NO where YES is at 5-35c), YES at
+10-25c after a fall of 3c+ in 1 / 3 / 7 days, the opposite move (10-25c, up 3c+ in 7 days), and 3-10c after a 7-day fall.
+All resting. Per bet is the mean over all bets; the tail test is per event, in sample / out of sample.
+
+| Level | Rule | Events | Per bet | Losing events in / out | Tail test in / out | Replay 1% a year in / out | Worst DD in / out |
+|---|---|---|---|---|---|---|---|
+| 20,000 | band 5-35c | 691 | +7.39% | 22.4% / 21.4% | passes / passes | +9.1% / +33.0% | 6.5% / 6.6% |
+| 20,000 | 10-25c, down in 1d | 402 | +7.14% | 21.4% / 13.5% | passes / passes | +7.8% / +27.8% | 7.4% / 2.9% |
+| 20,000 | 10-25c, down in 3d | 403 | +7.65% | 21.1% / 13.6% | passes / passes | +5.5% / +25.2% | 7.5% / 2.8% |
+| 20,000 | 10-25c, down in 7d | 359 | +9.23% | 19.8% / 11.8% | passes / passes | +12.2% / +26.0% | 6.9% / 2.7% |
+| 20,000 | 10-25c, UP in 7d | 201 | +5.87% | 20.5% / 12.0% | FAILS (26.7% vs 26.4%) / passes | +2.6% / +8.7% | 4.4% / 2.8% |
+| 20,000 | 3-10c, down in 7d | 404 | +4.83% | 4.9% / 5.9% | passes / passes | +4.6% / +9.0% | 3.4% / 2.4% |
+| 45,000 | band 5-35c | 402 | +7.14% | 24.1% / 15.7% | passes / passes | +9.9% / +25.5% | 8.1% / 2.3% |
+| 45,000 | 10-25c, down in 1d | 226 | +8.04% | 19.5% / 9.7% | passes / passes | +5.0% / +28.0% | 6.5% / 1.6% |
+| 45,000 | 10-25c, down in 3d | 222 | +8.38% | 19.2% / 9.1% | passes / passes | +6.9% / +20.0% | 7.4% / 1.8% |
+| 45,000 | 10-25c, down in 7d | 218 | +10.21% | 17.1% / 6.1% | passes / passes | +8.2% / +20.4% | 4.6% / 2.0% |
+| 45,000 | 10-25c, UP in 7d | 105 | +3.11% | 25.6% / 7.4% | FAILS (35.0% vs 24.8%) / passes | +1.1% / +10.4% | 5.2% / 1.0% |
+| 45,000 | 3-10c, down in 7d | 254 | +5.49% | 3.3% / 4.1% | passes / passes | +8.6% / +6.3% | 1.7% / 1.0% |
+
+- **A fall helps per bet, not per account.** After a 7-day fall the 10-25c bets earn +9.2% / +10.2% a bet against the
+  band's +7.4% / +7.1%, and every falling version passes both halves at both levels; the same prices after a RISE earn about
+  half and fail the tail test in sample. So the direction of the last move carries some information, the opposite of what
+  the pooled nine categories showed (3.37). But the falling subsets trade half as often, and the 1% replay earns less a
+  year than the whole band out of sample (+20% to +28% against +25.5% / +33.0%); in sample the 7-day fall is ahead only at
+  20,000 (+12.2% against +9.1%).
+- Caveats: 12 variants, no t-statistic above 3 is claimed; the band and the fall rules overlap (a fall rule's bets are mostly
+  band bets), and there is no "10-25c with no fall" rule to compare against directly (item 28 added). Capacity is the
+  band's: median $3,000 to $6,800 traded in the week before entry, under 100 contracts on 5-9% of entry days.
+- Verdict: no new account. The existing `rule_ent_fall` (10-25c, down 3c+ in 7 days, 5,000+) is the forward test of this
+  and stays as it is; the band stays the main Entertainment account.
+- Forward: main $1,010.18, 1 settled (+$8.57); a cycle has been running since 2:20 pm. 23 variant accounts, 0 settled
+  (controls control_fade -$27.26, control_coinflip -$34.86); 11 rule accounts, 0 settled (rule_ent_band -$2.27 against its
+  control control_ent_quiet -$2.53; rule_5c_busy -$0.22 against control_5c_quiet $0.00). Shadow logs: resting fills 12 of 16
+  (busy 5-cent) and 11 of 11 (Entertainment band) decided.

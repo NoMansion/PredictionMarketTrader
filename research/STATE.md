@@ -691,6 +691,9 @@ Forward-only (cannot be backtested):
     (rules.yaml; pair `rule_5c_busy`). Read it once 20+ of its markets (kept and vetoed) have settled.
 - 1:30 pm CST Nov 22: queue item 25 (report 3.46): Entertainment band unchanged at 20,000/45,000, weaker at 5,000 (tail test passes, 1% replay out of sample -1.0%/y, DD 18%; taker fails). New paper account rule_ent_band_20k. Items 26-27 added. Jobs ok; main $1,010.18, 1 settled.
 
+- 3:30 pm CST Nov 22: queue item 19 (report 3.47): in Entertainment a recent fall lifts the band's per-bet edge (+9-10% vs +7%), a rise
+  fails in sample; fewer bets, so no account better than the band; rule_ent_fall stays. Item 28 added. Jobs ok; main $1,010.18, 1 settled.
+
 ## Next actions
 
 1. Each check-in: `python3 research/panel.py` (what landed), then for every category with a finished pass run
@@ -824,7 +827,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
     Combined account (research/combined.py) without the 5-cent nine-category leg, and with that leg at 45,000 instead of
     the default level (report 3.35: the leg's out-of-sample edge fell to +0.29% a bet and it loses money above 0.25%).
     Needs a leg option in combined.py (add, with a test).
-19. The momentum lead (report 3.37) failed pooled; one last look in Entertainment alone (busy, 20,000 and 45,000),
+19. DONE 3:30 pm CST Nov 22 (report 3.47): in Entertainment a 7-day fall lifts 10-25c NO to +9.2% / +10.2% a bet (band +7.4% /
+    +7.1%), all falling versions pass both halves at 20,000 and 45,000, a RISE fails in sample; but the 1% replay earns less a
+    year than the band (fewer bets). No new account (rule_ent_fall already tests it). Item 28 added. Was: The momentum lead (report 3.37) failed pooled; one last look in Entertainment alone (busy, 20,000 and 45,000),
     where the wide NO band works: does a recent fall add anything over the band itself (compare with 3.29)?
 20. Finish the hourly fetch (`research/hourly_bars.py --sample liquid --min-cumvol 45000 --categories Entertainment`,
     same command, resumes), then replay the band's stop exits (exits.py stop_drop / stop_px) on the hourly bars in the
@@ -852,3 +857,6 @@ drawdown, capacity in dollars, and say how many variants were tried.
     with a test), or a filter in a small script. If it loses in both halves, write it plainly for the user: rule_ent_band
     and rule_combined (5,000+) trade it.
 27. Forward, once both have 30+ settled bets: rule_ent_band_20k against rule_ent_band (its superset) and control_ent_quiet.
+28. Isolate the fall effect in Entertainment (report 3.47): the band's 10-25c bets WITHOUT a 3c+ fall in 7 days against those
+    with one, at 20,000 and 45,000, resting. Needs a new rule name in research/families.py (add, do not rename) and a test. If
+    the no-fall bets lose or are flat in both halves, the band's money is the fall, worth writing for the user.
