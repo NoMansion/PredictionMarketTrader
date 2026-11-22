@@ -46,6 +46,17 @@ accounts:
     stake_pct: 0.01
     legs: [*ent_band]
 
+  # ---- added 2026-11-22, 1:30 pm CST (Ideas queue 25, report 3.46): on the finished download the band at 5,000
+  # still passes the tail test but its 1% replay out of sample is -1.0%/y (DD 18%); at 20,000 it is unchanged
+  # (+7.4% a bet, passes both halves, replay 1% +9.1%/y in, +33%/y out, DD 6.6%). Same rule, busier markets only;
+  # rule_ent_band is left as it is. -------------------------------------------------------------------------------
+  rule_ent_band_20k:
+    about: "Entertainment band (NO against YES at 5-35c), resting, on markets with 20,000+ contracts traded: the level where the band still holds on the finished download (report 3.46)"
+    entry: resting
+    stake_pct: 0.01
+    legs:
+      - {label: "NO vs YES 5-35c, Entertainment, 20,000+", categories: [Entertainment], min_yes_mid: 0.05, max_yes_mid: 0.345, min_volume: 20000}
+
   # ---- the backtest's best whole account (report 3.28, part 2: +15.3% a year out of sample at 0.5%) -------------
   rule_combined:
     about: "COMBINED: four legs in one account at 0.5% a bet, as research/combined.py: 5-cent busy, Entertainment band, Climate band, 5-cent Entertainment"

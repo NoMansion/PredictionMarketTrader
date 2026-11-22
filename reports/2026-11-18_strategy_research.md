@@ -1764,3 +1764,37 @@ sample (349 bets) against +1.4% at 5,000; it is the steadiest leg (out-of-sample
 - Forward: main $1,010.18, 1 settled (+$8.57); 23 variant accounts, 0 settled (controls control_fade -$27.22,
   control_coinflip -$34.86); 10 rule accounts, 0 settled. Shadow logs: resting NO bids filled 12 of 16 (5-cent) and 11
   of 11 (Entertainment band); too few to judge.
+
+### 3.46 Ideas queue 25: the Entertainment band and the 5-cent rule on the finished download (1:30 pm CST, November 22)
+
+Report 3.45 found the band weaker on the larger download. Re-run of report 3.29 / 3.30 / 3.7 with the census level always
+given (`analyze_rule.py --sample liquid --min-cumvol N`): "NO where YES is at 5-35c", Entertainment, resting (mk) and taker
+(tk) at 5,000 / 20,000 / 45,000, and the 5-cent rule ("NO at mid <= 5c, <= 30d, spread <= 5c") on the nine at 45,000. 8 runs,
+all fixed beforehand.
+
+| Rule, level, entry | Bets (events) | Per bet | Tail test in / out | Replay 1%, in / out a year | Worst DD in / out |
+|---|---|---|---|---|---|
+| band, 5,000, resting | 3,450 (1,369) | +4.57% | passes (30.1 vs 37.2%) / passes (30.2 vs 32.1%) | +4.9% / **-1.0%** | 12.3% / **18.0%** |
+| band, 5,000, taker | 3,855 (1,473) | +0.76% | **fails / fails** | -2.5% / -6.9% | 16.6% / 19.3% |
+| band, 20,000, resting | 1,526 (691) | +7.39% | passes (25.7 vs 35.3%) / passes (26.4 vs 33.8%) | +9.1% / +33.0% | 6.5% / 6.6% |
+| band, 20,000, taker | 1,675 (726) | +3.47% | passes / passes | +2.9% / +13.7% | 7.6% / 7.4% |
+| band, 45,000, resting | 815 (402) | +7.14% | passes (28.7 vs 34.3%) / passes (22.2 vs 35.9%) | +9.9% / +25.5% | 8.1% / 2.3% |
+| band, 45,000, taker | 883 (413) | +3.45% | fails (29.0 vs 28.5%) / passes | +2.0% / +16.1% | 10.0% / 4.0% |
+| 5-cent, nine, 45,000, resting | 1,188 (716) | +2.07% | passes (4.8 vs 6.0%) / passes (4.0 vs 6.0%) | +1.6% / +18.1% | 3.0% / 1.5% |
+| 5-cent, nine, 45,000, taker | 1,503 (861) | +0.70% | fails / passes | +0.1% / +8.9% | 4.0% / 1.9% |
+
+**Result: at 20,000 and 45,000 nothing changed** (the same bets as 3.29 / 3.30: the download has not added busy markets), and
+the 5-cent rule at 45,000 is exactly report 3.42's figure. **At 5,000 the band is weaker**: the download added about 1,200
+markets between 5,000 and 20,000 contracts; per bet it fell from +7.3% to +4.57%. It still passes the tail test in both
+halves (out of sample by 1.9 points), but the account replay at 1% loses out of sample (-1.0%/y, worst drawdown 18.0%; at 0.5%
++2.9%/y, DD 12.1%), and the taker version now fails both halves. Capacity at 5,000: median $854 traded in the week before
+entry (at 20,000: $2,805; at 45,000: $5,663).
+
+- Verdicts that stand: 3.29's band at 20,000 and 45,000; 3.30's taker at 20,000 (passes) and 45,000 (fails in sample); 3.7's
+  5-cent rule at 45,000. Verdict that does NOT stand: the band at 5,000 as a 1% account (3.29: +31%/y out of sample, DD 6.0%).
+- The paper accounts rule_ent_band, rule_ent_band_taker and rule_combined use the 5,000 level. They keep running unchanged
+  (changing them would break their record), but their backtest basis is now weak: read them with this in mind.
+- New paper account `rule_ent_band_20k` (rules.yaml, under a new name, allowed by the standing instruction): the same band,
+  resting, 1% a bet, 20,000+ contracts only, the level that still passes everything. It is a subset of rule_ent_band's markets.
+- Forward: main $1,010.18, 1 settled; 23 variant accounts, 0 settled (controls control_fade -$27.22, control_coinflip
+  -$34.86); 10 rule accounts (11 from the next cycle), 0 settled. Shadow logs: resting fills 12 of 16 and 11 of 11.

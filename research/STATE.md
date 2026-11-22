@@ -689,6 +689,7 @@ Forward-only (cannot be backtested):
 17. DONE: Claude forecasts on Kalshi through the paper bot (since 2026-11-18).
 18. RUNNING since 2026-11-21: Claude as a filter on a mechanical rule: the paper account `rule_5c_busy_claude`
     (rules.yaml; pair `rule_5c_busy`). Read it once 20+ of its markets (kept and vetoed) have settled.
+- 1:30 pm CST Nov 22: queue item 25 (report 3.46): Entertainment band unchanged at 20,000/45,000, weaker at 5,000 (tail test passes, 1% replay out of sample -1.0%/y, DD 18%; taker fails). New paper account rule_ent_band_20k. Items 26-27 added. Jobs ok; main $1,010.18, 1 settled.
 
 ## Next actions
 
@@ -838,8 +839,16 @@ drawdown, capacity in dollars, and say how many variants were tried.
 24. Forward, once rule_5c_busy has 30+ settled bets: its Politics bets alone against report 3.44 (Politics 5-cent resting
     at 45,000: +6.3% a winner, 2% of events losing in sample); and re-test Climate and Weather alone when the download
     has added its markets at 45,000 (still 89 events on Nov 22).
-25. DO THIS BEFORE 19 (added 12:40 pm CST Nov 22, report 3.45): the Entertainment band at 5,000 now earns +5.3% / +3.2% a
+25. DONE 1:30 pm CST Nov 22 (report 3.46): at 20,000 / 45,000 the band and the 5-cent rule are unchanged (all of 3.29 / 3.30 /
+    3.7 stand there); at 5,000 the band still passes the tail test both halves (+4.57% a bet) but its 1% replay loses out of
+    sample (-1.0%/y, DD 18%) and the taker fails both. New account rule_ent_band_20k (20,000+). Items 26, 27 added. Was:
+    the Entertainment band at 5,000 now earns +5.3% / +3.2% a
     bet (3.29: +7.3% / +7.2%) and its 1% replay out of sample is -2.5%/y, DD 18.5%. Re-run the tail test and replay of
     "NO where YES is at 5-35c", Entertainment, mk and tk, at 5,000 / 20,000 / 45,000 (`research/analyze_rule.py --sample
     liquid --min-cumvol N --categories Entertainment`), and the 5-cent rule at 45,000 on the nine; write which verdicts of
     3.29 / 3.30 / 3.7 still stand. If the band fails, say so to the user (rule_ent_band and rule_combined rest on it).
+26. The Entertainment band in the 5,000-20,000 contract layer alone (report 3.46: the markets the download added there pulled
+    the 5,000 figure down): does that layer lose by itself, in both halves? Needs a max-cumvol option in analyze_rule.py (add,
+    with a test), or a filter in a small script. If it loses in both halves, write it plainly for the user: rule_ent_band
+    and rule_combined (5,000+) trade it.
+27. Forward, once both have 30+ settled bets: rule_ent_band_20k against rule_ent_band (its superset) and control_ent_quiet.
