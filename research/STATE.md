@@ -631,6 +631,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   negative at every threshold). Item 21 added. Jobs ok (cycle running since 4:07 am); main $1,010.31, 0 settled.
 - 6:20 am CST Nov 22: queue item 14 (report 3.41): the Entertainment band by days to close: the edge is spread across
   horizons, short-dated markets the weakest (fail out of sample). No new account. Jobs ok; main $1,009.89, 0 settled.
+- 7:35 am CST Nov 22: queue item 15 (report 3.42): the 5-cent rule at 3-5c only: better per bet, less money out of sample;
+  no new account (subset of rule_5c_busy); new rule name in families.py + 1 test (477 pass). Item 22 added. Jobs ok;
+  main $1,009.89, 0 settled.
 
 ## How to run a round
 
@@ -788,7 +791,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
     tail test out of sample; 7-30d passes by a hair, 30+d earns most (+8.2%) but leans on 2026. Account unchanged. Was:
     The Entertainment band (resting) by days to close (0-7, 7-30, 30+ days) at 20,000: taker results (3.30) are
     thin in 2025; is the edge in the short-dated markets, where capital turns over fastest?
-15. The 5-cent rule without its 0-3c corner (report 3.31): NO at mid 3-5c, spread <= 5c, <= 30d, resting and taker, at
+15. DONE 7:35 am CST Nov 22 (report 3.42): at 45,000 resting, 3-5c earns +3.27% a bet (whole rule +2.07%) and passes both
+    halves, but the out-of-sample replay earns less (+13.6%/y vs +18.1%); taker fails; default level fails out of sample.
+    A subset of rule_5c_busy: no new account; item 22 added. Was: The 5-cent rule without its 0-3c corner (report 3.31): NO at mid 3-5c, spread <= 5c, <= 30d, resting and taker, at
     45,000 and the default level. Needs a new rule name in research/families.py (add, do not rename) and a test.
 16. The nine-category wide band at 45,000 (report 3.33) earns almost only in 2026: split by year AND days to close
     (0-7, 7-30, 30+) to see whether 2026 is a change in the market or a shift to short-dated markets.
@@ -804,3 +809,5 @@ drawdown, capacity in dollars, and say how many variants were tried.
     last 48 h instead of the next daily open: does any verdict of 3.28 / 3.36 change? Needs an hourly option in exits.py.
 21. The exclusive 1.05+ basket corner (report 3.40: 13 in sample, 55 out of sample, +1.75%, worst -0.2%): re-run
     `research/event_baskets.py` only once the download has added many more exclusive events; low priority.
+22. Forward, once rule_5c_busy has 30+ settled bets: split its settled bets by entry price (YES 0-3c against 3-5c) and
+    compare with report 3.42 (3-5c +3.27% a bet, the 0-3c rest about +0.6%): the forward test of item 15, no new account.

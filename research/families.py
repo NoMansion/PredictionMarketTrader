@@ -101,6 +101,10 @@ def f_bonds(f: Features):
         m = f.base & (f.dte <= dmax) & (f.spread <= smax)
         yield "2 bonds", f"YES at mid >= {thr * 100:g}c, <= {dmax}d, spread <= {smax * 100:g}c", m & (f.mid >= thr), "yes", entry
         yield "2 bonds", f"NO at mid <= {100 - thr * 100:g}c, <= {dmax}d, spread <= {smax * 100:g}c", m & (f.mid <= 1 - thr) & (f.mid > 0), "no", entry
+    # The 5-cent rule without its 0-3c corner (report 3.31 found the money in 3-6c; queue item 15, report 3.42)
+    for entry in ENTRIES:
+        m = f.base & (f.dte <= 30) & (f.spread <= 0.05)
+        yield "2 bonds", "NO at mid 3-5c, <= 30d, spread <= 5c", m & (f.mid > 0.03) & (f.mid <= 0.05), "no", entry
 
 
 # 3. Always No, by event size and by where in the event the market sits

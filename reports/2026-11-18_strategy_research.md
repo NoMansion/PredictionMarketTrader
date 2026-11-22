@@ -1637,3 +1637,38 @@ Three slices plus the whole, 4 variants.
   (all horizons) stays as it is. No new account.
 - Forward: rule accounts have almost nothing settled (control_ent_quiet 2 bets); main account $1,009.89, 0 settled,
   5 resting orders; a paper cycle began at 6:09 am.
+
+### 3.42 Ideas queue 15: the 5-cent rule without its 0-3c corner (7:35 am CST, November 22)
+
+Question (from 3.31): the 5-cent rule's money sits in 3-6c; does dropping the 0-3c corner give a better rule? New
+rule name in `research/families.py` (added, nothing renamed; one test): "NO at mid 3-5c, <= 30d, spread <= 5c", family
+2. `analyze_rule.py --sample liquid --categories <the nine>`, at 45,000 contracts and at the default census level,
+resting and taker, with the whole 5-cent rule beside it on the same data. 8 runs, 4 of them new variants. Data: at
+45,000, 8,893 markets, 3,202 events, closes Aug 2021 to Sep 2026; default level 53,711 markets, 11,098 events.
+
+| level | rule | entry | bets (events) | per bet | tail test in / out (bound vs break-even) | replay 1%, in / out a year (worst DD) | median $ traded 7d before |
+|---|---|---|---|---|---|---|---|
+| 45,000 | 3-5c | resting | 662 (459) | +3.27% | 4.73 < 7.07 pass / 5.68 < 7.22 pass | +2.0% (2.5%) / +13.6% (1.8%) | $1,416 |
+| 45,000 | whole 0-5c | resting | 1,188 (716) | +2.07% | 4.77 < 6.03 pass / 3.99 < 5.99 pass | +1.6% (3.0%) / +18.1% (1.5%) | $844 |
+| 45,000 | 3-5c | taker | 858 (573) | +1.25% | 4.57 > 4.24 FAIL / 4.83 = 4.83 FAIL | +0.3% (3.4%) / +8.8% (1.7%) | $1,390 |
+| 45,000 | whole 0-5c | taker | 1,503 (861) | +0.70% | 4.05 > 3.44 FAIL / 3.54 < 3.83 pass | +0.1% (4.0%) / +8.9% (1.9%) | $844 |
+| default | 3-5c | resting | 3,349 (2,001) | +0.96% | 7.51 < 8.22 pass / 9.93 > 8.93 FAIL | +2.3% (12.7%) / -13.8% (12.1%) | $67 |
+| default | whole 0-5c | resting | 5,470 (2,715) | +0.74% | 6.77 < 7.70 pass / 9.05 > 8.16 FAIL | +2.3% (12.0%) / -14.7% (12.8%) | $45 |
+| default | 3-5c | taker | 6,081 (3,021) | -0.21% | FAIL / FAIL | -2.5% (15.4%) / -21.8% (13.7%) | $37 |
+| default | whole 0-5c | taker | 9,419 (3,798) | -0.19% | FAIL / FAIL | -3.7% (19.3%) / -17.4% (11.0%) | $26 |
+
+- At 45,000, resting: dropping 0-3c raises the per-bet return from +2.07% to +3.27% and widens the margin below
+  break-even in both halves (in sample 2.3 points against 1.3; out of sample 1.5 against 2.0: narrower out of sample,
+  with only 134 events). The markets are deeper (median $1,416 a week against $844). But the account earns LESS out of
+  sample (+13.6% a year against +18.1%): fewer bets, less capital at work (10% against 20%); in sample it earns a
+  little more (+2.0% against +1.6%). Drawdowns are alike (1.5-3.0%). Losing bets by year: 2024 1 of 30, 2025 4 of 206,
+  2026 7 of 403; the largest series has 5% of the bets.
+- Taker: fails at 45,000 in both halves (the whole rule's taker fails in sample too). At the default level both
+  versions fail out of sample and lose about 14% a year: the busy-market level stays what pays, as 3.7 found.
+- Verdict: a sharpening, not a better account. Per bet it is better; in money out of sample it is worse, and the
+  difference sits inside the noise of 4 variants on 134-227 events. The paper account `rule_5c_busy` already buys
+  every market this rule would (it is a strict subset), so no new account: queue item 22 reads rule_5c_busy's settled
+  bets split by entry price (0-3c against 3-5c) once 30+ have settled, which tests the same question forward for free.
+- Forward: nothing settled. Rule accounts: rule_5c_busy_taker -$3.09 (27 open), rule_ent_band_taker -$19.58 (69
+  open), controls flat; the shadow fill rates so far 79% (14 decided) and 100% (9 decided) against the backtest's
+  55-80% model, too few to read. Main account $1,009.89, 0 settled; the paper cycle of 7:08 am is running.

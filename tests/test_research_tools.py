@@ -288,6 +288,14 @@ def test_find_rule_finds_the_named_condition_and_refuses_unknown_ones(world):
         analyze_rule.find_rule(f, titles, FIVE, "yes", "tk")          # the name exists, but only for NO
 
 
+def test_the_5_cent_rule_without_its_0_3c_corner_is_the_5_cent_rule_above_3c(world):
+    f, titles = world["f"], world["titles"]
+    for entry in ("mk", "tk"):
+        _, five = analyze_rule.find_rule(f, titles, FIVE, "no", entry)
+        fam, mask = analyze_rule.find_rule(f, titles, "NO at mid 3-5c, <= 30d, spread <= 5c", "no", entry)
+        assert fam == "2 bonds" and np.array_equal(mask, five & (f.mid > 0.03))
+        assert not (mask & (f.mid <= 0.03)).any()
+
 def test_bets_frame_is_one_bet_per_market(world):
     p, f = world["p"], world["f"]
     _, mask = analyze_rule.find_rule(f, world["titles"], FIVE, "no", "tk")
