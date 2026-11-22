@@ -776,10 +776,11 @@ drawdown, capacity in dollars, and say how many variants were tried.
 11. DONE 4:15 am CST Nov 22 (reports 3.39, 3.40): event baskets on all eleven busy categories with Kalshi's flags known
     (3,706 fetched): exclusive baskets never pass both halves (1.00+: -0.37% / +0.73%; 1.02+: -0.09% / +1.16%); after
     fees nothing is locked at entry. FAILS, no account; item 21 added.
-12. Forward, when there is data: each rule account against its control and its backtest per-bet figure (30+
+12. STANDING (not an open item; 4:15 am CST Nov 22): check it in every check-in's forward-log step, and write it up only
+    once its thresholds are met; until then go on to the next open item. Forward, when there is data: each rule account against its control and its backtest per-bet figure (30+
     settled bets); `rule_5c_busy_claude`: loss rate of kept against vetoed markets (20+ settled); the shadow logs'
     resting fill rates against the backtest's 55-80% model (50+ decided).
-13. When a queue item passes all the tests, add a paper account for it under a new name in rules.yaml (allowed
+13. STANDING (not an open item): when a queue item passes all the tests, add a paper account for it under a new name in rules.yaml (allowed
     by the user's word above), and say so in the report.
 14. The Entertainment band (resting) by days to close (0-7, 7-30, 30+ days) at 20,000: taker results (3.30) are
     thin in 2025; is the edge in the short-dated markets, where capital turns over fastest?
