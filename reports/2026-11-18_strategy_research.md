@@ -1672,3 +1672,31 @@ resting and taker, with the whole 5-cent rule beside it on the same data. 8 runs
 - Forward: nothing settled. Rule accounts: rule_5c_busy_taker -$3.09 (27 open), rule_ent_band_taker -$19.58 (69
   open), controls flat; the shadow fill rates so far 79% (14 decided) and 100% (9 decided) against the backtest's
   55-80% model, too few to read. Main account $1,009.89, 0 settled; the paper cycle of 7:08 am is running.
+
+### 3.43 Ideas queue 16: the nine-category wide band at 45,000 by days to close and year (9:25 am CST, November 22)
+
+Question (from 3.33): the nine pooled band (NO where YES is at 5-35c, resting) at 45,000 earns almost only in 2026;
+is that a change in the market or a shift towards short-dated markets? `research/band_by_dte.py 45000 nine` (the
+3.41 script, now with a `nine` option): 8,893 markets, 3,202 events, closes Aug 2021 to Sep 2026, 3,571 markets out
+of sample. Three slices by days to the scheduled close plus the whole, first bar per market inside the window; 4
+variants here, 16 with report 3.33 on this band.
+
+| slice | bets / events | per bet | 2025 / 2026 per bet | tail test in / out (bound vs break-even) | replay at 1%, in / out a year (worst DD) | median $ traded 7d before |
+|---|---|---|---|---|---|---|
+| all | 2,355 / 1,145 | +4.18% | +1.3% / +6.8% | 23.71 < 28.01 pass / 28.41 < 31.02 pass | +1.0% (11.2%) / +15.2% (6.2%) | $4,799 |
+| 0-7 d | 615 / 391 | +5.97% | +4.2% / +7.6% | 20.20 < 22.82 pass / 24.89 < 25.64 pass (by 0.75 pt, 135 events) | +5.5% (4.4%) / +19.1% (4.6%) | $6,688 |
+| 7-30 d | 788 / 491 | +4.94% | +3.0% / +5.0% | 20.08 < 24.15 pass / 31.97 > 28.10 FAIL | +7.0% (4.2%) / +8.7% (7.8%) | $5,190 |
+| 30+ d | 1,536 / 711 | +2.94% | -0.0% / +6.4% | 25.70 < 27.39 pass / 30.53 > 30.41 FAIL | -2.0% (12.3%) / +5.2% (4.9%) | $4,159 |
+
+- Mostly a horizon effect: the long-dated slice is flat in 2025 (682 bets, -0.0% a bet) and its long holds (median
+  65 days) are what make the whole band's in-sample replay weak (+1.0% a year, 11.2% drawdown). Short-dated markets
+  earn in 2025 as well (0-7 d +4.2%, 7-30 d +3.0%), so 2026 is not the only source. All slices are better in 2026, so
+  part of the jump is the market too.
+- The 0-7 day slice is the only one that passes the tail test in both halves, with the best replays (in sample +5.5% a
+  year, drawdown 4.4%; out of sample +19.1%, 4.6%; capital at work 1-3%, median hold 4.4 days) and the deepest
+  markets. But out of sample it passes by 0.75 points on 135 events, picked as the best of 4 slices after 12 earlier
+  variants; largest series 8% of bets (gas prices, CPI, WTI: data-release markets).
+- Verdict: a lead, not yet an account. Before a paper account (queue item 13), the same slice must hold at a second
+  census level (queue item 23: 0-7 d at 20,000), as Politics in 3.33 did not. No account added this round.
+- Forward: nothing settled in any account (main $1,009.89, 3 open, 4 resting; rule accounts flat to -$19 on open
+  taker positions, controls flat). The paper cycle of 8:14 am is running.

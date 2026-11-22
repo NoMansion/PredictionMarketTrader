@@ -2,6 +2,7 @@
 scheduled close. Each slice takes the first bar per market inside its window, so a market can be in several slices.
 
     .venv/Scripts/python.exe research/band_by_dte.py 20000
+    .venv/Scripts/python.exe research/band_by_dte.py 45000 nine   # queue item 16 (report 3.43): the nine pooled
 """
 import sys
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent))
@@ -13,7 +14,10 @@ from analyze_rule import find_rule, bets_frame, report
 from run_sweep import titles_for
 pd.set_option("display.width", 200)
 mc = float(sys.argv[1])
-df = panel.load(str(panel.DB), ["Entertainment"], sample="liquid", min_cumvol=mc)
+NINE = ["Economics", "Politics", "Companies", "Science and Technology", "Elections", "Health", "World",
+        "Commodities", "Financials"]
+cats = NINE if len(sys.argv) > 2 and sys.argv[2] == "nine" else ["Entertainment"]
+df = panel.load(str(panel.DB), cats, sample="liquid", min_cumvol=mc)
 print(panel.describe(df).splitlines()[0])
 p = Panel(df); f = Features(p)
 for entry in ("mk",):

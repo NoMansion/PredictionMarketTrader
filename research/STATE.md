@@ -634,6 +634,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 7:35 am CST Nov 22: queue item 15 (report 3.42): the 5-cent rule at 3-5c only: better per bet, less money out of sample;
   no new account (subset of rule_5c_busy); new rule name in families.py + 1 test (477 pass). Item 22 added. Jobs ok;
   main $1,009.89, 0 settled.
+- 9:25 am CST Nov 22: queue item 16 (report 3.43): the nine-category band's weak 2025 is the long-dated slice; 0-7d passes
+  both halves at 45,000 (by a hair out of sample). Lead only; item 23 (same at 20,000) added. Jobs ok; main $1,009.89, 0 settled.
 
 ## How to run a round
 
@@ -795,7 +797,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
     halves, but the out-of-sample replay earns less (+13.6%/y vs +18.1%); taker fails; default level fails out of sample.
     A subset of rule_5c_busy: no new account; item 22 added. Was: The 5-cent rule without its 0-3c corner (report 3.31): NO at mid 3-5c, spread <= 5c, <= 30d, resting and taker, at
     45,000 and the default level. Needs a new rule name in research/families.py (add, do not rename) and a test.
-16. The nine-category wide band at 45,000 (report 3.33) earns almost only in 2026: split by year AND days to close
+16. DONE 9:25 am CST Nov 22 (report 3.43): mostly horizon: 30+d is flat in 2025 and drags the replay; 0-7d passes both halves
+    (+5.97% a bet, out of sample by 0.75 pt on 135 events; replay 1% +5.5%/y DD 4.4% in, +19.1%/y DD 4.6% out); 7-30d and
+    30+d fail out of sample. A lead, no account yet; item 23 added. Was: The nine-category wide band at 45,000 (report 3.33) earns almost only in 2026: split by year AND days to close
     (0-7, 7-30, 30+) to see whether 2026 is a change in the market or a shift to short-dated markets.
 17. Climate and Weather 5-cent rule at 45,000 (report 3.34: 0 losing in 89 events, too few): re-run analyze_rule mk/tk
     once the download has added Climate and Weather markets; also pool it with Politics only (both pass/near-pass alone).
@@ -811,3 +815,6 @@ drawdown, capacity in dollars, and say how many variants were tried.
     `research/event_baskets.py` only once the download has added many more exclusive events; low priority.
 22. Forward, once rule_5c_busy has 30+ settled bets: split its settled bets by entry price (YES 0-3c against 3-5c) and
     compare with report 3.42 (3-5c +3.27% a bet, the 0-3c rest about +0.6%): the forward test of item 15, no new account.
+23. The nine-category wide band, 0-7 days to close (report 3.43, passed at 45,000 by 0.75 pt out of sample): re-run at 20,000
+    and 5,000 (`research/band_by_dte.py 20000 nine`). If it passes both halves at 20,000 too, add a paper account under a
+    new name in rules.yaml (check that rules.yaml supports a days-to-close window first; if not, code it with a test).
