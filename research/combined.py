@@ -2,6 +2,7 @@
 
     python research/combined.py
     python research/combined.py --stakes 0.005,0.01,0.02 --exit "take at bid >= 0.98, resting"
+    python research/combined.py --five-cumvol 45000      # the 5-cent nine-category leg on 45,000+ markets only
 
 The legs (rule, side, entry, categories) are fixed below, from reports 3.22 to 3.27: the 5-cent rule resting on the
 nine categories where it was tested pooled, and the wide NO rule resting where it was a lead (Entertainment, with
@@ -66,14 +67,25 @@ def account(p: Panel, res: Result, stake: float) -> tuple[portfolio.Account, por
     return portfolio.simulate(bets(p, a[0]), stake_frac=stake), portfolio.simulate(bets(p, a[1]), stake_frac=stake)
 
 
+def leg_level(df: pd.DataFrame, min_cumvol: float) -> np.ndarray:
+    """Bars at which the market had traded at least `min_cumvol` contracts so far (known at the bar, rule 0)."""
+    return df["cumvol"].to_numpy("float64") >= float(min_cumvol)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=str(panel.DB))
     ap.add_argument("--stakes", default="0.005,0.01,0.02")
     ap.add_argument("--exit", default="", help="an exit policy name from research/exits.policies() (default: hold)")
+    ap.add_argument("--min-cumvol", type=float, default=None,
+                    help="census level for every leg (default: the lowest complete level, which falls to 1 contract "
+                         "once a category's random pass is finished: pass 5000 to compare with reports 3.22-3.35)")
+    ap.add_argument("--five-cumvol", type=float, default=None,
+                    help="the 5-cent nine-category leg only on bars where the market has traded this many contracts "
+                         "(report 3.7's 45,000 level); the other legs keep the default level")
     args = ap.parse_args()
     cats = sorted({c for leg in LEGS for c in leg[4]})
-    df = panel.load(args.db, cats, sample="liquid")
+    df = panel.load(args.db, cats, sample="liquid", min_cumvol=args.min_cumvol)
     print(panel.describe(df))
     p = Panel(df)
     f = Features(p)
@@ -84,15 +96,19 @@ def main() -> int:
         raise SystemExit(f"unknown exit policy {args.exit!r}; known: " + "; ".join(x.name for x in policies()))
     catcol = df["category"].to_numpy(object)
     legs = []
-    for label, name, side, entry, leg_cats in LEGS:
+    for i, (label, name, side, entry, leg_cats) in enumerate(LEGS):
         _, mask = find_rule(f, titles, name, side, entry)
         mask = mask & np.isin(catcol, leg_cats)
+        if i == 0 and args.five_cumvol is not None:
+            mask = mask & leg_level(df, args.five_cumvol)
+            label = f"{label}, {args.five_cumvol:,.0f}+"
         legs.append((label, ex.run(rule_rows(p, mask, side, entry), side, entry, pol)))
     out = []
     combos = [(label, [res]) for label, res in legs]
     combos.append(("ALL FOUR LEGS in one account", [res for _, res in legs]))
     combos.append(("the first three legs", [res for _, res in legs[:3]]))
     combos.append(("5-cent nine + NO 5-35c Entertainment", [legs[0][1], legs[1][1]]))
+    combos.append(("the other three legs (no 5-cent nine)", [res for _, res in legs[1:]]))
     for stake in [float(s) for s in args.stakes.split(",")]:
         for label, parts in combos:
             res = first_per_market(p, merge(parts))
@@ -112,6 +128,10 @@ def main() -> int:
                                                "in sharpe": "{:.2f}".format, "out sharpe": "{:.2f}".format,
                                                "out years": "{:.2f}".format}))
     tag = "hold" if pol is HOLD else "".join(ch if ch.isalnum() else "_" for ch in pol.name)[:40]
+    if args.min_cumvol is not None:
+        tag += f"_min{args.min_cumvol:.0f}"
+    if args.five_cumvol is not None:
+        tag += f"_five{args.five_cumvol:.0f}"
     path = HERE / "results" / f"combined_{tag}.csv"
     t.round(5).to_csv(path, index=False)
     print(f"-> {path}")

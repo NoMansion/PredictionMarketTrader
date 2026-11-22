@@ -640,7 +640,15 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 10:10 am CST Nov 22: queue item 17 (report 3.44): Climate 5-cent alone unchanged (89 events); with Politics passes both
   halves but Politics carries it and the pair was picked after the fact; no account; item 24 added. Jobs ok; main $1,009.89, 0 settled.
 
+- 12:40 pm CST Nov 22: queue item 18 (report 3.45): combined account at 0.25% is best with the 5-cent leg at 45,000 (+10.3%/y out
+  of sample). Found: the random pass has finished for 8 categories, so the liquid DEFAULT level is now 1 contract (all markets):
+  ALWAYS pass --min-cumvol from now on. The Entertainment band is weaker on the larger download (item 25, next). Jobs ok; main
+  $1,010.18, 1 settled (+$8.57).
+
 ## How to run a round
+
+SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
+(report 3.45): always pass `--min-cumvol` (5,000 or 45,000), or the "busy" sample is every market.
 
 ```
 cd PolymarketTrader
@@ -809,7 +817,10 @@ drawdown, capacity in dollars, and say how many variants were tried.
     passes and the pair was picked after the fact; no account (Politics is inside rule_5c_busy). Item 24 added. Was:
     Climate and Weather 5-cent rule at 45,000 (report 3.34: 0 losing in 89 events, too few): re-run analyze_rule mk/tk
     once the download has added Climate and Weather markets; also pool it with Politics only (both pass/near-pass alone).
-18. Combined account (research/combined.py) without the 5-cent nine-category leg, and with that leg at 45,000 instead of
+18. DONE 12:40 pm CST Nov 22 (report 3.45): at 5,000 and 0.25% out of sample, the 5-cent leg at 45,000 is best (+10.3%/y,
+    DD 6.0%) vs +7.6% (leg at 5,000) and +8.9% (no leg); above 0.25% all worse. combined.py got --five-cumvol and
+    --min-cumvol (+test). Found: the Entertainment band is weaker on the larger download; item 25 goes FIRST. Was:
+    Combined account (research/combined.py) without the 5-cent nine-category leg, and with that leg at 45,000 instead of
     the default level (report 3.35: the leg's out-of-sample edge fell to +0.29% a bet and it loses money above 0.25%).
     Needs a leg option in combined.py (add, with a test).
 19. The momentum lead (report 3.37) failed pooled; one last look in Entertainment alone (busy, 20,000 and 45,000),
@@ -827,3 +838,8 @@ drawdown, capacity in dollars, and say how many variants were tried.
 24. Forward, once rule_5c_busy has 30+ settled bets: its Politics bets alone against report 3.44 (Politics 5-cent resting
     at 45,000: +6.3% a winner, 2% of events losing in sample); and re-test Climate and Weather alone when the download
     has added its markets at 45,000 (still 89 events on Nov 22).
+25. DO THIS BEFORE 19 (added 12:40 pm CST Nov 22, report 3.45): the Entertainment band at 5,000 now earns +5.3% / +3.2% a
+    bet (3.29: +7.3% / +7.2%) and its 1% replay out of sample is -2.5%/y, DD 18.5%. Re-run the tail test and replay of
+    "NO where YES is at 5-35c", Entertainment, mk and tk, at 5,000 / 20,000 / 45,000 (`research/analyze_rule.py --sample
+    liquid --min-cumvol N --categories Entertainment`), and the 5-cent rule at 45,000 on the nine; write which verdicts of
+    3.29 / 3.30 / 3.7 still stand. If the band fails, say so to the user (rule_ent_band and rule_combined rest on it).

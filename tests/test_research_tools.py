@@ -379,12 +379,29 @@ def test_account_splits_the_bets_at_the_close(world):
     assert a.bets + a.skipped == (~oos).sum() > 0 and o.bets + o.skipped == oos.sum() > 0
 
 
+def test_combined_five_cumvol_limits_only_the_five_cent_leg(world, results_here, monkeypatch):
+    df = panel.load(world["db"], ["Economics"], sample="liquid")
+    lvl = combined.leg_level(df, 1e12)
+    assert lvl.dtype == bool and not lvl.any() and combined.leg_level(df, 0).all()
+    assert run_main(monkeypatch, combined, "--db", world["db"], "--stakes", "0.01") == 0
+    base = pd.read_csv(results_here / "combined_hold.csv").set_index("account")
+    assert run_main(monkeypatch, combined, "--db", world["db"], "--stakes", "0.01", "--five-cumvol", "1e12") == 0
+    t = pd.read_csv(results_here / "combined_hold_five1000000000000.csv").set_index("account")
+    five = [a for a in t.index if a.startswith("5-cent rule, nine")]
+    assert len(five) == 1 and t.loc[five[0], ["bets in", "bets out"]].sum() == 0
+    other = "the other three legs (no 5-cent nine)"
+    assert run_main(monkeypatch, combined, "--db", world["db"], "--stakes", "0.01", "--min-cumvol", "1") == 0
+    assert (results_here / "combined_hold_min1.csv").exists()
+    assert t.loc[other, "bets in"] == base.loc[other, "bets in"] > 0
+    assert t.loc["ALL FOUR LEGS in one account", "bets in"] == base.loc[other, "bets in"]
+
+
 def test_combined_main_writes_one_row_per_account_and_stake(world, results_here, monkeypatch, capsys):
     assert run_main(monkeypatch, combined, "--db", world["db"], "--stakes", "0.01,0.02") == 0
     t = pd.read_csv(results_here / "combined_hold.csv")
     assert list(t.columns) == ["stake", "account", "bets in", "bets out", "in/bet", "out/bet", "in/yr", "in dd", "in sharpe",
                                "in at work", "out/yr", "out dd", "out sharpe", "out at work", "out years"]
-    assert len(t) == 2 * 7 and sorted(t["stake"].unique()) == [0.01, 0.02]
+    assert len(t) == 2 * 8 and sorted(t["stake"].unique()) == [0.01, 0.02]
     assert "exit policy: hold to settlement" in capsys.readouterr().out
     # every market once, however many legs saw it
     df = panel.load(world["db"], sorted({c for leg in combined.LEGS for c in leg[4]}), sample="liquid")
@@ -405,7 +422,7 @@ def test_combined_main_writes_one_row_per_account_and_stake(world, results_here,
     # an exit policy gets its own file
     assert run_main(monkeypatch, combined, "--db", world["db"], "--stakes", "0.01", "--exit", "take at bid >= 0.98, resting") == 0
     t2 = pd.read_csv(results_here / "combined_take_at_bid____0_98__resting.csv")
-    assert len(t2) == 7 and (t2["bets in"] + t2["bets out"]).tolist() == bets.tolist()   # an exit changes returns, not entries
+    assert len(t2) == 8 and (t2["bets in"] + t2["bets out"]).tolist() == bets.tolist()   # an exit changes returns, not entries
 
 
 # ---- exit_study and exit_summary -----------------------------------------------------------------------------

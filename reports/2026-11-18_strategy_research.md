@@ -1723,3 +1723,44 @@ The rule "NO at mid <= 5c, <= 30d, spread <= 5c" at 45,000 contracts, liquid sam
 - Forward: nothing settled in any account (main $1,009.89; 23 variant accounts, controls control_fade -$27.83 and
   control_coinflip -$33.54; 10 rule accounts, 0 settled). Shadow logs: resting NO bids filled 12 of 16 (5-cent) and
   11 of 11 (Entertainment band) decided so far, above the backtest's fill model; too few to judge (needs 50+).
+
+### 3.45 Ideas queue 18: the combined account without the 5-cent leg, and with that leg at 45,000 (12:40 pm CST, November 22)
+
+`research/combined.py` has two new options (tests added, 478 pass): `--five-cumvol N` puts the 5-cent nine-category
+leg on bars where the market had traded N contracts (the other legs unchanged), and `--min-cumvol N` sets the census
+level for every leg; a new row "the other three legs (no 5-cent nine)" is always printed. Hold to settlement, stakes
+0.25%, 0.5%, 1%; 4 runs x 3 stakes x 8 accounts = 96 rows, so read the best cell as partly luck.
+
+**First, a change in the data that touches every default-level result.** The download's random pass has now
+finished for Economics, Politics, Elections, Entertainment, Companies, Health, Science and Technology and World, so
+`panel.load(sample="liquid")` finds those categories "complete down to 1 contract" and its DEFAULT level now takes
+in every market, quiet ones too. At that default the Entertainment band earns +0.05% a bet out of sample (3,528 bets)
+and the combined account loses (0.25%: -4.4%/y, DD 11.8%). That is the quiet-market result the control account
+expects, not a new finding about the rule. From now on every run must pass `--min-cumvol` (5,000 for the accounts'
+level, 45,000 for report 3.7's): default-level figures from today on are not comparable with reports 3.22-3.35. (Report
+3.42's "default level fails out of sample" may already have been affected.)
+
+At 5,000 contracts (comparable with 3.35; the Climate leg drops out: its census is complete only to 31,452):
+
+| account, out of sample | 0.25% /y | DD | 0.5% /y | DD | 1% /y | DD | bets out |
+|---|---|---|---|---|---|---|---|
+| all four legs, 5-cent at 5,000 | +7.6% | 5.7% | +1.7% | 10.1% | +6.3% | 8.7% | 2,719 |
+| all four legs, 5-cent at 45,000 | +10.3% | 6.0% | +3.3% | 11.0% | -0.7% | 14.3% | 1,922 |
+| other three legs, no 5-cent nine | +8.9% | 5.9% | +0.7% | 12.5% | +1.3% | 15.7% | 1,573 |
+| Entertainment band alone | +7.2% | 6.3% | +1.2% | 12.6% | -2.5% | 18.5% | 1,198 |
+
+In sample at 0.25%: +5.0%/y (DD 4.0%), +5.3% (3.7%), +4.9% (3.7%). The 5-cent leg at 45,000 alone: +2.4% a bet out of
+sample (349 bets) against +1.4% at 5,000; it is the steadiest leg (out-of-sample Sharpe 3.3).
+
+- Answer to item 18: at the risk-averse stake (0.25%) the 45,000 version of the 5-cent leg is the best of the three
+  out of sample (+10.3%/y against +7.6% with the 5,000 leg and +8.9% without it) and equal in sample; dropping the leg
+  does not help. Above 0.25% every version earns less and draws down more out of sample.
+- **The bigger result: the Entertainment band is weaker on the larger download.** At 5,000 it now has 2,252 / 1,198
+  bets (3.35 had 1,294 / 643) and earns +5.3% / +3.2% a bet (3.29: +7.3% / +7.2%). Its replay at 1% out of sample is
+  now -2.5%/y with an 18.5% drawdown (3.29: +31%/y, DD 6.0%). The paper accounts rule_ent_band (1%) and rule_combined
+  (0.5%: now +0.8% to +3.3%/y out of sample, DD 10-13%) were built on the older figures. They are left as they are
+  (their record runs on), but the tail test of the band must be re-run on the finished download before anything is
+  read off them: queue item 25, worked next.
+- Forward: main $1,010.18, 1 settled (+$8.57); 23 variant accounts, 0 settled (controls control_fade -$27.22,
+  control_coinflip -$34.86); 10 rule accounts, 0 settled. Shadow logs: resting NO bids filled 12 of 16 (5-cent) and 11
+  of 11 (Entertainment band); too few to judge.
