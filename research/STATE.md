@@ -691,6 +691,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 12:15 pm CST Nov 23: queue item 34 (report 3.56): entry delay / lower bid in the Entertainment band's 0-7 day markets FAILS (fewer
   fills, less per order; adverse selection); entry_delay.py + 1 test (487 pass); item 36 added. Jobs ok (cycle running since 11:13 am);
   main $1,004.14, 1 settled; rule_5c_busy's first settled bet lost.
+- 1:59 pm CST Nov 23: EVERYTHING PAUSED at the user's word ("Pause"). Both Windows tasks (Check-in, Jobs) disabled;
+  download and paper loop stopped. The paper cycle that began at 1:48 pm was left to finish on its own (stopping it
+  mid-forecast would leave a half-done cycle); nothing follows it. To resume: enable both tasks and run
+  `research\start_jobs.ps1 -PaperLoop`.
 
 ## How to run a round
 
