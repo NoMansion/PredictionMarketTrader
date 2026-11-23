@@ -275,6 +275,18 @@ def test_the_tail_test_passes_a_clean_record_and_fails_a_short_one():
     assert lost["breakeven"] == 0.0 and not lost["proven"]
 
 
+def test_below_cumvol_keeps_only_bars_under_the_level_known_at_the_bar(world):
+    p, f = world["p"], world["f"]
+    _, mask = analyze_rule.find_rule(f, world["titles"], WIDE, "no", "mk")
+    assert analyze_rule.below_cumvol(p, mask, None) is mask
+    cv = p.df["cumvol"].to_numpy()
+    level = float(np.median(cv[mask])) if mask.any() else 1.0
+    cut = analyze_rule.below_cumvol(p, mask, level)
+    assert np.array_equal(cut, mask & (cv < level))
+    assert not (cut & ~mask).any() and (cv[cut] < level).all()
+    assert not analyze_rule.below_cumvol(p, mask, 0.0).any()
+
+
 def test_find_rule_finds_the_named_condition_and_refuses_unknown_ones(world):
     f, titles = world["f"], world["titles"]
     fam, mask = analyze_rule.find_rule(f, titles, FIVE, "no", "mk")

@@ -648,6 +648,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   stays, no verdict changes; exits.py --hourly + 1 test (479 pass); item 29 added. Jobs ok; main $1,010.18, 1 settled.
 - 6:20 pm CST Nov 22: queue item 23 (report 3.49): the nine-category band at 0-7d fails out of sample at 20,000 and 5,000; no
   account. Jobs ok; main $1,008.69, 1 settled.
+- 7:15 pm CST Nov 22: queue item 26 (report 3.50): the band's 5,000-20,000 layer is the whole 5,000 account (all bets before 20,000);
+  hindsight split: quiet markets are its best, not its losers; no account change; analyze_rule --max-cumvol + 1 test (480 pass); item 30
+  added. Jobs ok (cycle running since 6:22 pm); main $1,008.96, 1 settled.
 
 ## How to run a round
 
@@ -859,7 +862,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
     "NO where YES is at 5-35c", Entertainment, mk and tk, at 5,000 / 20,000 / 45,000 (`research/analyze_rule.py --sample
     liquid --min-cumvol N --categories Entertainment`), and the 5-cent rule at 45,000 on the nine; write which verdicts of
     3.29 / 3.30 / 3.7 still stand. If the band fails, say so to the user (rule_ent_band and rule_combined rest on it).
-26. The Entertainment band in the 5,000-20,000 contract layer alone (report 3.46: the markets the download added there pulled
+26. DONE 7:15 pm CST Nov 22 (report 3.50): cut by volume at entry, the layer IS the whole 5,000 account (every bet comes before
+    20,000); hindsight split by final volume: never-busy markets are the BEST (+8.1% / +5.7%), later-busy fail out of sample.
+    Not tradeable (final volume is partly the outcome); analyze_rule --max-cumvol + 1 test; item 30 added. Was: The Entertainment band in the 5,000-20,000 contract layer alone (report 3.46: the markets the download added there pulled
     the 5,000 figure down): does that layer lose by itself, in both halves? Needs a max-cumvol option in analyze_rule.py (add,
     with a test), or a filter in a small script. If it loses in both halves, write it plainly for the user: rule_ent_band
     and rule_combined (5,000+) trade it.
@@ -872,3 +877,7 @@ drawdown, capacity in dollars, and say how many variants were tried.
     <nine> --rules "NO at mid <= 5c, <= 30d, spread <= 5c|no|mk" --max-markets 1000`, resumes), then `research/exit_study.py
     --tag nine_liquid_45000_hourly --hourly data\kalshi_hourly.db` against the same run without --hourly. Low priority: hold
     already beat its stops on daily bars (3.28).
+30. Entry timing in the Entertainment band (report 3.50): for markets that reach 20,000 contracts, the band's bet at the first
+    5,000 bar against its bet at the first 20,000 bar (same markets, resting; both known ex ante): is waiting for the market to
+    get busy what makes the 20,000 account hold while the 5,000 account weakens? A small script on panel.load at 5,000 with
+    the 20,000 mask from cumvol; tail test and per-bet both halves.

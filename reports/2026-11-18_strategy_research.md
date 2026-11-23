@@ -1899,3 +1899,31 @@ only in its 0-7 day slice, by 0.75 pt out of sample. The pre-stated check: the s
   control_coinflip -$35.08); 11 rule accounts, 0 settled (rule_ent_band -$2.37 against control_ent_quiet -$2.41;
   rule_5c_busy -$0.22 against control_5c_quiet $0.00). Shadow logs: resting fills 12 of 16 (busy 5-cent) and 12 of 12
   (Entertainment band) decided, none settled.
+
+## 3.50 Ideas queue 26: the Entertainment band's 5,000-20,000 layer: it is the whole 5,000 account, and its quiet markets are not the losers (7:15 pm CST, Nov 22)
+
+Question (3.46): at 5,000 contracts the band now earns less than at 20,000 (1% replay out of sample -1.0%/y, DD 18%). Is
+it the markets between 5,000 and 20,000 that lose? New: `research/analyze_rule.py --max-cumvol N` keeps only bars at which
+the market had traded fewer than N contracts so far (known at the bar; `below_cumvol`, +1 test, 480 pass).
+
+- **The layer cut by volume at entry is the whole 5,000 account.** With `--min-cumvol 5000 --max-cumvol 20000` the band
+  (resting) gives exactly the 3.46 figures: 3,450 bets in 1,369 events, +4.57% a bet, tail test passes both halves (30.1 vs
+  37.2%, 30.2 vs 32.1%), replay 1% +4.9%/y in, -1.0%/y out, DD 18.0%. Taker: +0.76% a bet, fails both halves, loses in
+  every replay. The account bets on a market's first qualifying bar, which is always before it reaches 20,000 contracts.
+  The 20,000 account trades the same markets, but later and at other prices. So "the layer" cannot be cut ex ante by volume.
+- **Diagnostic only (uses each market's FINAL volume, which is hindsight; not a rule):**
+
+| resting, 5,000 account | in sample: bets / events / per bet / tail | out of sample: bets / events / per bet / tail |
+|---|---|---|
+| markets that never reached 20,000 | 605 / 425 / +8.13% / passes (17.5 vs 24.0%) | 292 / 205 / +5.67% / passes (18.8 vs 20.6%) |
+| markets that reached 20,000 later | 1,647 / 664 / +4.25% / passes (34.3 vs 38.6%) | 906 / 319 / +2.42% / **FAILS** (34.6 vs 34.4%) |
+
+  Taker, same split: never-busy +4.36% / +3.21% (passes both); later-busy -0.34% / -0.98% (fails both).
+- Read: the quiet markets are the band's best bets, not its losers; the weak part is markets that went on to trade heavily.
+  Final volume is partly caused by the outcome (a market whose YES comes alive draws trading), so this split is biased and
+  says nothing tradeable. It does rule out the guess of item 26: the 5,000 account is not dragged down by a quiet layer.
+- No account changes. rule_ent_band and rule_combined (5,000+) keep running; rule_ent_band_20k is the cleaner test. Item 30
+  added: for markets that reach 20,000, compare the bet at the 5,000 bar with the bet at the 20,000 bar (entry timing).
+- Forward: main $1,008.96, 1 settled (+$8.57); 23 variant accounts, 0 settled (controls control_fade -$26.71,
+  control_coinflip -$35.08); 11 rule accounts, 0 settled (rule_ent_band -$2.37 against control_ent_quiet -$2.41;
+  rule_5c_busy -$0.22 against control_5c_quiet $0.00). Shadow logs: resting fills 12 of 16 and 12 of 12, none settled.

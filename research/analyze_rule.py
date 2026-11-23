@@ -76,6 +76,15 @@ def find_rule(f: Features, titles, name: str, side: str, entry: str):
     raise SystemExit(f"no rule named {name!r} with side {side}, entry {entry}")
 
 
+def below_cumvol(p: Panel, mask: np.ndarray, max_cumvol: float | None) -> np.ndarray:
+    """Keep only the bars at which the market had traded FEWER than `max_cumvol` contracts so far (known at the bar).
+    With --min-cumvol this isolates one layer of the census: the bets the lower level's account makes before a
+    market reaches the higher level (from that bar on, the higher level's account would see it as well)."""
+    if max_cumvol is None:
+        return mask
+    return mask & (p.df["cumvol"].to_numpy() < max_cumvol)
+
+
 def bets_frame(p: Panel, mask: np.ndarray, side: str, entry: str) -> pd.DataFrame:
     key = (side, entry)
     rows = p.first_per_market(mask & p.ok[key])
@@ -143,6 +152,8 @@ def main() -> int:
     ap.add_argument("--categories", default="")
     ap.add_argument("--sample", default="random", choices=["random", "liquid"])
     ap.add_argument("--min-cumvol", type=float, default=None)
+    ap.add_argument("--max-cumvol", type=float, default=None,
+                    help="only bars at which the market had traded fewer contracts than this (a layer of the census)")
     args = ap.parse_args()
     cats = [c.strip() for c in args.categories.split(",") if c.strip()] or None
     df = panel.load(args.db, cats, sample=args.sample, min_cumvol=args.min_cumvol)
