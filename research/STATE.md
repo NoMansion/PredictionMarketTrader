@@ -646,6 +646,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   $1,010.18, 1 settled (+$8.57).
 - 4:45 pm CST Nov 22: queue item 20 (report 3.48): hourly stops on the Entertainment band: every stop worse than on daily bars; hold
   stays, no verdict changes; exits.py --hourly + 1 test (479 pass); item 29 added. Jobs ok; main $1,010.18, 1 settled.
+- 6:20 pm CST Nov 22: queue item 23 (report 3.49): the nine-category band at 0-7d fails out of sample at 20,000 and 5,000; no
+  account. Jobs ok; main $1,008.69, 1 settled.
 
 ## How to run a round
 
@@ -842,7 +844,8 @@ drawdown, capacity in dollars, and say how many variants were tried.
     `research/event_baskets.py` only once the download has added many more exclusive events; low priority.
 22. Forward, once rule_5c_busy has 30+ settled bets: split its settled bets by entry price (YES 0-3c against 3-5c) and
     compare with report 3.42 (3-5c +3.27% a bet, the 0-3c rest about +0.6%): the forward test of item 15, no new account.
-23. The nine-category wide band, 0-7 days to close (report 3.43, passed at 45,000 by 0.75 pt out of sample): re-run at 20,000
+23. DONE 6:20 pm CST Nov 22 (report 3.49): FAILS out of sample at 20,000 (bound 30.7% vs break-even 26.4%) and at 5,000 (27.7 vs
+    27.4); no account. At those levels 7-30d passes by a hair instead (noise of 9 slices). Was: The nine-category wide band, 0-7 days to close (report 3.43, passed at 45,000 by 0.75 pt out of sample): re-run at 20,000
     and 5,000 (`research/band_by_dte.py 20000 nine`). If it passes both halves at 20,000 too, add a paper account under a
     new name in rules.yaml (check that rules.yaml supports a days-to-close window first; if not, code it with a test).
 24. Forward, once rule_5c_busy has 30+ settled bets: its Politics bets alone against report 3.44 (Politics 5-cent resting

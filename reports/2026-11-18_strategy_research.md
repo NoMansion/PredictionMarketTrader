@@ -1872,3 +1872,30 @@ and time exits stay daily. 1 new test (479 pass). Same 25 policies as 3.28 / 3.3
   control_coinflip -$35.08); 11 rule accounts, 0 settled (rule_ent_band -$2.37 against control_ent_quiet -$2.41;
   rule_5c_busy -$0.22 against control_5c_quiet $0.00). Shadow logs: resting fills 12 of 16 (busy 5-cent) and 11 of 11
   (Entertainment band) decided, none settled.
+
+## 3.49 Ideas queue 23: the nine-category wide band at 0-7 days fails out of sample at 20,000 and 5,000 (6:20 pm CST, Nov 22)
+
+Report 3.43 found the nine-category wide band (NO where YES is at 5-35c, resting) passing both halves at 45,000 contracts
+only in its 0-7 day slice, by 0.75 pt out of sample. The pre-stated check: the same slice at 20,000 and 5,000
+(`research/band_by_dte.py 20000 nine`, `... 5000 nine`); a paper account only if it passes both halves at 20,000.
+
+| level, slice | bets / events | per bet | tail test in / out (bound vs break-even) | 1% replay in / out, a year (worst DD) |
+|---|---|---|---|---|
+| 20,000, all | 3,268 / 1,596 | +3.60% | passes / passes (29.0 vs 31.7) | +3.1% (13.4%) / +11.5% (10.0%) |
+| 20,000, 0-7d | 903 / 562 | +3.67% | passes / **FAILS** (30.7 vs 26.4) | +6.4% (5.5%) / +4.1% (7.8%) |
+| 20,000, 7-30d | - / 695 | - | passes / passes (27.8 vs 28.3) | +8.1% (7.3%) / +29.6% (6.5%) |
+| 20,000, 30+d | - / 981 | - | passes / passes | -2.0% (13.5%) / +8.7% (5.1%) |
+| 5,000, 0-7d | 1,909 / 1,077 | +3.01% | passes / **FAILS** (27.7 vs 27.4) | +7.0% (14.8%) / +20.5% (16.4%) |
+| 5,000, 7-30d | 2,198 / 1,196 | +4.07% | passes / passes by a hair (27.27 vs 27.35) | +11.0% (8.9%) / +36.1% (11.3%) |
+| 5,000, 30+d | 3,641 / 1,709 | +2.98% | passes / passes | -1.3% (15.0%) / -2.8% (12.0%) |
+
+- **The 0-7 day lead of 3.43 does not hold below 45,000**: it fails the tail test out of sample at both 20,000 and 5,000.
+  No paper account. The 45,000 pass was the thin edge of a slice that fails at the levels with more events.
+- At the lower levels it is the 7-30 day slice that passes both halves, by under 0.6 pt out of sample, while 3.43 found it
+  failing at 45,000. With 3 slices x 3 levels tried and the passing slice changing with the level, this is the noise of
+  slicing, not a finding; no t above 3 is claimed. The 30+ day slice loses in the replay in sample at both levels (as in 3.43).
+- Capacity (20,000, 0-7d): median $3,706 traded in the 7 days before entry; 5% of entry days under 100 contracts.
+- Forward: main $1,008.69, 1 settled (+$8.57); 23 variant accounts, 0 settled (controls control_fade -$26.71,
+  control_coinflip -$35.08); 11 rule accounts, 0 settled (rule_ent_band -$2.37 against control_ent_quiet -$2.41;
+  rule_5c_busy -$0.22 against control_5c_quiet $0.00). Shadow logs: resting fills 12 of 16 (busy 5-cent) and 12 of 12
+  (Entertainment band) decided, none settled.
