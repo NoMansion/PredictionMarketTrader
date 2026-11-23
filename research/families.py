@@ -326,6 +326,11 @@ def f_combos(f: Features):
         mom = f.mom[k]
         m = f.base & f.price(lo, hi) & ((mom >= 0.03) if sign > 0 else (mom <= -0.03))
         yield ("14 price x momentum", f"mid {name_range(lo * 100, hi * 100, 'c')}, {'up' if sign > 0 else 'down'} 3c+ in {k}d", m, side, entry)
+    # The complement of a fall (queue item 28, report 3.51): every bet at the price WITHOUT a 3c+ fall in k days, including
+    # bars with no k-day history, so "down 3c+" and "no 3c+ fall" split the price band exactly.
+    for (lo, hi), k, side, entry in itertools.product(price, (1, 3, 7), SIDES, ENTRIES):
+        m = f.base & f.price(lo, hi) & ~(f.mom[k] <= -0.03)
+        yield ("14 price x momentum", f"mid {name_range(lo * 100, hi * 100, 'c')}, no 3c+ fall in {k}d", m, side, entry)
 
 
 def all_rules(f: Features, titles: np.ndarray):

@@ -308,6 +308,16 @@ def test_the_5_cent_rule_without_its_0_3c_corner_is_the_5_cent_rule_above_3c(wor
         assert fam == "2 bonds" and np.array_equal(mask, five & (f.mid > 0.03))
         assert not (mask & (f.mid <= 0.03)).any()
 
+def test_no_fall_rule_is_the_exact_complement_of_the_fall_rule_within_the_price(world):
+    f, titles = world["f"], world["titles"]
+    for k in (1, 3, 7):
+        _, down = analyze_rule.find_rule(f, titles, f"mid 10-25c, down 3c+ in {k}d", "no", "mk")
+        fam, nofall = analyze_rule.find_rule(f, titles, f"mid 10-25c, no 3c+ fall in {k}d", "no", "mk")
+        whole = f.base & f.price(0.10, 0.25)
+        assert fam == "14 price x momentum"
+        assert not (down & nofall).any() and np.array_equal(down | nofall, whole)
+
+
 def test_bets_frame_is_one_bet_per_market(world):
     p, f = world["p"], world["f"]
     _, mask = analyze_rule.find_rule(f, world["titles"], FIVE, "no", "tk")

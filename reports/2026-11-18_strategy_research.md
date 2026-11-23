@@ -1927,3 +1927,31 @@ the market had traded fewer than N contracts so far (known at the bar; `below_cu
 - Forward: main $1,008.96, 1 settled (+$8.57); 23 variant accounts, 0 settled (controls control_fade -$26.71,
   control_coinflip -$35.08); 11 rule accounts, 0 settled (rule_ent_band -$2.37 against control_ent_quiet -$2.41;
   rule_5c_busy -$0.22 against control_5c_quiet $0.00). Shadow logs: resting fills 12 of 16 and 12 of 12, none settled.
+
+## 3.51 Ideas queue 28: the Entertainment fall effect isolated: 10-25c bets with no fall against those after one (9:25 pm CST, Nov 22)
+
+New rule name in `research/families.py` ("mid 10-25c, no 3c+ fall in 7d", family 14 price x momentum; also 1d and 3d and the
+other price bands): every bar at the price WITHOUT a 3c+ fall in the window, including bars with no 7-day history, so it and
+"down 3c+ in 7d" split the 10-25c bets exactly (1 test, 481 pass). `research/analyze_rule.py --sample liquid --min-cumvol N
+--categories Entertainment --side no --entry mk`, N = 20,000 and 45,000, on the download as of tonight. 2 new variants (the
+fall rows are re-runs of 3.47, unchanged).
+
+| Level | Rule | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay 1% a year in / out | Worst DD in / out |
+|---|---|---|---|---|---|---|---|
+| 20,000 | 10-25c, down 3c+ in 7d | 581 (359) | +9.23% | 19.8% / 11.8% | passes / passes | +12.2% / +26.0% | 6.9% / 2.7% |
+| 20,000 | 10-25c, NO fall in 7d | 658 (397) | +3.59% | 21.3% / 19.2% | FAILS (25.8% vs 25.6%) / FAILS (25.9% vs 24.9%) | +1.4% / +9.6% | 10.0% / 5.8% |
+| 45,000 | 10-25c, down 3c+ in 7d | 305 (218) | +10.21% | 17.1% / 6.1% | passes / passes | +8.2% / +20.4% | 4.6% / 2.0% |
+| 45,000 | 10-25c, NO fall in 7d | 328 (197) | +5.30% | 23.0% / 12.1% | FAILS (29.7% vs 27.2%) / passes | +2.8% / +13.2% | 6.5% / 2.4% |
+
+- **Most of the 10-25c money is the fall.** Without a fall the same prices earn a third to a half as much a bet, are flat in
+  2025 (+1.2% / -1.3% a bet), fail the tail test in sample at both levels and out of sample at 20,000, and the 1% replay in
+  sample earns +1.4% / +2.8% a year with a worse drawdown at 20,000 (10.0%). They do not lose outright: per bet stays positive
+  in both halves, so the band is not carried by the fall alone; its other prices (5-10c, 25-35c) are not split here.
+- Caveat: 3.47 picked the fall rule after seeing the band, and the 7-day window was one of three; 2 new variants here, no
+  t-statistic above 3 is claimed. Capacity as the band (median $3,100 / $5,500 traded in the 7 days before entry).
+- Verdict: no account change. `rule_ent_fall` (5,000+) is the forward test; the band stays. Item 31 added: the same split for the
+  band's 3-10c and 25-50c prices, to see whether the fall effect holds across the band.
+- Forward: main $1,007.88, 1 settled (+$8.57); a cycle has been running since 8:24 pm. 23 variant accounts, 1 settled (main);
+  controls control_fade -$30.28, control_coinflip -$38.65. 11 rule accounts, 0 settled (rule_ent_band -$2.22 against
+  control_ent_quiet -$2.29; rule_ent_band_20k -$1.24; rule_5c_busy -$0.22 against control_5c_quiet $0.00; rule_ent_fall -$0.45).
+  Shadow logs: resting fills 12 of 17 (busy 5-cent) and 12 of 12 (Entertainment band) decided.

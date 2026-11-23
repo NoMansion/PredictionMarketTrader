@@ -651,6 +651,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 7:15 pm CST Nov 22: queue item 26 (report 3.50): the band's 5,000-20,000 layer is the whole 5,000 account (all bets before 20,000);
   hindsight split: quiet markets are its best, not its losers; no account change; analyze_rule --max-cumvol + 1 test (480 pass); item 30
   added. Jobs ok (cycle running since 6:22 pm); main $1,008.96, 1 settled.
+- 9:25 pm CST Nov 22: queue item 28 (report 3.51): Entertainment 10-25c without a 3c+ fall earns a third to half of the fall bets, flat
+  in 2025, fails the tail test in sample; no account change; new rule name + 1 test (481 pass); item 31 added. Jobs ok (cycle running
+  since 8:24 pm); main $1,007.88, 1 settled.
 
 ## How to run a round
 
@@ -869,7 +872,9 @@ drawdown, capacity in dollars, and say how many variants were tried.
     with a test), or a filter in a small script. If it loses in both halves, write it plainly for the user: rule_ent_band
     and rule_combined (5,000+) trade it.
 27. Forward, once both have 30+ settled bets: rule_ent_band_20k against rule_ent_band (its superset) and control_ent_quiet.
-28. Isolate the fall effect in Entertainment (report 3.47): the band's 10-25c bets WITHOUT a 3c+ fall in 7 days against those
+28. DONE 9:25 pm CST Nov 22 (report 3.51): no-fall 10-25c bets earn +3.6% / +5.3% a bet (fall +9.2% / +10.2%), flat in 2025, fail the
+    tail test in sample at both levels: most of the 10-25c money is the fall, but no-fall does not lose. No account change; item 31
+    added. Was: Isolate the fall effect in Entertainment (report 3.47): the band's 10-25c bets WITHOUT a 3c+ fall in 7 days against those
     with one, at 20,000 and 45,000, resting. Needs a new rule name in research/families.py (add, do not rename) and a test. If
     the no-fall bets lose or are flat in both halves, the band's money is the fall, worth writing for the user.
 29. The 5-cent rule's stops on hourly bars (report 3.48 found hourly bars make every Entertainment-band stop worse): fetch
@@ -881,3 +886,6 @@ drawdown, capacity in dollars, and say how many variants were tried.
     5,000 bar against its bet at the first 20,000 bar (same markets, resting; both known ex ante): is waiting for the market to
     get busy what makes the 20,000 account hold while the 5,000 account weakens? A small script on panel.load at 5,000 with
     the 20,000 mask from cumvol; tail test and per-bet both halves.
+31. The fall split across the rest of the band (report 3.51): "mid 3-10c" and "mid 25-50c", "down 3c+ in 7d" against "no 3c+ fall
+    in 7d" (rule names exist in research/families.py), Entertainment, NO, resting, at 20,000 and 45,000: does the fall carry the
+    band's other prices too? If the no-fall bets fail at every price, write it for the user (a fall-only band would trade less).
