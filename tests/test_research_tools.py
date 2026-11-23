@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import analyze_rule  # noqa: E402
 import calibration_curve  # noqa: E402
 import combined  # noqa: E402
+import entry_timing  # noqa: E402
 import event_baskets  # noqa: E402
 import exit_study  # noqa: E402
 import exit_summary  # noqa: E402
@@ -1006,3 +1007,17 @@ def test_shadow_main_reports_and_observes_on_a_fake_exchange(tmp_path, monkeypat
     out = capsys.readouterr().out
     assert "shadow longshot: looked at 1, recorded 1" in out and "1 qualifying markets seen" in out
     assert (tmp_path / "data" / "shadow.db").exists() and (tmp_path / "data" / "kalshi_series.json").exists()
+
+
+def test_entry_timing_pairs_the_same_markets_early_and_late(world):
+    p, f = world["p"], world["f"]
+    _, mask = analyze_rule.find_rule(f, world["titles"], WIDE, "no", "mk")
+    cv = p.df["cumvol"].to_numpy()
+    level = float(np.median(cv[mask])) if mask.any() else 1.0
+    e, lt, rest = entry_timing.timing_pair(p, mask, "no", "mk", level)
+    assert list(e["ticker"]) == list(lt["ticker"])
+    assert (e["ts"].to_numpy() <= lt["ts"].to_numpy()).all()
+    late_rows = p.df.set_index(["ticker", "ts"]).loc[list(zip(lt["ticker"], lt["ts"])), "cumvol"].to_numpy()
+    assert (late_rows >= level).all()
+    allb = analyze_rule.bets_frame(p, mask, "no", "mk")
+    assert len(e) + len(rest) == len(allb) and not set(rest["ticker"]) & set(lt["ticker"])

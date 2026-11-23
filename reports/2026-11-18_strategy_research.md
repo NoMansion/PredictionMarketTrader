@@ -1955,3 +1955,31 @@ fall rows are re-runs of 3.47, unchanged).
   controls control_fade -$30.28, control_coinflip -$38.65. 11 rule accounts, 0 settled (rule_ent_band -$2.22 against
   control_ent_quiet -$2.29; rule_ent_band_20k -$1.24; rule_5c_busy -$0.22 against control_5c_quiet $0.00; rule_ent_fall -$0.45).
   Shadow logs: resting fills 12 of 17 (busy 5-cent) and 12 of 12 (Entertainment band) decided.
+
+## 3.52 Ideas queue 30: Entertainment band entry timing: the same markets bet at their first 5,000 bar against their first 20,000 / 45,000 bar (10:15 pm CST, Nov 22)
+
+New script `research/entry_timing.py` (+1 test, 482 pass): loads the liquid Entertainment sample at 5,000, takes the band
+("NO where YES is at 5-35c", NO, resting) and, for every market the band also bets once it has traded the higher level
+(cumvol known at the bar), compares its first bet at all ("early") with its first bet at the higher level ("late"). Which
+markets get a late bet is known only afterwards: a diagnostic of timing, not a tradeable split. 2 comparisons.
+
+| Late level | Group | Bets (events) | Per bet | Median hold | Tail test in / out |
+|---|---|---|---|---|---|
+| 20,000 | same markets, early bet | 1,526 (691) | +9.77% (in +9.66 / out +9.99) | 13.7 d | passes / passes |
+| 20,000 | same markets, late bet | 1,526 (691) | +7.39% (in +7.58 / out +7.00) | 6.4 d | passes / passes |
+| 20,000 | early only (no late bet) | 1,924 (1,069) | +0.44% (in +1.64 / out -1.67) | 7.0 d | FAILS / FAILS |
+| 45,000 | same markets, early bet | 815 (402) | +11.54% (in +9.46 / out +16.47) | 16.4 d | passes / passes |
+| 45,000 | same markets, late bet | 815 (402) | +7.14% (in +5.94 / out +9.96) | 5.4 d | passes / passes |
+| 45,000 | early only (no late bet) | 2,635 (1,266) | +2.41% (in +3.86 / out -0.14) | 7.9 d | passes / FAILS |
+
+- **Waiting is not what earns.** On the same markets the early bet earns MORE a bet than the late one (+2.4 / +4.4 points), at a
+  lower NO price (0.801 against 0.814 at 20,000): the NO side tends to get dearer while the market gets busy. Waiting earns less
+  a bet but frees capital sooner (median hold 6.4 against 13.7 days), so per day held the late bet is roughly comparable or
+  better; the account replays of rule_ent_band (5,000+) and rule_ent_band_20k (3.46) already measure that trade-off.
+- **The 5,000 account's weakness is in the other markets**: those the band bets at 5,000 but never again once they are busy
+  (out of the band by then, or never busy) earn about nothing and fail the tail test out of sample at both levels. Which
+  markets those are is not known at entry, so this does not give a filter; it does say the 20,000 account's edge is the same
+  markets' edge, entered later, not a different set of markets.
+- Verdict: no account change. Item 32 added (does the NO price drift up between the early and late bar in band markets
+  generally: a drift rule with a known-at-the-bar signal).
+- Forward: main $1,007.88, 1 settled (+$8.57); last cycle ok at 9:55 pm (8 forecasts, 1 order). Nothing new settled.

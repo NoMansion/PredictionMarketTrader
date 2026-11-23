@@ -655,6 +655,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   in 2025, fails the tail test in sample; no account change; new rule name + 1 test (481 pass); item 31 added. Jobs ok (cycle running
   since 8:24 pm); main $1,007.88, 1 settled.
 
+- 10:15 pm CST Nov 22: queue item 30 (report 3.52): same Entertainment markets bet at 5,000 earn more a bet than at 20,000 (+9.8% vs
+  +7.4%) but hold twice as long; waiting is not the edge; no account change; entry_timing.py + 1 test (482 pass); item 32 added.
+  Jobs ok; main $1,007.88, 1 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -882,10 +886,15 @@ drawdown, capacity in dollars, and say how many variants were tried.
     <nine> --rules "NO at mid <= 5c, <= 30d, spread <= 5c|no|mk" --max-markets 1000`, resumes), then `research/exit_study.py
     --tag nine_liquid_45000_hourly --hourly data\kalshi_hourly.db` against the same run without --hourly. Low priority: hold
     already beat its stops on daily bars (3.28).
-30. Entry timing in the Entertainment band (report 3.50): for markets that reach 20,000 contracts, the band's bet at the first
+30. DONE 10:15 pm CST Nov 22 (report 3.52): same markets, the early (5,000) bet earns MORE a bet than the late one (+9.8% vs
+    +7.4% at 20,000; +11.5% vs +7.1% at 45,000) but holds twice as long; the 5,000 account's weak bets are markets never bet
+    again once busy (fail out of sample). Waiting is not the edge; no account change; research/entry_timing.py + 1 test. Was:
+    Entry timing in the Entertainment band (report 3.50): for markets that reach 20,000 contracts, the band's bet at the first
     5,000 bar against its bet at the first 20,000 bar (same markets, resting; both known ex ante): is waiting for the market to
     get busy what makes the 20,000 account hold while the 5,000 account weakens? A small script on panel.load at 5,000 with
     the 20,000 mask from cumvol; tail test and per-bet both halves.
 31. The fall split across the rest of the band (report 3.51): "mid 3-10c" and "mid 25-50c", "down 3c+ in 7d" against "no 3c+ fall
     in 7d" (rule names exist in research/families.py), Entertainment, NO, resting, at 20,000 and 45,000: does the fall carry the
     band's other prices too? If the no-fall bets fail at every price, write it for the user (a fall-only band would trade less).
+32. NO-price drift in Entertainment band markets (report 3.52: the NO price rose 1.4-2.7c between the early and late bet): does
+    the band's NO get dearer over a market's life in general, by days to close, with a signal known at the bar? Backtest only.
