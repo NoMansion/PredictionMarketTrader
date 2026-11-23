@@ -27,6 +27,7 @@ import analyze_rule  # noqa: E402
 import calibration_curve  # noqa: E402
 import combined  # noqa: E402
 import entry_timing  # noqa: E402
+import no_drift  # noqa: E402
 import event_baskets  # noqa: E402
 import exit_study  # noqa: E402
 import exit_summary  # noqa: E402
@@ -1021,3 +1022,19 @@ def test_entry_timing_pairs_the_same_markets_early_and_late(world):
     assert (late_rows >= level).all()
     allb = analyze_rule.bets_frame(p, mask, "no", "mk")
     assert len(e) + len(rest) == len(allb) and not set(rest["ticker"]) & set(lt["ticker"])
+
+
+def test_no_drift_signs_and_horizons():
+    df = pd.DataFrame({
+        "ticker": ["A"] * 4 + ["B"] * 2, "event": ["EA"] * 4 + ["EB"] * 2, "oos": [False] * 4 + [True] * 2,
+        "dte": [10.0, 9, 8, 7, 3, 2], "age": [0.0, 1, 2, 3, 0, 1], "life": [10.0] * 4 + [4.0] * 2,
+        "mid": [0.30, 0.25, 0.20, 0.50, 0.10, 0.12], "quoted": [True] * 6, "y": [0.0] * 4 + [1.0] * 2})
+    d = no_drift.drift_frame(df, 0.05, 0.35, horizons=(1, 3))
+    assert len(d) == 5                                       # the 0.50 bar is outside the band
+    assert d["d1"].iloc[0] == pytest.approx(0.05)            # YES 0.30 -> 0.25: NO dearer by 5c
+    assert d["d3"].iloc[0] == pytest.approx(-0.20)           # 0.30 -> 0.50 three bars later
+    assert np.isnan(d["d1"].iloc[4])                         # B's last bar: nothing after it
+    assert d["settle"].iloc[3] == pytest.approx(0.10 - 1.0)  # YES won: NO loses its price
+    assert list(d["dte_bin"].astype(str)[:2]) == ["7-30d", "7-30d"]
+    x = no_drift.by_event(d, "settle")
+    assert x["events"] == 2

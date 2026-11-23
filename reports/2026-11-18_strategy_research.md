@@ -2016,3 +2016,32 @@ price exactly, 3.51). 8 runs, 4 prices x levels. Note 25-50c reaches past the ba
   controls control_fade -$26.64, control_coinflip -$34.16. 11 rule accounts, 0 settled (rule_ent_band -$3.07 against
   control_ent_quiet -$2.06; rule_ent_band_20k -$2.09; rule_5c_busy -$0.33 against control_5c_quiet $0.00; rule_ent_fall +$1.67).
   Shadow logs: resting fills 12 of 17 (busy 5-cent) and 14 of 14 (Entertainment band) decided.
+
+## 3.54 Ideas queue 32: does the NO price in Entertainment band markets drift up over a market's life? (4:30 am CST, Nov 23)
+
+`research/no_drift.py --categories Entertainment --min-cumvol N` (new, + 1 test), N = 5,000 / 20,000 / 45,000. Every quoted bar
+with YES mid 5-35c is an observation; drift over the next 1 / 3 / 7 daily bars is the change of the NO mid, "settle" is
+mid - outcome (the NO side's gain to settlement, before fees and spread). Each event counts once (its bars averaged), t over
+events; grouped by days to the scheduled end and by share of the market's life gone (both known at the bar). Cents of NO price.
+
+| Level | Half | Next 1 bar | Next 3 bars | Next 7 bars | To settlement | Events |
+|---|---|---|---|---|---|---|
+| 5,000 | in / out | -0.55c (t -1.9) / -1.45c (t -2.6) | -1.06c / -2.85c (t -3.0) | -0.56c / -2.85c | +2.63c (t 3.1) / -0.10c | 1,113 / 514 |
+| 20,000 | in / out | -1.87c (t -3.2) / -0.05c | -1.08c / -2.98c (t -1.7) | +0.07c / +0.49c | +2.30c (t 1.8) / +2.95c (t 1.7) | 556 / 234 |
+| 45,000 | in / out | -2.33c (t -2.5) / -0.52c | -1.97c / -0.65c | +1.71c / +2.43c | +0.85c / +8.62c (t 5.3) | 332 / 127 |
+
+- **No general upward drift.** Over the next 1-7 days the band's NO price, if anything, gets CHEAPER (YES bounces back), most in
+  the 0-7 day markets (next 3 bars -1.5c to -7.6c, t -1.3 to -2.2); only the 45,000 level's 7-30d and 30+d bars drift up a little
+  (+0.6c to +6.0c, mixed t). By share of life gone nothing is consistent across halves and levels.
+- The band's money arrives AT SETTLEMENT (the "to settlement" column), not as a price drift a holder could sell into; this agrees
+  with 3.28 / 3.36 / 3.48 (holding beats every early exit). The 1.4-2.7c rise between early and late bets in 3.52 is a selection of
+  markets that went on to get busy, not a general drift.
+- At 5,000 the out-of-sample settlement gain is about zero (-0.10c), echoing 3.46 (the 5,000 band weakens on the full download);
+  20,000 and 45,000 keep it.
+- Caveats: per-bar observations overlap (one event contributes many bars, averaged once), daily bars, before fees; 3 levels x
+  4 horizons x 7 groups x 2 halves read, so single cells with |t| near 2 are noise. Verdict: FAILS as a drift signal; no account
+  change. Item 34 added (does waiting a bar or resting a cent lower in the band's 0-7 day markets buy NO cheaper without losing fills?).
+- Forward: main $1,005.99, 1 settled (+$8.57); a cycle has been running since 3:31 am. 23 variant accounts, 1 settled (main);
+  controls control_fade -$31.07, control_coinflip -$39.89. 11 rule accounts, 0 settled (rule_ent_band -$3.31 against
+  control_ent_quiet -$2.17; rule_ent_band_20k -$2.43; rule_5c_busy -$1.05 against control_5c_quiet $0.00; rule_ent_fall +$1.56).
+  Shadow logs: resting fills 12 of 17 (busy 5-cent) and 14 of 14 (Entertainment band) decided.

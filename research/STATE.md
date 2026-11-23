@@ -1,4 +1,4 @@
-﻿# Research loop: state
+# Research loop: state
 
 The user asked (2026-11-18, before going to bed) for strategy research to keep running: every strategy family
 that can be tested, and combinations of families, with settings varied. This file is what each check-in
@@ -680,6 +680,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   (+21% a bet at 20,000, passes both halves; no-fall fails). Lead only; item 33 added. Jobs ok (cycle running since 12:58 am); main
   $1,005.72, 1 settled.
 
+- 4:30 am CST Nov 23: queue item 32 (report 3.54): no general NO drift in Entertainment band markets; over 1-7 bars NO gets
+  slightly cheaper, the money comes at settlement; no account change; no_drift.py + 1 test (485 pass); item 34 added. Jobs ok (cycle
+  running since 3:31 am); main $1,005.99, 1 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -919,9 +923,13 @@ drawdown, capacity in dollars, and say how many variants were tried.
     sample on 34 events. Lead, no account; item 33 added. Was: The fall split across the rest of the band (report 3.51): "mid 3-10c" and "mid 25-50c", "down 3c+ in 7d" against "no 3c+ fall
     in 7d" (rule names exist in research/families.py), Entertainment, NO, resting, at 20,000 and 45,000: does the fall carry the
     band's other prices too? If the no-fall bets fail at every price, write it for the user (a fall-only band would trade less).
-32. NO-price drift in Entertainment band markets (report 3.52: the NO price rose 1.4-2.7c between the early and late bet): does
+32. DONE 4:30 am CST Nov 23 (report 3.54): no general upward drift; over 1-7 bars band NO gets slightly CHEAPER (most in 0-7d
+    markets); the money arrives at settlement. FAILS as a signal; no_drift.py + 1 test (485 pass); item 34 added. Was: NO-price drift in Entertainment band markets (report 3.52: the NO price rose 1.4-2.7c between the early and late bet): does
     the band's NO get dearer over a market's life in general, by days to close, with a signal known at the bar? Backtest only.
 33. The 25-50c fall lead (report 3.53: NO after a 3c+ 7-day fall, Entertainment, resting, +21% a bet at 20,000, passes both halves):
     pre-state and run at 5,000 / 20,000 / 45,000, the 35-50c part alone (outside the band) against 25-35c, and the 1d / 3d windows.
     Needs a "mid 35-50c" rule name only if families.py lacks one (add, with a test). If it passes both halves at 20,000 again on
     the 35-50c part, add a paper account under a new name in rules.yaml (check rules.yaml has min_fall_7d: it does).
+34. Entry delay in the Entertainment band's 0-7 day markets (report 3.54: NO gets 1.5-7.6c cheaper over the next 3 bars there):
+    resting the NO bid one bar later, or a cent below, against the band's first-bar bid, at 20,000 and 45,000: per bet, fill
+    rate (a later bar must trade through the bid), tail test both halves. Backtest only; a small script beside entry_timing.py.
