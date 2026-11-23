@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import analyze_rule  # noqa: E402
 import calibration_curve  # noqa: E402
 import combined  # noqa: E402
+import entry_delay  # noqa: E402
 import entry_timing  # noqa: E402
 import no_drift  # noqa: E402
 import event_baskets  # noqa: E402
@@ -1049,3 +1050,23 @@ def test_no_drift_signs_and_horizons():
     assert list(d["dte_bin"].astype(str)[:2]) == ["7-30d", "7-30d"]
     x = no_drift.by_event(d, "settle")
     assert x["events"] == 2
+
+
+def test_entry_delay_offsets_and_delays():
+    df = pd.DataFrame({
+        "ticker": ["A"] * 4 + ["B"], "quoted": [True] * 5, "ask": [0.20, 0.22, 0.25, 0.30, 0.10],
+        "bid_hi": [0.0, 0.205, 0.18, 0.19, 0.0], "px_hi": [0.0, 0.20, 0.0, 0.0, 0.0],
+        "r_no_mk": [0.25, 0.28, np.nan, 0.43, 0.11], "maker_fee": [False] * 5, "mult": [1.0] * 5,
+        "y": [0.0] * 4 + [1.0]})
+    rows = np.array([0, 4])
+    base = entry_delay.variant_returns(df, rows)
+    assert base[0] == pytest.approx(0.25) and base[1] == pytest.approx(0.11)
+    one_c = entry_delay.variant_returns(df, rows, offset=0.01)
+    assert np.isnan(one_c[0])                                 # YES bid reached 0.205, not 0.21: no fill
+    half = entry_delay.variant_returns(df, rows, offset=0.005)
+    assert half[0] == pytest.approx(1 / 0.795 - 1)            # filled at NO 0.795, NO won
+    assert np.isnan(half[1])                                  # B has no later bar
+    d1 = entry_delay.variant_returns(df, rows, delay=1)
+    assert d1[0] == pytest.approx(0.28) and np.isnan(d1[1])   # B's next row is past the end
+    d3 = entry_delay.variant_returns(df, np.array([0, 1]), delay=3)
+    assert d3[0] == pytest.approx(0.43) and np.isnan(d3[1])   # row 4 belongs to B

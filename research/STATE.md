@@ -688,6 +688,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   35-50c fall passes the pre-stated test at 20,000 (+22.9% a bet), so new paper account rule_ent_fall_35_50 (rules.yaml, reason in
   the report) + 2 tests (486 pass); fails at 45,000 on few events. Item 35 added. Jobs ok (cycle running since 8:39 am); main $1,004.14.
 
+- 12:15 pm CST Nov 23: queue item 34 (report 3.56): entry delay / lower bid in the Entertainment band's 0-7 day markets FAILS (fewer
+  fills, less per order; adverse selection); entry_delay.py + 1 test (487 pass); item 36 added. Jobs ok (cycle running since 11:13 am);
+  main $1,004.14, 1 settled; rule_5c_busy's first settled bet lost.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -936,9 +940,14 @@ drawdown, capacity in dollars, and say how many variants were tried.
     pre-state and run at 5,000 / 20,000 / 45,000, the 35-50c part alone (outside the band) against 25-35c, and the 1d / 3d windows.
     Needs a "mid 35-50c" rule name only if families.py lacks one (add, with a test). If it passes both halves at 20,000 again on
     the 35-50c part, add a paper account under a new name in rules.yaml (check rules.yaml has min_fall_7d: it does).
-34. Entry delay in the Entertainment band's 0-7 day markets (report 3.54: NO gets 1.5-7.6c cheaper over the next 3 bars there):
+34. DONE 12:15 pm CST Nov 23 (report 3.56): FAILS. Waiting 1 bar loses a third of the fills and half the money per order; 3 bars loses;
+    1-2c lower keeps per bet level but fills 8-17 pt less, so per order earns less in 3 of 4 cells (adverse selection: the bids that
+    fill late are the losers). First-bar bid stays; entry_delay.py + 1 test (487 pass); item 36 added. Was: Entry delay in the Entertainment band's 0-7 day markets (report 3.54: NO gets 1.5-7.6c cheaper over the next 3 bars there):
     resting the NO bid one bar later, or a cent below, against the band's first-bar bid, at 20,000 and 45,000: per bet, fill
     rate (a later bar must trade through the bid), tail test both halves. Backtest only; a small script beside entry_timing.py.
 35. Entertainment 35-50c NO WITHOUT the fall condition (report 3.55: the no-fall half earns +10.5% a bet and passes both halves at
     20,000 by 0.2 pt): the calibration rule "mid 35-50c" (family 1, exists), Entertainment, NO, mk and tk, at 5,000 / 20,000 /
     45,000; and 50-65c beside it. Is there a plain overpricing of Entertainment YES at 35-50c? Backtest only.
+36. Adverse selection of the resting fill (report 3.56): in the Entertainment band at 20,000 and 45,000, compare bets that filled on the
+    first later bar against those that filled only on bar 2-3, and the per-bet return of markets whose resting order never filled
+    (counted at the next open as a taker would pay): is a slow fill a warning sign worth cancelling on? Backtest only.

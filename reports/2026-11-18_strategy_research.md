@@ -2085,3 +2085,41 @@ the 1d / 3d windows at 20,000; a paper account if the 35-50c fall part passes bo
   controls control_fade -$31.63, control_coinflip -$47.64. 12 rule accounts (one not started), 0 settled (rule_ent_band -$3.24
   against control_ent_quiet -$2.06; rule_ent_band_20k -$2.58; rule_5c_busy -$0.84 against control_5c_quiet $0.00; rule_ent_fall
   +$0.81; rule_ent_band_taker -$17.13). Shadow logs: resting fills 12 of 18 (busy 5-cent) and 14 of 14 (Entertainment band) decided.
+
+## 3.56 Ideas queue 34: entry delay in the Entertainment band's 0-7 day markets (12:15 pm CST, Nov 23)
+
+Question (from 3.54: the band's NO gets 1.5-7.6c cheaper over the next 3 bars in 0-7 day markets): does resting the NO bid a cent
+or two lower, or one or three bars later, buy NO cheaper without losing the fills that pay? `research/entry_delay.py` (new, + 1 test,
+487 pass). Same placements for every variant: the band rule ("NO where YES is at 5-35c", Entertainment, liquid sample) at its first
+bar per market inside 0-7 days to the scheduled end. "-k c": NO bid k cents lower, filled only if a later bar's YES bid reached
+that level or a trade printed above it within 3 bars. "+d bars": committed at the placement bar, resting at the bar d bars later
+at its own price. "Per order" counts unfilled orders as zero, the fair comparison. 5 variants x 2 levels, plus the whole band at
+20,000 for reference: 15 runs read.
+
+| Level | Variant | Fill in / out | Per bet in / out | Per order in / out | Tail test in / out |
+|---|---|---|---|---|---|
+| 20,000 (939 placements, 479 events) | base | 84% / 86% | +7.87% / +3.03% | +6.60% / +2.61% | passes / FAILS (28.8 vs 26.8) |
+| | -1c | 74% / 80% | +7.49% / +3.13% | +5.53% / +2.49% | passes / FAILS |
+| | -2c | 68% / 76% | +8.04% / +3.63% | +5.50% / +2.75% | passes / FAILS |
+| | +1 bar | 60% / 61% | +5.17% / +1.51% | +3.12% / +0.92% | passes / FAILS |
+| | +3 bars | 34% / 20% | +4.88% / -2.72% | +1.65% / -0.55% | FAILS / FAILS |
+| 45,000 (490 placements, 265 events) | base | 84% / 86% | +6.90% / +6.26% | +5.79% / +5.39% | passes / passes (24.6 vs 25.9) |
+| | -1c | 73% / 79% | +6.10% / +6.59% | +4.45% / +5.21% | passes / passes |
+| | -2c | 67% / 77% | +6.71% / +7.56% | +4.49% / +5.82% | passes / passes |
+| | +1 bar | 59% / 54% | +4.88% / +1.79% | +2.88% / +0.96% | FAILS / FAILS |
+| | +3 bars | 30% / 15% | -4.79% / -20.63% | -1.45% / -3.03% | FAILS / FAILS |
+| 20,000, all days (reference) | base / -2c / +3 bars per order | | | +6.12% / +5.65% / +4.02% in; +5.43% / +5.09% / +2.92% out | all pass |
+
+- **FAILS: the first-bar bid stays.** Waiting a bar loses a third of the fills and roughly half the money per order at both levels;
+  waiting three bars loses money in the short-dated markets. The NO price that "gets cheaper" in 3.54 gets cheaper in the markets
+  where YES then rises, i.e. the bets that lose: a lower or later bid fills more of those and fewer of the winners (adverse
+  selection), so the cheaper price does not pay.
+- A bid 1-2c lower keeps per-bet returns about level (better in 2 of 4 cells) but fills 8-17 points less, so per order it earns
+  less in 3 of 4 cells; the one better cell (-2c out of sample at 45,000, +5.82% vs +5.39%) is inside the noise of 15 runs on 80 events.
+- Side finding, consistent with 3.41: the band's 0-7 day slice at 20,000 fails the tail test out of sample (+3.0% a bet); at 45,000 it
+  passes. No account change (rule_ent_band_20k trades all days, where the band passes both halves).
+- Forward: main $1,004.14, 1 settled (+$8.57); a cycle has been running since 11:13 am. 23 variant accounts, 1 settled (main); controls
+  control_fade -$32.02, control_coinflip -$52.76. 12 rule accounts: rule_5c_busy -$10.64 with its first settled bet LOST (and the
+  same market lost in rule_5c_busy_taker and rule_5c_busy_claude), against control_5c_quiet -$0.31; rule_ent_band -$3.41 against
+  control_ent_quiet -$2.06; one settled bet is far too few to read. Shadow logs: resting fills 13 of 19 (busy 5-cent, 68%) and 14 of 14
+  (Entertainment band) decided.
