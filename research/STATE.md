@@ -676,6 +676,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   +7.4%) but hold twice as long; waiting is not the edge; no account change; entry_timing.py + 1 test (482 pass); item 32 added.
   Jobs ok; main $1,007.88, 1 settled.
 
+- 1:20 am CST Nov 23: queue item 31 (report 3.53): the fall split: at 3-10c the fall adds little; at 25-50c it is most of the money
+  (+21% a bet at 20,000, passes both halves; no-fall fails). Lead only; item 33 added. Jobs ok (cycle running since 12:58 am); main
+  $1,005.72, 1 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -910,8 +914,14 @@ drawdown, capacity in dollars, and say how many variants were tried.
     5,000 bar against its bet at the first 20,000 bar (same markets, resting; both known ex ante): is waiting for the market to
     get busy what makes the 20,000 account hold while the 5,000 account weakens? A small script on panel.load at 5,000 with
     the 20,000 mask from cumvol; tail test and per-bet both halves.
-31. The fall split across the rest of the band (report 3.51): "mid 3-10c" and "mid 25-50c", "down 3c+ in 7d" against "no 3c+ fall
+31. DONE 1:20 am CST Nov 23 (report 3.53): at 3-10c the fall adds little (both halves pass at 20,000); at 25-50c the fall is the money
+    (+21.0% a bet, passes both halves at 20,000, replay 1% +16.8%/y / +26.1%/y, DD 5.1%; no-fall fails both); at 45,000 fails out of
+    sample on 34 events. Lead, no account; item 33 added. Was: The fall split across the rest of the band (report 3.51): "mid 3-10c" and "mid 25-50c", "down 3c+ in 7d" against "no 3c+ fall
     in 7d" (rule names exist in research/families.py), Entertainment, NO, resting, at 20,000 and 45,000: does the fall carry the
     band's other prices too? If the no-fall bets fail at every price, write it for the user (a fall-only band would trade less).
 32. NO-price drift in Entertainment band markets (report 3.52: the NO price rose 1.4-2.7c between the early and late bet): does
     the band's NO get dearer over a market's life in general, by days to close, with a signal known at the bar? Backtest only.
+33. The 25-50c fall lead (report 3.53: NO after a 3c+ 7-day fall, Entertainment, resting, +21% a bet at 20,000, passes both halves):
+    pre-state and run at 5,000 / 20,000 / 45,000, the 35-50c part alone (outside the band) against 25-35c, and the 1d / 3d windows.
+    Needs a "mid 35-50c" rule name only if families.py lacks one (add, with a test). If it passes both halves at 20,000 again on
+    the 35-50c part, add a paper account under a new name in rules.yaml (check rules.yaml has min_fall_7d: it does).

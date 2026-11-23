@@ -1983,3 +1983,36 @@ markets get a late bet is known only afterwards: a diagnostic of timing, not a t
 - Verdict: no account change. Item 32 added (does the NO price drift up between the early and late bar in band markets
   generally: a drift rule with a known-at-the-bar signal).
 - Forward: main $1,007.88, 1 settled (+$8.57); last cycle ok at 9:55 pm (8 forecasts, 1 order). Nothing new settled.
+
+## 3.53 Ideas queue 31: the fall split across the rest of the Entertainment band, 3-10c and 25-50c (1:20 am CST, Nov 23)
+
+`research/analyze_rule.py --sample liquid --min-cumvol N --categories Entertainment --side no --entry mk --rule "mid P, C"`,
+N = 20,000 and 45,000, P = 3-10c and 25-50c (YES mid), C = "down 3c+ in 7d" against "no 3c+ fall in 7d" (the two split each
+price exactly, 3.51). 8 runs, 4 prices x levels. Note 25-50c reaches past the band's 35c top (the existing family's band).
+
+| Level | Rule | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay 1% a year in / out | Worst DD in / out |
+|---|---|---|---|---|---|---|---|
+| 20,000 | 3-10c, down 3c+ | 727 (404) | +4.83% | 4.9% / 5.9% | passes / passes | +4.6% / +9.0% | 3.4% / 2.4% |
+| 20,000 | 3-10c, no fall | 788 (405) | +3.66% | 7.4% / 4.4% | passes / passes | +2.8% / +12.3% | 2.0% / 1.0% |
+| 20,000 | 25-50c, down 3c+ | 455 (280) | +20.96% | 31.3% / 31.9% | passes / passes | +16.8% / +26.1% | 5.1% / 3.9% |
+| 20,000 | 25-50c, no fall | 610 (380) | +6.30% | 40.4% / 37.2% | FAILS (45.6 vs 45.6) / FAILS (45.3 vs 44.9) | +3.8% / +18.7% | 8.7% / 10.7% |
+| 45,000 | 3-10c, down 3c+ | 419 (254) | +5.49% | 3.3% / 4.1% | passes / passes | +8.6% / +6.3% | 1.7% / 1.0% |
+| 45,000 | 3-10c, no fall | 418 (223) | +3.04% | 7.2% / 5.6% | passes / FAILS (12.4 vs 10.6) | +4.9% / +4.5% | 1.7% / 1.3% |
+| 45,000 | 25-50c, down 3c+ | 228 (152) | +16.96% | 33.1% / 35.3% | passes / FAILS (50.8 vs 47.5; 34 events) | +13.6% / +9.2% | 3.5% / 3.0% |
+| 45,000 | 25-50c, no fall | 300 (190) | +7.12% | 40.0% / 36.4% | FAILS / FAILS | +4.4% / +10.9% | 7.4% / 4.0% |
+
+- **At 3-10c the fall matters little**: both halves earn (+4.8% against +3.7% a bet at 20,000) and both pass the tail test at
+  20,000; the no-fall bets are not the losers, so the cheap end of the band is not carried by the fall.
+- **At 25-50c the fall is most of the money**: after a 3c+ fall NO earns +21.0% a bet at 20,000 (every year 2024-26 between
+  +17.6% and +22.6%), passes both halves, replay 1% +16.8% / +26.1% a year, worst drawdown 5.1%; without a fall +6.3% and the
+  tail test fails in both halves. At 45,000 the fall version passes in sample but fails out of sample on only 34 events.
+- Caveats: this price window was chosen after 3.47/3.51 showed the fall effect, 25-50c is not the band's price range, and the
+  family has tried many price x momentum cells (6 prices x 3 windows x 2 signs, plus the no-fall complements); no t above 3 is
+  claimed. Capacity: dollars traded in the 7 days before entry, median $6,200 (20,000) / $13,150 (45,000), the largest of the
+  band's prices; the losing rate is a third of events, so it is not a lopsided bet and drawdowns come from clusters of losses.
+- Verdict: a LEAD, no account yet. Item 33 added: the 25-50c fall rule at 5,000 and with the 35-50c part alone (outside the
+  band), and a pre-stated check of 1d/3d windows, before any paper account.
+- Forward: main $1,005.72, 1 settled (+$8.57); a cycle has been running since 12:58 am. 23 variant accounts, 1 settled (main);
+  controls control_fade -$26.64, control_coinflip -$34.16. 11 rule accounts, 0 settled (rule_ent_band -$3.07 against
+  control_ent_quiet -$2.06; rule_ent_band_20k -$2.09; rule_5c_busy -$0.33 against control_5c_quiet $0.00; rule_ent_fall +$1.67).
+  Shadow logs: resting fills 12 of 17 (busy 5-cent) and 14 of 14 (Entertainment band) decided.
