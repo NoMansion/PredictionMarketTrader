@@ -8,6 +8,10 @@ param(
     [int]$TimeoutMinutes = 60,
     [string]$Model = "claude-opus-5-5",
     [string]$PromptFile = "",          # default scripts\checkin_prompt.md (another file only for testing the plumbing)
+    # skip when the last check-in started less than this long ago. Windows can add a second every-3-hours schedule
+    # counted from the moment the task is enabled again (seen 2026-11-22: runs at :11 and :08), which doubled the
+    # Claude usage of the check-ins; the user aims for 75% of the weekly limit (2026-11-22)
+    [int]$MinGapMinutes = 150,
     # the three below are for tests/test_checkin_ps1.py only; the scheduled task never passes them
     [string]$ClaudeExe = "",           # default .tools\claude\...\claude.exe
     [string]$DataDir = "",             # default data\
@@ -50,6 +54,15 @@ if (Test-Path $lock) {
 Set-Content -Path $lock -Value $PID
 try {
     if (Test-Path (Join-Path $data "STOP")) { Write-Log "skipped: data\STOP exists (kill switch)"; return }
+    # every real start writes <stamp>.prompt.txt first, so the newest one is the last start
+    $prev = Get-ChildItem -Path $dir -Filter "*.prompt.txt" -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($prev -and $MinGapMinutes -gt 0) {
+        $since = ((Get-Date) - $prev.LastWriteTime).TotalMinutes
+        if ($since -lt $MinGapMinutes) {
+            Write-Log ("skipped: the last check-in started {0:n0} minutes ago (under {1})" -f $since, $MinGapMinutes); return
+        }
+    }
     if (-not (Test-Path $claude)) { Write-Log "FAILED: the claude program is missing ($claude)"; Show-Note "check-in failed: claude program missing"; return }
     # a run started from inside a Claude session must not inherit that session's identity
     Get-ChildItem Env: | Where-Object { $_.Name -match '^(CLAUDECODE|CLAUDE_CODE_|CLAUDE_AGENT_SDK_|ANTHROPIC_BASE_URL)' } |

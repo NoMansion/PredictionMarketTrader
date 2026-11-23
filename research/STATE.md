@@ -32,8 +32,21 @@ per check-in, backtests and cheap code only. New PAPER accounts (rules.yaml, var
 instruction when the backtest supports them: add a new name, never change an old one, write the reason here.
 Still NOT covered: the main account's config, the forecaster's settings, real money, standing PC changes, and
 more Claude usage than the paper loop's own plus the capped filter account (rule_5c_busy_claude, 2 questions a
-cycle). If the paper loop's gap has widened (data\paper_loop_state.json above 2 h: Claude's limit was hit), do
-health only.
+cycle). If the paper loop's gap has widened (data\paper_loop_state.json above runtime.cycle_every_hours in
+config.yaml: Claude's limit was hit), do health only.
+
+## CLAUDE USAGE BUDGET (the user, 11:40 pm CST 2026-11-22: "Aim for 75% usage per week")
+
+The weekly all-models limit resets Sundays at 4:00 pm CST. Measured 4:00 to 11:30 pm Nov 22 (cycles every 2 h,
+check-ins twice per 3 h by a Windows quirk): 4% of the week for about $34 at list price, so about 1% per $8.5
+(rough: the app shows whole percents). Of that, forecasts ~81% ($7 a cycle, 8 questions), check-ins ~14% ($0.6-1.4
+each), the filter account ~5%. Pace: ~90% a week. Changes at 11:45 pm Nov 22: runtime.cycle_every_hours 2 -> 2.5,
+and scripts\checkin.ps1 skips a start within 150 minutes of the last one (the quirk). Expected: ~67-70% a week from
+this PC, leaving room for the user's own sessions (the new PC shares the same limit).
+- Check-ins cannot see the plan's usage. They stay at ONE queue item per check-in and must not raise usage.
+- A session that can see usage (the user's) re-checks the pace; if it runs above 75%, the next dial is
+  cycle_every_hours 3 (allowed by the user's word above), then universe.max_candidates_per_cycle. Never the
+  forecaster's model, runs or effort.
 
 ## Standing instruction (2026-11-19, about 3:50 am CST, on the PC)
 
@@ -627,6 +640,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 4:07 am CST Nov 22: RESUMED at the user's word ("close all unnecessary tasks and resume"). Nine old idle check-in
   sessions (Nov 19-20) archived in the Claude app; both Windows tasks enabled again (next Opus check-in 6:11 am);
   download and paper loop restarted, a paper cycle began at once. The app's own scheduled check-in stays OFF (Fable).
+- 11:45 pm CST Nov 22: "Aim for 75% usage per week": new section CLAUDE USAGE BUDGET. Pace was ~90% a week (4% in
+  7.5 h after the 4 pm reset). Paper cycles every 2.5 h instead of 2; the check-in task had been firing twice per
+  3 h since it was re-enabled at 4:08 am (:11 and :08), so checkin.ps1 now skips a start within 150 minutes of the
+  last one (two tests). One queue item per check-in, as written.
 - 4:15 am CST Nov 22: queue item 11 finished (report 3.40): event baskets with the flags known fail (exclusive in sample
   negative at every threshold). Item 21 added. Jobs ok (cycle running since 4:07 am); main $1,010.31, 0 settled.
 - 6:20 am CST Nov 22: queue item 14 (report 3.41): the Entertainment band by days to close: the edge is spread across

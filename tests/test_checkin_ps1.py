@@ -200,6 +200,25 @@ def test_each_run_appends_one_line(rig):
     rig.run()
     rig.behave(stdout=answer(result="PMT second"))
     time.sleep(1)
-    rig.run()
+    rig.run("-MinGapMinutes", "0")
     lines = rig.log()
     assert len(lines) == 2 and lines[1].endswith("PMT second")
+
+
+def test_a_second_start_soon_after_the_last_one_is_skipped_without_asking_claude(rig):
+    rig.run()
+    (rig.fake_dir / "seen.json").unlink()
+    rig.run()
+    lines = rig.log()
+    assert len(lines) == 2 and "skipped: the last check-in started 0 minutes ago (under 150)" in lines[1]
+    assert rig.seen() is None and not (rig.data / "checkin.lock").exists()
+
+
+def test_a_start_long_after_the_last_one_runs(rig):
+    rig.run()
+    old = time.time() - 151 * 60
+    for f in (rig.data / "checkin").glob("*.prompt.txt"):
+        os.utime(f, (old, old))
+    (rig.fake_dir / "seen.json").unlink()
+    rig.run()
+    assert "ok in" in rig.log()[1] and rig.seen() is not None

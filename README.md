@@ -106,7 +106,7 @@ Scheduler.
 ## Running it unattended
 
 On this PC the paper loop (`research\start_jobs.ps1 -PaperLoop`, started at log-on by the Windows task
-"PredictionMarketTrader Jobs") runs a cycle every 2 hours (`runtime.cycle_every_hours`) and widens the gap by
+"PredictionMarketTrader Jobs") runs a cycle every 2.5 hours (`runtime.cycle_every_hours`; the user aims for 75% of the weekly Claude limit) and widens the gap by
 itself, up to 12 hours, when the Claude subscription's limit is reached. The Task Scheduler line below is the
 simpler alternative it replaced. One cycle every 8 hours is plenty: these markets resolve over days and weeks, and forecasts are refreshed every
 48 hours. Schedule it away from the stock trader's evening job (the bot also refuses to run between 17:15 and

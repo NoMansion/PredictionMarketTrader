@@ -144,6 +144,8 @@ runtime:
   # itself, up to cycle_max_hours, after a cycle in which the forecaster could not answer, and comes back down
   # when forecasts come through. Raise cycle_every_hours by hand when the plan's usage is running ahead of the
   # week; the loop reads this file before every decision, no restart needed.
-  cycle_every_hours: 2
+  # 2.5 since 2026-11-22, 11:45 pm CST (the user: "Aim for 75% usage per week"): at 2 hours this PC was on pace for
+  # about 90% of the weekly limit, about 80% of it the forecasts. research/STATE.md "Claude usage budget".
+  cycle_every_hours: 2.5
   cycle_max_hours: 12
   lock_stale_hours: 1             # a lock not refreshed for this long belongs to a dead run (it is refreshed after every forecast)
