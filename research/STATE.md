@@ -684,6 +684,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   slightly cheaper, the money comes at settlement; no account change; no_drift.py + 1 test (485 pass); item 34 added. Jobs ok (cycle
   running since 3:31 am); main $1,005.99, 1 settled.
 
+- 9:40 am CST Nov 23: queue item 33 (report 3.55): the Entertainment fall lead holds at 25-35c and 35-50c, 5,000 and 20,000, all windows;
+  35-50c fall passes the pre-stated test at 20,000 (+22.9% a bet), so new paper account rule_ent_fall_35_50 (rules.yaml, reason in
+  the report) + 2 tests (486 pass); fails at 45,000 on few events. Item 35 added. Jobs ok (cycle running since 8:39 am); main $1,004.14.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -926,10 +930,15 @@ drawdown, capacity in dollars, and say how many variants were tried.
 32. DONE 4:30 am CST Nov 23 (report 3.54): no general upward drift; over 1-7 bars band NO gets slightly CHEAPER (most in 0-7d
     markets); the money arrives at settlement. FAILS as a signal; no_drift.py + 1 test (485 pass); item 34 added. Was: NO-price drift in Entertainment band markets (report 3.52: the NO price rose 1.4-2.7c between the early and late bet): does
     the band's NO get dearer over a market's life in general, by days to close, with a signal known at the bar? Backtest only.
-33. The 25-50c fall lead (report 3.53: NO after a 3c+ 7-day fall, Entertainment, resting, +21% a bet at 20,000, passes both halves):
+33. DONE 9:40 am CST Nov 23 (report 3.55): the fall lead holds at 5,000 and 20,000 on 25-35c and 35-50c and with 1d / 3d windows;
+    35-50c fall at 20,000 +22.9% a bet, passes both halves (out of sample by 0.7 pt), replay 1% +11.9%/y / +16.3%/y, DD 5.9%; all
+    fail out of sample at 45,000 (20-29 events). New paper account rule_ent_fall_35_50; item 35 added. Was: The 25-50c fall lead (report 3.53: NO after a 3c+ 7-day fall, Entertainment, resting, +21% a bet at 20,000, passes both halves):
     pre-state and run at 5,000 / 20,000 / 45,000, the 35-50c part alone (outside the band) against 25-35c, and the 1d / 3d windows.
     Needs a "mid 35-50c" rule name only if families.py lacks one (add, with a test). If it passes both halves at 20,000 again on
     the 35-50c part, add a paper account under a new name in rules.yaml (check rules.yaml has min_fall_7d: it does).
 34. Entry delay in the Entertainment band's 0-7 day markets (report 3.54: NO gets 1.5-7.6c cheaper over the next 3 bars there):
     resting the NO bid one bar later, or a cent below, against the band's first-bar bid, at 20,000 and 45,000: per bet, fill
     rate (a later bar must trade through the bid), tail test both halves. Backtest only; a small script beside entry_timing.py.
+35. Entertainment 35-50c NO WITHOUT the fall condition (report 3.55: the no-fall half earns +10.5% a bet and passes both halves at
+    20,000 by 0.2 pt): the calibration rule "mid 35-50c" (family 1, exists), Entertainment, NO, mk and tk, at 5,000 / 20,000 /
+    45,000; and 50-65c beside it. Is there a plain overpricing of Entertainment YES at 35-50c? Backtest only.

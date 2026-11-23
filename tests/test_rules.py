@@ -74,6 +74,8 @@ def test_the_real_rules_file_loads():
     assert acc["control_5c_quiet"].control and acc["control_5c_quiet"].legs[0].max_volume == 45000
     assert acc["rule_5c_busy_taker"].entry == "taker"
     assert acc["rule_ent_fall"].legs[0].min_fall_7d == 0.03
+    hi = acc["rule_ent_fall_35_50"].legs[0]
+    assert (hi.min_yes_mid, hi.max_yes_mid, hi.min_volume, hi.min_fall_7d) == (0.35, 0.495, 20000, 0.03)
 
 
 def write(tmp_path, text):

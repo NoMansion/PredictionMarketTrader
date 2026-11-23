@@ -88,6 +88,17 @@ accounts:
     legs:
       - {label: "Entertainment 10-25c, down 3c+ in 7d", categories: [Entertainment], min_yes_mid: 0.10, max_yes_mid: 0.245, min_volume: 5000, min_fall_7d: 0.03}
 
+  # ---- added 2026-11-23, 9:40 am CST (Ideas queue 33, report 3.55): the 25-50c fall lead of report 3.53 split at
+  # 35c. The pre-stated test (35-50c part, 20,000+, resting) passed both halves: +22.9% a bet, 214 events, replay 1%
+  # +11.9%/y in, +16.3%/y out, DD 5.9%; out of sample only by a hair (bound 49.5% vs break-even 50.2%), fails at
+  # 45,000 on 20 events. Outside the band's 5-35c, so it does not overlap rule_ent_band / rule_ent_fall. ---------
+  rule_ent_fall_35_50:
+    about: "NO where an Entertainment YES at 35-50c has fallen 3c+ in 7 days, 20,000+ contracts traded, resting (report 3.55)"
+    entry: resting
+    stake_pct: 0.01
+    legs:
+      - {label: "Entertainment 35-50c, down 3c+ in 7d, 20,000+", categories: [Entertainment], min_yes_mid: 0.35, max_yes_mid: 0.495, min_volume: 20000, min_fall_7d: 0.03}
+
   rule_climate_band:
     about: "NO against YES at 5-35c in busy Climate and Weather markets, resting: the same-signed echo of the Entertainment lead (report 3.27)"
     entry: resting

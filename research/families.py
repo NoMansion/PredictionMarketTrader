@@ -331,6 +331,12 @@ def f_combos(f: Features):
     for (lo, hi), k, side, entry in itertools.product(price, (1, 3, 7), SIDES, ENTRIES):
         m = f.base & f.price(lo, hi) & ~(f.mom[k] <= -0.03)
         yield ("14 price x momentum", f"mid {name_range(lo * 100, hi * 100, 'c')}, no 3c+ fall in {k}d", m, side, entry)
+    # The 25-50c fall lead split at the band's 35c top (queue item 33, report 3.55): the same fall / no-fall pair on
+    # 25-35c (inside the Entertainment band) and 35-50c (outside it). Added; the 25-50c names above are unchanged.
+    for (lo, hi), k, side, entry in itertools.product([(0.25, 0.35), (0.35, 0.50)], (1, 3, 7), SIDES, ENTRIES):
+        cell = f.base & f.price(lo, hi)
+        yield ("14 price x momentum", f"mid {name_range(lo * 100, hi * 100, 'c')}, down 3c+ in {k}d", cell & (f.mom[k] <= -0.03), side, entry)
+        yield ("14 price x momentum", f"mid {name_range(lo * 100, hi * 100, 'c')}, no 3c+ fall in {k}d", cell & ~(f.mom[k] <= -0.03), side, entry)
 
 
 def all_rules(f: Features, titles: np.ndarray):

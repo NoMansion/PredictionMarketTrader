@@ -2045,3 +2045,43 @@ events; grouped by days to the scheduled end and by share of the market's life g
   controls control_fade -$31.07, control_coinflip -$39.89. 11 rule accounts, 0 settled (rule_ent_band -$3.31 against
   control_ent_quiet -$2.17; rule_ent_band_20k -$2.43; rule_5c_busy -$1.05 against control_5c_quiet $0.00; rule_ent_fall +$1.56).
   Shadow logs: resting fills 12 of 17 (busy 5-cent) and 14 of 14 (Entertainment band) decided.
+
+## 3.55 Ideas queue 33: the 25-50c fall lead split at 35c, at three levels and three windows (9:40 am CST, Nov 23)
+
+Pre-stated in item 33 before the runs: the 35-50c part alone (outside the band) against 25-35c, at 5,000 / 20,000 / 45,000, and
+the 1d / 3d windows at 20,000; a paper account if the 35-50c fall part passes both halves at 20,000. New rule names "mid 25-35c" and
+"mid 35-50c" with "down 3c+ in kd" / "no 3c+ fall in kd" in `research/families.py` (added, + 1 test: the two split 25-50c exactly).
+`research/analyze_rule.py --sample liquid --min-cumvol N --categories Entertainment --side no --entry mk`. 11 runs this round.
+
+| Level | Rule | Bets (events) | Per bet | Losing events in / out | Tail test in / out (bound vs break-even out) | Replay 1% a year in / out | Worst DD in / out |
+|---|---|---|---|---|---|---|---|
+| 20,000 | 35-50c, down 3c+ 7d | 291 (214) | +22.87% | 33.3% / 36.7% | passes / passes (49.5 vs 50.2) | +11.9% / +16.3% | 5.9% / 4.3% |
+| 20,000 | 35-50c, no fall 7d | 403 (273) | +10.51% | 39.0% / 39.8% | passes / passes (49.4 vs 49.6) | +5.8% / +16.0% | 7.9% / 6.0% |
+| 20,000 | 25-35c, down 3c+ 7d | 301 (209) | +17.31% | 22.3% / 32.8% | passes / passes (44.0 vs 44.2) | +20.9% / +11.6% | 2.8% / 2.5% |
+| 20,000 | 25-35c, no fall 7d | 369 (257) | +5.33% | 34.2% / 31.5% | passes / FAILS (41.6 vs 35.2) | +5.6% / +2.9% | 5.3% / 7.1% |
+| 20,000 | 25-50c, down 3c+ 1d | 555 (342) | +15.02% | 35.1% / 36.1% | passes / passes | +25.9% / +25.7% | 8.1% / 8.0% |
+| 20,000 | 25-50c, down 3c+ 3d | 524 (325) | +18.68% | 31.9% / 34.4% | passes / passes | +16.6% / +26.0% | 6.4% / 5.8% |
+| 5,000 | 25-50c, down 3c+ 7d | 1,007 (562) | +16.83% | 35.9% / 36.1% | passes / passes | +23.7% / +32.5% | 8.4% / 10.3% |
+| 5,000 | 35-50c, down 3c+ 7d | 649 (421) | +21.19% | 37.5% / 38.9% | passes / passes | +21.3% / +28.4% | 5.8% / 7.3% |
+| 5,000 | 25-35c, down 3c+ 7d | 685 (435) | +14.20% | 28.0% / 34.9% | passes / passes | +28.7% / +16.0% | 5.1% / 8.0% |
+| 45,000 | 35-50c, down 3c+ 7d | 133 (103) | +21.85% | 33.7% / 50.0% | passes / FAILS (20 events) | +11.2% / +5.7% | 2.8% / 4.3% |
+| 45,000 | 25-35c, down 3c+ 7d | 159 (117) | +13.12% | 26.1% / 31.0% | passes / FAILS (29 events) | +8.2% / +5.6% | 4.5% / 2.0% |
+
+- **The fall lead holds on both halves of the price window and at 5,000 and 20,000**, and with 1-day and 3-day windows too; the
+  35-50c part earns the most a bet (+22.9% at 20,000, every year 2024-26 at +21% to +23%). At 45,000 every version fails out of
+  sample, on 20-29 events: too few to tell.
+- **New and not pre-stated: 35-50c NO earns WITHOUT a fall too** (+10.5% a bet, passes both halves at 20,000, by 0.2 pt out of
+  sample), while 25-35c without a fall fails out of sample. So above 35c part of the money is plain calibration (Entertainment YES at
+  35-50c overpriced), not the fall; the fall roughly doubles it.
+- Caveats: the window was chosen after 3.47 / 3.51 / 3.53 showed the fall effect, the momentum family now has many cells (prices x
+  3 windows x 2 signs plus complements), and both 20,000 out-of-sample passes are by under 1 pt; no t above 3 is claimed. Losing
+  rate is a third of events, not a lopsided bet: drawdowns come from clusters. Capacity at 20,000: dollars traded in the 7 days
+  before entry, median $6,750 (35-50c fall), 25th percentile $3,370; at 5,000 the median falls to $2,200 and a fifth of entry days
+  trade under 100 contracts.
+- Verdict: the pre-stated test passed, so a NEW paper account `rule_ent_fall_35_50` (rules.yaml: Entertainment, YES mid 35-49.5c,
+  3c+ fall in 7 days, 20,000+ contracts, resting, 1%; + 1 test, 486 pass). It does not overlap rule_ent_band / rule_ent_fall (5-35c).
+  Item 35 added (Entertainment 35-50c NO as a calibration rule, without the fall condition).
+- Forward: main $1,004.14, 1 settled (+$8.57); a cycle has been running since 8:39 am. 23 variant accounts, 1 settled (main);
+  controls control_fade -$31.63, control_coinflip -$47.64. 12 rule accounts (one not started), 0 settled (rule_ent_band -$3.24
+  against control_ent_quiet -$2.06; rule_ent_band_20k -$2.58; rule_5c_busy -$0.84 against control_5c_quiet $0.00; rule_ent_fall
+  +$0.81; rule_ent_band_taker -$17.13). Shadow logs: resting fills 12 of 18 (busy 5-cent) and 14 of 14 (Entertainment band) decided.

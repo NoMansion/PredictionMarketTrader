@@ -320,6 +320,17 @@ def test_no_fall_rule_is_the_exact_complement_of_the_fall_rule_within_the_price(
         assert not (down & nofall).any() and np.array_equal(down | nofall, whole)
 
 
+def test_25_50c_fall_split_at_35c_adds_up_to_the_25_50c_rule(world):
+    f, titles = world["f"], world["titles"]
+    for k in (1, 3, 7):
+        for kind in ("down 3c+ in", "no 3c+ fall in"):
+            _, whole = analyze_rule.find_rule(f, titles, f"mid 25-50c, {kind} {k}d", "no", "mk")
+            _, low = analyze_rule.find_rule(f, titles, f"mid 25-35c, {kind} {k}d", "no", "mk")
+            fam, high = analyze_rule.find_rule(f, titles, f"mid 35-50c, {kind} {k}d", "no", "mk")
+            assert fam == "14 price x momentum"
+            assert not (low & high).any() and np.array_equal(low | high, whole)
+
+
 def test_bets_frame_is_one_bet_per_market(world):
     p, f = world["p"], world["f"]
     _, mask = analyze_rule.find_rule(f, world["titles"], FIVE, "no", "tk")
