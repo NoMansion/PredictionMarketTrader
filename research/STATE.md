@@ -761,6 +761,9 @@ Forward-only (cannot be backtested):
 - 3:30 pm CST Nov 22: queue item 19 (report 3.47): in Entertainment a recent fall lifts the band's per-bet edge (+9-10% vs +7%), a rise
   fails in sample; fewer bets, so no account better than the band; rule_ent_fall stays. Item 28 added. Jobs ok; main $1,010.18, 1 settled.
 
+- 6:25 am CST Nov 24: queue item 37 (report 3.59): the 5,000-20,000 layer is the whole 5,000 account (no split possible); the 35-50c
+  5,000 failure is the no-fall bets. No account change; item 39 added. Jobs ok, cycle ended ok 6:08 am; main $1,005.19, 1 settled.
+
 ## Next actions
 
 1. Each check-in: `python3 research/panel.py` (what landed), then for every category with a finished pass run
@@ -975,9 +978,13 @@ drawdown, capacity in dollars, and say how many variants were tried.
     sample). 3-bar resting order stays; fill_speed.py + 1 test (488 pass); item 38 added. Was: Adverse selection of the resting fill (report 3.56): in the Entertainment band at 20,000 and 45,000, compare bets that filled on the
     first later bar against those that filled only on bar 2-3, and the per-bet return of markets whose resting order never filled
     (counted at the next open as a taker would pay): is a slow fill a warning sign worth cancelling on? Backtest only.
-37. The 5,000 failure of Entertainment 35-50c NO (report 3.57): is it the quiet layer? `analyze_rule.py --sample liquid --min-cumvol
+37. DONE 6:25 am CST Nov 24 (report 3.59): cannot be split: cut at entry the 5,000-20,000 layer IS the 5,000 account (figures
+    identical to 3.57 / 3.55); the 5,000 failure is the no-fall bets (-9%/y out of sample), the fall cell passes both halves there
+    (+21% a bet). No account change; item 39 added. Was: The 5,000 failure of Entertainment 35-50c NO (report 3.57): is it the quiet layer? `analyze_rule.py --sample liquid --min-cumvol
     5000 --max-cumvol 20000 --categories Entertainment --rule "mid 35-50c" --side no --entry mk` (and the fall / no-fall cells of 3.55
     in that layer): if the layer alone loses, the volume level is the edge, as for the band (3.50). Backtest only.
 38. Taker fallback in 0-7 day Entertainment band markets only (report 3.58 did all days; 3.56 found adverse selection there): add a
     --dte-lo/--dte-hi option to research/fill_speed.py (with a test) and re-read the bar-1 / bar-2-3 / never cells at 20,000 and 45,000.
     Backtest only; low priority.
+39. Forward, once rule_ent_fall_35_50 has 20+ settled bets: its per-bet return against 3.55 (+22.9% at 20,000) and its fill rate;
+    the 5,000 fall cell passes both halves too (3.59), so a 5,000 twin is a candidate only if the 20,000 account holds forward.

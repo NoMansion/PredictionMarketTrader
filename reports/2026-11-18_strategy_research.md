@@ -2182,3 +2182,23 @@ halves x 5 cells: 20 cells read, none pre-registered as a pass.
 - **The never-filled markets are winners too** (+5.5% to +14.3% a bet bought at the next open, passing the tail test), but that is
   hindsight: one only knows an order never filled 3 bars later, and buying then (taker after the window) fails the tail test in
   all four cells (+0.2% in sample). No taker fallback; no account change.
+
+## 3.59 Ideas queue 37: is the 5,000 failure of Entertainment 35-50c NO the quiet layer? (6:25 am CST, Nov 24)
+
+Pre-stated in item 37: `research/analyze_rule.py --sample liquid --min-cumvol 5000 --max-cumvol 20000 --categories Entertainment
+--side no --entry mk`, for "mid 35-50c" and its 7-day fall / no-fall cells (3.55). Three runs, resting only.
+
+| rule (5,000-20,000 layer) | bets (events) | per bet | tail test in / out | replay 1% in / out | worst DD in / out |
+|---|---|---|---|---|---|
+| mid 35-50c | 1,378 (742) | +8.86% | passes / FAILS (51.9 vs 48.0) | +12.8% / -2.5% a year | 13.6% / 20.0% |
+| 35-50c, down 3c+ in 7d | 649 (421) | +21.19% | passes / passes (47.1 vs 52.2) | +21.3% / +28.4% a year | 5.8% / 7.3% |
+| 35-50c, no 3c+ fall in 7d | 1,116 (664) | +6.47% | passes / FAILS (55.2 vs 47.9) | +7.9% / -9.0% a year | 16.0% / 19.9% |
+
+- **The question cannot be split this way: cut by volume at entry, the layer IS the whole 5,000 account.** Every figure is
+  identical to the 5,000 rows of 3.57 and 3.55: a market's first eligible bar comes before it reaches 20,000 contracts, so the
+  bet is always placed in the layer (as with the band in 3.50).
+- **What the runs do show: the 5,000 failure is the no-fall bets.** With the fall, 35-50c NO passes both halves at 5,000 too
+  (+21% a bet, out-of-sample replay +28%/y, drawdown 7.3%); without it, it loses out of sample (-9%/y). The plain rule's
+  failure comes from its no-fall bets (the two cells overlap: a market can enter each at a different bar).
+- Capacity (plain rule): entry-day dollars traded in the 7 days before, median $1,351, 25th percentile $594.
+- No account change: rule_ent_fall_35_50 (20,000+) already trades the fall cell; nothing here argues for a plain 35-50c account.
