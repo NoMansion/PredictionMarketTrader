@@ -700,6 +700,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   .venv rebuilt with the same package versions) and the Windows tasks now point there. The E:\Coding copy is the
   pre-move original; do not run it. To resume: enable both tasks and run `research\start_jobs.ps1 -PaperLoop`
   from C:\Coding\PredictionMarketTrader.
+- 9:22 pm CST Nov 23: RESUMED at the user's word ("unpause the kalshi bot"), first run from C:\Coding. The PC had
+  restarted at 9:16 pm. Both Windows tasks enabled (next Opus check-in 12:11 am); download and paper loop started
+  from C:\Coding (every 2.5 h), a paper cycle began at once. The 1:48 pm cycle had finished ok: equity $1,002.90,
+  4 positions, 4 resting.
 
 ## How to run a round
 
