@@ -719,6 +719,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   year: +22.3% vs +33.0%/y out of sample); band_by_dte.py 7+ day slice; item 41 added. Jobs ok (11:08 am cycle ok); main
   $1,009.26, 2 settled.
 
+- 3:25 pm CST Nov 24: queue item 41 (report 3.62): the mixed Entertainment cut (0-7d only at 45,000) FAILS narrowly (+31.0% vs
+  +33.0%/y out of sample, half the drawdown); near_close_cumvol + 1 test (490 pass); item 42 added. Jobs ok (12:39 pm cycle ok);
+  main $1,009.26, 2 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -1002,7 +1006,12 @@ drawdown, capacity in dollars, and say how many variants were tried.
     rule_ent_band_20k stays; item 41 added. Was: The Entertainment band at 20,000 in 0-7 day markets fails out of sample on bar-1 fills (3.60, +2.6% a bet) while 45,000 passes
     (+6.3%): re-run 3.41's 0-7 / 7-30 / 30+ split for rule_ent_band_20k with a 45,000 cut beside it, and say whether a 0-7 day
     exclusion at 20,000 would have lifted the out-of-sample replay (pre-state it; one variant). Backtest only; low priority.
-41. A mixed cut for the Entertainment band: 7+ day markets at 20,000 contracts, 0-7 day markets only at 45,000 (3.61: the 0-7d
+41. DONE 3:25 pm CST Nov 24 (report 3.62): FAILS narrowly. Mixed cut passes the tail test both halves and halves the drawdown (3.3% vs
+    6.6% out of sample) but earns less a year (+31.0% vs +33.0%/y out of sample, +6.1% vs +9.1% in sample); rule_ent_band_20k stays;
+    analyze_rule.near_close_cumvol + 1 test (490 pass); item 42 added. Was: A mixed cut for the Entertainment band: 7+ day markets at 20,000 contracts, 0-7 day markets only at 45,000 (3.61: the 0-7d
     slice fails the tail test at 20,000 but passes at 45,000). Pre-state it: one variant; passes if its out-of-sample replay at
     1% beats rule_ent_band_20k's (+33.0%/y) with no larger drawdown, and it passes the tail test in both halves. Needs a mask with
     two cumvol levels (research/band_by_dte.py or a small new script, with a test). Backtest only; low priority.
+42. Forward, once rule_ent_band_20k has 30+ settled bets: split its settled 0-7 day bets by contracts traded at entry (under / over
+    45,000) and compare with 3.60-3.62 (the under-45,000 0-7 day bets fail the tail test in the backtest but add yearly return).
+    No new account.

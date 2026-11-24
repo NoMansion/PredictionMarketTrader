@@ -85,6 +85,13 @@ def below_cumvol(p: Panel, mask: np.ndarray, max_cumvol: float | None) -> np.nda
     return mask & (p.df["cumvol"].to_numpy() < max_cumvol)
 
 
+def near_close_cumvol(p: Panel, mask: np.ndarray, dte: np.ndarray, split_days: float, near_cumvol: float) -> np.ndarray:
+    """A mixed census cut (queue item 41, report 3.62): bars with `split_days` or more to the close keep the panel's own
+    level; bars closer than that need `near_cumvol` contracts traded so far (known at the bar). The first bar per market
+    of the result is the bet, so a market first seen early at the low level is entered there."""
+    return mask & ((dte >= split_days) | (p.df["cumvol"].to_numpy() >= near_cumvol))
+
+
 def bets_frame(p: Panel, mask: np.ndarray, side: str, entry: str) -> pd.DataFrame:
     key = (side, entry)
     rows = p.first_per_market(mask & p.ok[key])

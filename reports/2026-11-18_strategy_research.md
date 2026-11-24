@@ -2254,3 +2254,31 @@ at 20,000 (1,570 events), 3,178 at 45,000 (942 events), closes to 2026-09-18.
 - Variants: 1 pre-stated (7+ d at 20,000), plus the 45,000 cut for comparison. 489 tests unchanged (slice added to a script).
 - Forward: nothing new has settled in the rule accounts (rule_5c_busy 1 bet, lost; the rest 0); main $1,009.26, 2 settled (both
   profitable, +$15.60), 3 open, 5 resting; the 11:08 am cycle ended ok (8 forecasts).
+
+## 3.62 Ideas queue 41: a mixed cut for the Entertainment band, 0-7 day markets only at 45,000 (3:25 pm CST, Nov 24)
+
+Pre-stated in item 41: one variant, "NO where YES is at 5-35c", Entertainment, resting; bars with 7+ days to the scheduled
+close at 20,000 contracts traded, bars closer than 7 days only once the market has traded 45,000 (both known at the bar; the
+first qualifying bar per market is the bet). Passes if its out-of-sample replay at 1% beats rule_ent_band_20k's (+33.0%/y)
+with no larger drawdown and it passes the tail test in both halves. `research/band_by_dte.py 20000 ent --mixed` (new helper
+`analyze_rule.near_close_cumvol`, + 1 test). Data unchanged from 3.61: 5,802 markets at 20,000 (1,570 events), closes to
+2026-09-18.
+
+| cut | bets / events | per bet | tail test in / out of sample (bound vs break-even) | replay at 1%, in / out of sample |
+|---|---|---|---|---|
+| 20,000 all (rule_ent_band_20k) | 1,526 / 691 | +7.39% | 25.7 < 35.3 pass / 26.4 < 33.8 pass | +9.1%/y DD 6.5% / +33.0%/y DD 6.6% |
+| 20,000 7+ d only (3.61) | 888 / 391 | +8.18% | 26.1 < 35.0 pass / 26.6 < 40.6 pass | +5.7%/y DD 3.4% / +22.3%/y DD 2.7% |
+| mixed (the variant) | 1,172 / 521 | +7.91% | 27.1 < 36.4 pass / 24.8 < 37.7 pass | +6.1%/y DD 4.8% / +31.0%/y DD 3.3% |
+
+- **FAILS as pre-stated, narrowly.** The mixed cut passes the tail test in both halves with more room than the 20,000 band
+  out of sample (loss rate 18.8% against 21.4%) and halves the out-of-sample drawdown (3.3% against 6.6%), but its replay
+  earns less a year in both halves (+31.0% against +33.0% out of sample, +6.1% against +9.1% in sample). At 0.5% it is
+  +17.8%/y DD 1.6% against +19.3%/y DD 3.2%; at 2% +27.3%/y DD 9.3% against +19.0%/y DD 12.9%.
+- Reading: the 0-7 day markets under 45,000 contracts carry return per year even though they fail the tail test on their
+  own (3.60, 3.61); leaving them out trades about a tenth of the yearly return in sample and out for half the drawdown.
+  Under the rules the 20,000 account stays as it is. No new account.
+- Capacity: median 3,766 contracts on the entry day (25th percentile 916), $2,896 traded in the 7 days before; 9% of entry
+  days under 100 contracts. Median hold 10.7 days.
+- Variants: 1 pre-stated. 490 tests pass. Forward: nothing new has settled in the rule accounts (rule_5c_busy 1 bet, lost);
+  main $1,009.26, 2 settled (+$15.60), 3 open, 5 resting; the 12:39 pm cycle ended ok. Item 42 added (forward check of the
+  same split once rule_ent_band_20k has settled bets).

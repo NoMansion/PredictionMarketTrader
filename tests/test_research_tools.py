@@ -290,6 +290,18 @@ def test_below_cumvol_keeps_only_bars_under_the_level_known_at_the_bar(world):
     assert not analyze_rule.below_cumvol(p, mask, 0.0).any()
 
 
+def test_near_close_cumvol_needs_the_higher_level_only_close_to_the_close(world):
+    p, f = world["p"], world["f"]
+    _, mask = analyze_rule.find_rule(f, world["titles"], WIDE, "no", "mk")
+    cv = p.df["cumvol"].to_numpy()
+    level = float(np.median(cv[mask])) if mask.any() else 1.0
+    cut = analyze_rule.near_close_cumvol(p, mask, f.dte, 7, level)
+    assert np.array_equal(cut, mask & ((f.dte >= 7) | (cv >= level)))
+    assert not (cut & ~mask).any() and (cv[cut & (f.dte < 7)] >= level).all()
+    assert np.array_equal(analyze_rule.near_close_cumvol(p, mask, f.dte, 7, 0.0), mask)
+    assert np.array_equal(analyze_rule.near_close_cumvol(p, mask, f.dte, 0, np.inf), mask & (f.dte >= 0))
+
+
 def test_find_rule_finds_the_named_condition_and_refuses_unknown_ones(world):
     f, titles = world["f"], world["titles"]
     fam, mask = analyze_rule.find_rule(f, titles, FIVE, "no", "mk")
