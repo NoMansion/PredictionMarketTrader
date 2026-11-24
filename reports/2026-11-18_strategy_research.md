@@ -2123,3 +2123,40 @@ at its own price. "Per order" counts unfilled orders as zero, the fair compariso
   same market lost in rule_5c_busy_taker and rule_5c_busy_claude), against control_5c_quiet -$0.31; rule_ent_band -$3.41 against
   control_ent_quiet -$2.06; one settled bet is far too few to read. Shadow logs: resting fills 13 of 19 (busy 5-cent, 68%) and 14 of 14
   (Entertainment band) decided.
+
+## 3.57 Ideas queue 35: Entertainment 35-50c NO as a plain calibration rule, without the fall condition (12:20 am CST, Nov 24)
+
+Pre-stated in item 35: the existing calibration rule "mid 35-50c" (family 1), Entertainment, NO, resting (mk) and taker (tk), at
+5,000 / 20,000 / 45,000 contracts, with "mid 50-65c" beside it. `research/analyze_rule.py --sample liquid --min-cumvol N
+--categories Entertainment --side no --entry mk|tk`. 12 runs this round.
+
+| Level | Rule | Entry | Bets (events) | Per bet | Tail test in / out (bound vs break-even out) | Replay 1% a year in / out | Worst DD in / out |
+|---|---|---|---|---|---|---|---|
+| 5,000 | 35-50c | mk | 1,378 (742) | +8.86% | passes / FAILS (51.9 vs 48.0) | +12.8% / -2.5% | 13.6% / 20.0% |
+| 5,000 | 35-50c | tk | 1,523 (785) | +3.64% | passes / FAILS (51.8 vs 44.4) | +5.8% / -12.8% | 17.1% / 25.0% |
+| 20,000 | 35-50c | mk | 563 (341) | +16.28% | passes / passes (47.4 vs 54.8) | +12.6% / +33.4% | 9.0% / 7.3% |
+| 20,000 | 35-50c | tk | 600 (353) | +9.65% | passes / passes (47.6 vs 50.3) | +6.7% / +19.0% | 10.6% / 8.1% |
+| 45,000 | 35-50c | mk | 267 (175) | +13.22% | passes / FAILS (63.5 vs 59.6, 42 events) | +12.3% / +10.0% | 6.2% / 3.3% |
+| 45,000 | 35-50c | tk | 285 (184) | +7.01% | FAILS / FAILS | +6.9% / +4.2% | 8.1% / 4.2% |
+| 5,000 | 50-65c | mk | 1,329 (781) | +11.53% | passes / FAILS (61.3 vs 55.1) | +24.7% / -8.0% | 22.1% / 34.5% |
+| 5,000 | 50-65c | tk | 1,423 (822) | +3.16% | passes / FAILS | +8.9% / -14.2% | 22.3% / 36.5% |
+| 20,000 | 50-65c | mk | 573 (375) | +12.26% | passes / FAILS (65.5 vs 58.4) | +12.1% / -2.9% | 13.0% / 17.0% |
+| 20,000 | 50-65c | tk | 598 (386) | +3.32% | FAILS / FAILS | +3.6% / -11.5% | 18.3% / 19.6% |
+| 45,000 | 50-65c | mk | 254 (177) | +9.84% | passes / FAILS | +7.0% / -9.8% | 7.4% / 14.4% |
+| 45,000 | 50-65c | tk | 269 (187) | +1.48% | FAILS / FAILS | +4.1% / -15.0% | 7.3% / 19.2% |
+
+- **50-65c NO fails out of sample at every level and both entries** (losing 56-66% of events after 2026-04-01, replay negative): no
+  plain overpricing of Entertainment favourites-to-be at 50-65c. Closed.
+- **35-50c NO passes both halves at 20,000 only** (resting +16.3% a bet, steady by year: 2024 +19.8%, 2025 +16.8%, 2026 +15.7%;
+  taking +9.7% also passes). At 5,000 it fails out of sample with a losing replay (-2.5% a year, drawdown 20%), and at 45,000 it fails
+  on 42 events. One level of three is not a robust calibration effect: the 20,000 pass looks like what 3.55 already found (the fall
+  subset, now its own paper account rule_ent_fall_35_50, plus a no-fall part that passed by 0.2 pt), not a separate rule.
+- Capacity at 20,000 (resting 35-50c): dollars traded in the 7 days before entry, median $8,190, 25th percentile $4,460; 7% of entry
+  days under 100 contracts.
+- Verdict: FAILS the robustness bar. No new paper account (it would mostly duplicate rule_ent_fall_35_50). Item 37 added: is the
+  5,000 failure the quiet 5,000-20,000 layer (`--max-cumvol 20000`), as with the band (3.50)?
+- Forward (nothing new settled): main $1,003.83, 1 settled (+$8.57); 23 variant accounts, controls control_fade -$32.43, control_coinflip
+  -$51.95. 12 rule accounts, rule_5c_busy -$10.74 (1 settled, lost) against control_5c_quiet -$0.20; rule_ent_band -$3.77 against
+  control_ent_quiet -$2.06. Shadow logs: resting fills 13 of 20 (busy 5-cent, 65%) and 14 of 14 (Entertainment band) decided.
+  The PC was powered off and restarted several times between 9:00 and 9:55 pm Nov 23; the 9:22 pm cycle was cut off (left
+  "running" in the ledger, no orders logged); the loop came back at 9:57 pm and a cycle has been running since 11:57 pm.
