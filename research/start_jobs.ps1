@@ -1,8 +1,8 @@
 # Start the background jobs that are not already running (Windows version of start_jobs.sh).
 # Safe to run at any time, as often as you like. From PowerShell, anywhere:
-#     E:\Coding\PredictionMarketTrader\research\start_jobs.ps1              history download only
-#     E:\Coding\PredictionMarketTrader\research\start_jobs.ps1 -PaperLoop   ... and the paper loop
-#     E:\Coding\PredictionMarketTrader\research\start_jobs.ps1 -Stop        stop both
+#     C:\Coding\PredictionMarketTrader\research\start_jobs.ps1              history download only
+#     C:\Coding\PredictionMarketTrader\research\start_jobs.ps1 -PaperLoop   ... and the paper loop
+#     C:\Coding\PredictionMarketTrader\research\start_jobs.ps1 -Stop        stop both
 # Everything they write goes under data\ in this folder (not committed).
 param(
     [switch]$PaperLoop,             # also start scripts\paper_loop.py (asks Claude: needs the claude command)

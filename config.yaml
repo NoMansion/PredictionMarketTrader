@@ -57,7 +57,7 @@ forecaster:
   #               which can exceed the expected profit of a $20 bet. Use only with a reason.
   # file        = questions written to data/requests/, answers read from data/forecasts/ (a Claude session fills them).
   backend: "claude_code"
-  # Where the Claude Code program is. On this PC it is installed inside the project so that it lives on E:
+  # Where the Claude Code program is. On this PC it is installed inside the project folder
   # (.tools/ is not committed; README says how it was installed and how to sign in). null = `claude` on PATH.
   executable: ".tools/claude/node_modules/@anthropic-ai/claude-code/bin/claude.exe"
   # Claude Code model alias ("opus", "fable", "sonnet") or null for whatever Claude Code defaults to on this PC.

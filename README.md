@@ -5,7 +5,7 @@ small bet. It runs on **paper only**, against live prices from **Kalshi** (CFTC-
 Polymarket US is supported too and was measured to be much thinner). No keys, no wallet and no money are
 involved until the paper record passes the gates in `docs/GO_LIVE.md`.
 
-**Where it lives:** `E:\Coding\PredictionMarketTrader` on the PC, its own git repository
+**Where it lives:** `C:\Coding\PredictionMarketTrader` on the PC (moved from E: on 2026-11-23), its own git repository
 (github.com/NoMansion/PredictionMarketTrader). It began on 2026-11-18 as a `PolymarketTrader/` folder on a
 branch of the stock trader's repository, built in a cloud session; that folder's history was carried over,
 the stock trader's was not. Everything the project downloads or writes (the virtual environment, the Claude
@@ -89,7 +89,7 @@ Run in PowerShell from the project folder.
 | 4. Status | `.venv\Scripts\python scripts\status.py` | Account, positions, forecast scoring, go-live gates |
 
 The forecaster needs the Claude Code command (`claude`) installed and signed in for the Windows user that runs
-the job. On this PC it is installed inside the project, so that it sits on E: with everything else
+the job. On this PC it is installed inside the project, so that it sits with everything else
 (`.tools/` is not committed; `forecaster.executable` in `config.yaml` points at it):
 
 ```
@@ -113,7 +113,7 @@ simpler alternative it replaced. One cycle every 8 hours is plenty: these market
 18:20 local time, `runtime.quiet_windows`):
 
 ```
-schtasks /create /tn "PredictionMarketTrader Cycle" /sc hourly /mo 8 /st 07:40 /f /tr "wscript.exe //B \"E:\Coding\PredictionMarketTrader\scripts\run_cycle_hidden.vbs\""
+schtasks /create /tn "PredictionMarketTrader Cycle" /sc hourly /mo 8 /st 07:40 /f /tr "wscript.exe //B \"C:\Coding\PredictionMarketTrader\scripts\run_cycle_hidden.vbs\""
 ```
 
 That runs at 07:40, 15:40 and 23:40, hidden, logging to `data\run_cycle.log` and refreshing `data\status.md`.

@@ -1,6 +1,6 @@
 ﻿# One research check-in, run headless by the Claude Code CLI on Opus 5.5 (never Fable: the user, 2026-11-20).
 # Started every 3 hours by the Windows task "PredictionMarketTrader Check-in" (through checkin_hidden.vbs), or by
-# hand:   powershell -ExecutionPolicy Bypass -File E:\Coding\PredictionMarketTrader\scripts\checkin.ps1
+# hand:   powershell -ExecutionPolicy Bypass -File C:\Coding\PredictionMarketTrader\scripts\checkin.ps1
 #
 # Writes data\checkin\<time>.json (the CLI's full answer, with the models that were really used and the cost) and
 # one line per run to data\checkin.log; shows the answer's last line as a Windows notification.

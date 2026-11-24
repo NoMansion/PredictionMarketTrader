@@ -118,7 +118,7 @@ session ran continues on the PC without waiting for the user. What that does and
 ## Background jobs
 
 **MOVED TO THE USER'S PC on 2026-11-18, about 7:00 pm CST.** The project now lives at
-`E:\Coding\PredictionMarketTrader` in its own repository (github.com/NoMansion/PredictionMarketTrader); the
+`C:\Coding\PredictionMarketTrader` (moved from E: on 2026-11-23) in its own repository (github.com/NoMansion/PredictionMarketTrader); the
 branch on the stock trader's repository is no longer used. The cloud container's `data/` did not come along
 (it is not committed), so on the PC:
 
@@ -695,6 +695,11 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   download and paper loop stopped. The paper cycle that began at 1:48 pm was left to finish on its own (stopping it
   mid-forecast would leave a half-done cycle); nothing follows it. To resume: enable both tasks and run
   `research\start_jobs.ps1 -PaperLoop`.
+- 7:30 pm CST Nov 23: MOVED TO C:\Coding\PredictionMarketTrader (still paused). The E: drive is going into the user's
+  new PC for good, and this PC keeps running the bot and the stock trader, so both were copied to C:\Coding (the
+  .venv rebuilt with the same package versions) and the Windows tasks now point there. The E:\Coding copy is the
+  pre-move original; do not run it. To resume: enable both tasks and run `research\start_jobs.ps1 -PaperLoop`
+  from C:\Coding\PredictionMarketTrader.
 
 ## How to run a round
 
