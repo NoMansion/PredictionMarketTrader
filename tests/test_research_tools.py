@@ -1084,3 +1084,10 @@ def test_fill_speed_bar_and_taker():
     assert fill_speed.fill_bar(df, np.array([3]))[0] == 0      # next row belongs to B
     tk = fill_speed.taker_at(df, np.array([0, 4]), 3)
     assert tk[0] == pytest.approx(0.4) and np.isnan(tk[1])
+
+
+def test_fill_speed_dte_window():
+    import fill_speed
+    w = fill_speed.in_window(np.array([0.0, 6.99, 7.0, 30.0, np.nan]), 0, 7)
+    assert w.tolist() == [True, True, False, False, False]
+    assert fill_speed.in_window(np.array([7.0, 100.0]), 7, 1e9).tolist() == [True, True]

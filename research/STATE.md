@@ -712,6 +712,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   bar 1 costs 0.8-1.2 pt per order); fill_speed.py + 1 test (488 pass); item 38 added. Jobs ok, cycle running since 2:28 am; main
   $1,003.30, 1 settled.
 
+- 9:20 am CST Nov 24: queue item 38 (report 3.60): a slow resting fill is not a warning sign in the 0-7 day Entertainment band markets
+  either; fill_speed.py --dte-lo/--dte-hi + 1 test (489 pass); item 40 added. Jobs ok (cycle 7:33 am ok); main $999.81, 1 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -983,8 +986,13 @@ drawdown, capacity in dollars, and say how many variants were tried.
     (+21% a bet). No account change; item 39 added. Was: The 5,000 failure of Entertainment 35-50c NO (report 3.57): is it the quiet layer? `analyze_rule.py --sample liquid --min-cumvol
     5000 --max-cumvol 20000 --categories Entertainment --rule "mid 35-50c" --side no --entry mk` (and the fall / no-fall cells of 3.55
     in that layer): if the layer alone loses, the volume level is the edge, as for the band (3.50). Backtest only.
-38. Taker fallback in 0-7 day Entertainment band markets only (report 3.58 did all days; 3.56 found adverse selection there): add a
+38. DONE 9:20 am CST Nov 24 (report 3.60): FAILS as a signal in 0-7d too. 77-86% of fills come on bar 1; cancelling after bar 1 never
+    earns more per order (0 to -0.4 pt); crossing after the window fails (-3.0% / +1.4% in sample). 3-bar order stays; fill_speed.py
+    --dte-lo/--dte-hi + 1 test (489 pass). Was: Taker fallback in 0-7 day Entertainment band markets only (report 3.58 did all days; 3.56 found adverse selection there): add a
     --dte-lo/--dte-hi option to research/fill_speed.py (with a test) and re-read the bar-1 / bar-2-3 / never cells at 20,000 and 45,000.
     Backtest only; low priority.
 39. Forward, once rule_ent_fall_35_50 has 20+ settled bets: its per-bet return against 3.55 (+22.9% at 20,000) and its fill rate;
     the 5,000 fall cell passes both halves too (3.59), so a 5,000 twin is a candidate only if the 20,000 account holds forward.
+40. The Entertainment band at 20,000 in 0-7 day markets fails out of sample on bar-1 fills (3.60, +2.6% a bet) while 45,000 passes
+    (+6.3%): re-run 3.41's 0-7 / 7-30 / 30+ split for rule_ent_band_20k with a 45,000 cut beside it, and say whether a 0-7 day
+    exclusion at 20,000 would have lifted the out-of-sample replay (pre-state it; one variant). Backtest only; low priority.

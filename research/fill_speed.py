@@ -1,6 +1,7 @@
 """Adverse selection of the resting fill (queue item 36, report 3.58).
 
     python research/fill_speed.py --categories Entertainment --min-cumvol 20000
+    python research/fill_speed.py --categories Entertainment --min-cumvol 20000 --dte-hi 7   (item 38)
 
 Report 3.56 found that bids which fill late are the losers. Here, for the band rule's first bar per market (known at
 the bar; resting NO at 1 - ask for 3 bars, the backtest's standard r_no_mk), split the placements by the bar on which
@@ -56,6 +57,12 @@ def taker_at(df: pd.DataFrame, rows: np.ndarray, lag: int) -> np.ndarray:
     return np.where(ok, df["r_no_tk"].to_numpy("float64")[tc], np.nan)
 
 
+def in_window(dte: np.ndarray, lo: float, hi: float) -> np.ndarray:
+    """Days-to-close window [lo, hi) as Features.days (queue item 38: the 0-7 day markets only)."""
+    dte = np.asarray(dte, dtype="float64")
+    return (dte >= lo) & (dte < hi)
+
+
 def line(label: str, r: np.ndarray, event: np.ndarray) -> str:
     f = ~np.isnan(r)
     if f.sum() == 0:
@@ -73,6 +80,8 @@ def main() -> int:
     ap.add_argument("--categories", default="Entertainment")
     ap.add_argument("--min-cumvol", type=float, default=20000)
     ap.add_argument("--rule", default="NO where YES is at 5-35c")
+    ap.add_argument("--dte-lo", type=float, default=0)
+    ap.add_argument("--dte-hi", type=float, default=1e9)
     a = ap.parse_args()
     cats = [c.strip() for c in a.categories.split(",") if c.strip()] or None
     df = panel.load(a.db, cats, sample="liquid", min_cumvol=a.min_cumvol)
@@ -80,12 +89,12 @@ def main() -> int:
     p = Panel(df)
     f = Features(p)
     _, mask = find_rule(f, titles_for(df, a.db), a.rule, "no", "mk")
-    rows = p.first_per_market(mask & df["quoted"].to_numpy(bool))
+    rows = p.first_per_market(mask & in_window(f.dte, a.dte_lo, a.dte_hi) & df["quoted"].to_numpy(bool))
     event, oos = df["event"].to_numpy()[rows], df["oos"].to_numpy(bool)[rows]
     fb = fill_bar(df, rows)
     mk = df["r_no_mk"].to_numpy("float64")[rows]
     now, late = taker_at(df, rows, 0), taker_at(df, rows, 3)
-    print(f"{a.rule}, NO, resting, min_cumvol {a.min_cumvol:,.0f}: {len(rows):,} placements in {len(set(event)):,} events")
+    print(f"{a.rule}, NO, resting, dte {a.dte_lo:g}-{a.dte_hi:g}, min_cumvol {a.min_cumvol:,.0f}: {len(rows):,} placements in {len(set(event)):,} events")
     for name, m in (("in sample", ~oos), ("out of sample", oos)):
         print(f"  {name}: placed {m.sum()}, fill bar 1 {np.mean(fb[m] == 1):.0%}, bar 2-3 {np.mean(fb[m] >= 2):.0%}, "
               f"never {np.mean(fb[m] == 0):.0%}")

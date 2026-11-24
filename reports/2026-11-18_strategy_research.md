@@ -2202,3 +2202,27 @@ Pre-stated in item 37: `research/analyze_rule.py --sample liquid --min-cumvol 50
   failure comes from its no-fall bets (the two cells overlap: a market can enter each at a different bar).
 - Capacity (plain rule): entry-day dollars traded in the 7 days before, median $1,351, 25th percentile $594.
 - No account change: rule_ent_fall_35_50 (20,000+) already trades the fall cell; nothing here argues for a plain 35-50c account.
+
+## 3.60 Ideas queue 38: is a slow resting fill a warning sign in the 0-7 day Entertainment band markets? (9:20 am CST, Nov 24)
+
+Pre-stated in item 38: report 3.58's fill-speed split (all days) re-read on the band's 0-7 day markets only, where 3.56 found
+adverse selection. `research/fill_speed.py --categories Entertainment --min-cumvol N --dte-hi 7` (new `--dte-lo/--dte-hi`
+options, `in_window` + 1 test; 489 pass). Rule "NO where YES is at 5-35c", resting at 1 - ask for 3 bars. Data: 5,802 markets
+at 20,000 (1,570 events), 3,178 at 45,000 (942 events), closes to 2026-09-18. Two runs.
+
+| level, half | placed | bar 1 / 2-3 / never | bar-1 fills per bet | bar 2-3 fills per bet | never, taker late | per order: cancel after bar 1 / rest 3 bars |
+|---|---|---|---|---|---|---|
+| 20,000 in | 620 | 77% / 7% / 16% | +8.11% (passes) | +5.26% (n 43, fails) | -3.02% (n 40) | +6.24% / +6.60% |
+| 20,000 out | 319 | 84% / 2% / 14% | +2.59% (FAILS, 29.4% vs 26.6%) | +19.89% (n 7) | +1.92% (n 6) | +2.18% / +2.61% |
+| 45,000 in | 347 | 78% / 6% / 16% | +6.61% (passes) | +10.70% (n 21) | +1.35% (n 19) | +5.14% / +5.79% |
+| 45,000 out | 143 | 86% / 0% / 14% | +6.26% (passes) | none | n 1 | +5.39% / +5.39% |
+
+- **FAILS as a signal, as in 3.58.** In the short-dated markets almost every fill comes on bar 1 (77-86%); the bar 2-3 fills are
+  few (0-43) and do not earn less in three of four cells. Cancelling after one bar never earns more per order (0 to -0.4 pt).
+  The 3-bar resting order stays.
+- Never-filled markets win for NO (+8-15% a bet at the next open, 0-4% losing), but that is known only after the window: the
+  order that did not fill is the one where YES fell away from it. Crossing after the window (taker late) earns -3.0% / +1.4% in
+  sample and fails. Not tradeable.
+- Worth noting: at 20,000 the bar-1 fills in 0-7 day markets fail out of sample (+2.6% a bet), in line with 3.41 (0-7d is the band's
+  weakest slice). At 45,000 they pass.
+- Variants: 2 levels x 2 halves, one pre-stated window. No account change.
