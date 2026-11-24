@@ -708,6 +708,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   20,000); 50-65c fails; no new account; item 37 added. Jobs ok; PC power-cycled 9:00-9:55 pm Nov 23 cut off the 9:22 pm cycle;
   loop back 9:57 pm, cycle running since 11:57 pm. Main $1,003.83, 1 settled.
 
+- 3:25 am CST Nov 24: queue item 36 (report 3.58): a slow resting fill is NOT a warning sign in the Entertainment band (cancel after
+  bar 1 costs 0.8-1.2 pt per order); fill_speed.py + 1 test (488 pass); item 38 added. Jobs ok, cycle running since 2:28 am; main
+  $1,003.30, 1 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -966,9 +970,14 @@ drawdown, capacity in dollars, and say how many variants were tried.
     Was: Entertainment 35-50c NO WITHOUT the fall condition (report 3.55: the no-fall half earns +10.5% a bet and passes both halves at
     20,000 by 0.2 pt): the calibration rule "mid 35-50c" (family 1, exists), Entertainment, NO, mk and tk, at 5,000 / 20,000 /
     45,000; and 50-65c beside it. Is there a plain overpricing of Entertainment YES at 35-50c? Backtest only.
-36. Adverse selection of the resting fill (report 3.56): in the Entertainment band at 20,000 and 45,000, compare bets that filled on the
+36. DONE 3:25 am CST Nov 24 (report 3.58): FAILS as a signal. Bar 2-3 fills earn as much or more a bet than bar-1 fills; cancelling
+    after one bar costs 0.8-1.2 pt per order; never-filled markets win too but buying after the window fails the tail test (+0.2% in
+    sample). 3-bar resting order stays; fill_speed.py + 1 test (488 pass); item 38 added. Was: Adverse selection of the resting fill (report 3.56): in the Entertainment band at 20,000 and 45,000, compare bets that filled on the
     first later bar against those that filled only on bar 2-3, and the per-bet return of markets whose resting order never filled
     (counted at the next open as a taker would pay): is a slow fill a warning sign worth cancelling on? Backtest only.
 37. The 5,000 failure of Entertainment 35-50c NO (report 3.57): is it the quiet layer? `analyze_rule.py --sample liquid --min-cumvol
     5000 --max-cumvol 20000 --categories Entertainment --rule "mid 35-50c" --side no --entry mk` (and the fall / no-fall cells of 3.55
     in that layer): if the layer alone loses, the volume level is the edge, as for the band (3.50). Backtest only.
+38. Taker fallback in 0-7 day Entertainment band markets only (report 3.58 did all days; 3.56 found adverse selection there): add a
+    --dte-lo/--dte-hi option to research/fill_speed.py (with a test) and re-read the bar-1 / bar-2-3 / never cells at 20,000 and 45,000.
+    Backtest only; low priority.

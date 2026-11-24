@@ -1070,3 +1070,17 @@ def test_entry_delay_offsets_and_delays():
     assert d1[0] == pytest.approx(0.28) and np.isnan(d1[1])   # B's next row is past the end
     d3 = entry_delay.variant_returns(df, np.array([0, 1]), delay=3)
     assert d3[0] == pytest.approx(0.43) and np.isnan(d3[1])   # row 4 belongs to B
+
+
+def test_fill_speed_bar_and_taker():
+    import fill_speed
+    df = pd.DataFrame({
+        "ticker": ["A"] * 4 + ["B"] * 2, "ask": [0.20, 0.25, 0.30, 0.30, 0.10, 0.10],
+        "bid_hi": [0.0, 0.10, 0.205, 0.0, 0.0, 0.05], "px_hi": [0.0, 0.0, 0.0, 0.0, 0.0, 0.10],
+        "r_no_tk": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]})
+    fb = fill_speed.fill_bar(df, np.array([0, 4]))
+    assert fb[0] == 2                     # bar 1 bid 0.10 < 0.20; bar 2 bid 0.205 reaches the ask
+    assert fb[1] == 0                     # B's trade at exactly the ask is not above it; bid 0.05 below
+    assert fill_speed.fill_bar(df, np.array([3]))[0] == 0      # next row belongs to B
+    tk = fill_speed.taker_at(df, np.array([0, 4]), 3)
+    assert tk[0] == pytest.approx(0.4) and np.isnan(tk[1])

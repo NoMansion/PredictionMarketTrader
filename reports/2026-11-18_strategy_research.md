@@ -2160,3 +2160,25 @@ Pre-stated in item 35: the existing calibration rule "mid 35-50c" (family 1), En
   control_ent_quiet -$2.06. Shadow logs: resting fills 13 of 20 (busy 5-cent, 65%) and 14 of 14 (Entertainment band) decided.
   The PC was powered off and restarted several times between 9:00 and 9:55 pm Nov 23; the 9:22 pm cycle was cut off (left
   "running" in the ledger, no orders logged); the loop came back at 9:57 pm and a cycle has been running since 11:57 pm.
+
+## 3.58 Ideas queue 36: is a slow resting fill a warning sign? (3:25 am CST, Nov 24)
+
+Question (from 3.56, where lower or later bids filled more of the losers): in the Entertainment band ("NO where YES is at 5-35c",
+resting NO at 1 - ask for 3 bars, first bar per market, all days to close), split the placements by the bar on which the order
+filled, and price the orders that never filled as a taker would. `research/fill_speed.py` (new, + 1 test, 488 pass). 2 levels x 2
+halves x 5 cells: 20 cells read, none pre-registered as a pass.
+
+| Level, half | Placed | Fill bar 1 / bar 2-3 / never | Bar 1 per bet | Bar 2-3 per bet | Never, taker at next open | Never, taker after window | Per order: cancel after bar 1 / rest 3 bars |
+|---|---|---|---|---|---|---|---|
+| 20,000 in | 1,163 | 65% / 11% / 25% | +8.23% passes | +7.54% passes | +6.32% passes | +0.26% FAILS | +5.32% / +6.12% |
+| 20,000 out | 560 | 79% / 5% / 16% | +5.86% passes | +16.44% (25 events) FAILS | +12.04% passes | +6.26% FAILS | +4.61% / +5.43% |
+| 45,000 in | 644 | 66% / 10% / 23% | +5.73% passes | +8.81% FAILS | +5.46% passes | +0.20% FAILS | +3.81% / +4.72% |
+| 45,000 out | 271 | 77% / 4% / 19% | +8.19% passes | +26.68% (10 events) FAILS | +14.29% passes | +11.82% FAILS | +6.29% / +7.47% |
+
+- **FAILS as a warning sign: a slow fill is not a loser in the whole band.** Bar 2-3 fills earn as much or more a bet than bar-1
+  fills in all four cells (their tail tests fail only for size: 10-98 events). Cancelling an order that has not filled after one
+  bar earns about 0.8-1.2 points less per order at both levels and in both halves. The 3-bar resting order stays as it is.
+  The adverse selection of 3.56 belongs to bids placed lower or later in the short-dated markets, not to the standard bid.
+- **The never-filled markets are winners too** (+5.5% to +14.3% a bet bought at the next open, passing the tail test), but that is
+  hindsight: one only knows an order never filled 3 bars later, and buying then (taker after the window) fails the tail test in
+  all four cells (+0.2% in sample). No taker fallback; no account change.
