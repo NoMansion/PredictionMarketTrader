@@ -2226,3 +2226,31 @@ at 20,000 (1,570 events), 3,178 at 45,000 (942 events), closes to 2026-09-18. Tw
 - Worth noting: at 20,000 the bar-1 fills in 0-7 day markets fail out of sample (+2.6% a bet), in line with 3.41 (0-7d is the band's
   weakest slice). At 45,000 they pass.
 - Variants: 2 levels x 2 halves, one pre-stated window. No account change.
+
+## 3.61 Ideas queue 40: the 20,000 Entertainment band without its 0-7 day markets (12:15 pm CST, Nov 24)
+
+Pre-stated in item 40: would leaving out the 0-7 day markets (one variant: enter at the first bar with 7+ days to the
+scheduled close) have lifted rule_ent_band_20k's out-of-sample account replay? 3.41's split re-run with a 45,000 cut beside it.
+`research/band_by_dte.py 20000` and `45000` (new 7-10000 slice). Rule "NO where YES is at 5-35c", resting. Data: 5,802 markets
+at 20,000 (1,570 events), 3,178 at 45,000 (942 events), closes to 2026-09-18.
+
+| level, slice | bets / events | per bet | tail test out of sample (loss rate, bound vs break-even) | replay at 1%, in / out of sample |
+|---|---|---|---|---|
+| 20,000 all | 1,526 / 691 | +7.39% | 21.4%, 26.4 < 33.8 pass | +9.1%/y DD 6.5% / +33.0%/y DD 6.6% |
+| 20,000 0-7 d | 831 / 442 | +6.15% | 22.2%, 28.5 > 26.9 FAIL | +14.5%/y DD 6.6% / +20.2%/y DD 7.8% |
+| 20,000 7+ d (the variant) | 888 / 391 | +8.18% | 19.0%, 26.6 < 40.6 pass | +5.7%/y DD 3.4% / +22.3%/y DD 2.7% |
+| 45,000 all | 815 / 402 | +7.14% | 15.7%, 22.2 < 35.9 pass | +9.9%/y DD 8.1% / +25.5%/y DD 2.3% |
+| 45,000 0-7 d | 433 / 250 | +6.97% | 16.3%, 24.6 < 26.3 pass | +6.4%/y DD 6.6% / +16.3%/y DD 3.3% |
+| 45,000 7+ d | 465 / 215 | +7.59% | 14.8%, 25.2 < 44.6 pass | +8.6%/y DD 3.5% / +16.1%/y DD 1.6% |
+
+- **FAILS as pre-stated.** Without its 0-7 day markets the 20,000 band earns more per bet (+8.18% against +7.39%) and passes
+  the tail test with more room, but the account replay earns LESS a year in both halves (+5.7% against +9.1% in sample, +22.3%
+  against +33.0% out of sample at 1%). The short-dated markets turn capital fastest (median hold 3.4 days against 18.4) and are
+  the deepest (median 13,151 contracts on the entry day against 2,048), so they add return per year even with the thinner
+  per-bet edge. What the exclusion buys is a smaller drawdown (2.7% against 6.6% out of sample).
+- At 45,000 the 0-7 day slice passes the tail test out of sample (by a small margin, 24.6 < 26.3), as in 3.60.
+- Verdict: rule_ent_band_20k stays as it is. No new account. The 0-7 day slice at 20,000 is the band's weak point (it fails the
+  tail test out of sample); item 41 tests a mixed cut that keeps 0-7 day markets only at 45,000.
+- Variants: 1 pre-stated (7+ d at 20,000), plus the 45,000 cut for comparison. 489 tests unchanged (slice added to a script).
+- Forward: nothing new has settled in the rule accounts (rule_5c_busy 1 bet, lost; the rest 0); main $1,009.26, 2 settled (both
+  profitable, +$15.60), 3 open, 5 resting; the 11:08 am cycle ended ok (8 forecasts).

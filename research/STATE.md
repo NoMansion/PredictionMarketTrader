@@ -715,6 +715,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 9:20 am CST Nov 24: queue item 38 (report 3.60): a slow resting fill is not a warning sign in the 0-7 day Entertainment band markets
   either; fill_speed.py --dte-lo/--dte-hi + 1 test (489 pass); item 40 added. Jobs ok (cycle 7:33 am ok); main $999.81, 1 settled.
 
+- 12:15 pm CST Nov 24: queue item 40 (report 3.61): the 20,000 Entertainment band without 0-7d markets FAILS (more a bet, less a
+  year: +22.3% vs +33.0%/y out of sample); band_by_dte.py 7+ day slice; item 41 added. Jobs ok (11:08 am cycle ok); main
+  $1,009.26, 2 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -993,6 +997,12 @@ drawdown, capacity in dollars, and say how many variants were tried.
     Backtest only; low priority.
 39. Forward, once rule_ent_fall_35_50 has 20+ settled bets: its per-bet return against 3.55 (+22.9% at 20,000) and its fill rate;
     the 5,000 fall cell passes both halves too (3.59), so a 5,000 twin is a candidate only if the 20,000 account holds forward.
-40. The Entertainment band at 20,000 in 0-7 day markets fails out of sample on bar-1 fills (3.60, +2.6% a bet) while 45,000 passes
+40. DONE 12:15 pm CST Nov 24 (report 3.61): FAILS as pre-stated. Without 0-7d the 20,000 band earns more a bet (+8.18% vs
+    +7.39%) but less a year (+22.3% vs +33.0%/y out of sample at 1%; DD 2.7% vs 6.6%): short-dated markets turn capital fastest.
+    rule_ent_band_20k stays; item 41 added. Was: The Entertainment band at 20,000 in 0-7 day markets fails out of sample on bar-1 fills (3.60, +2.6% a bet) while 45,000 passes
     (+6.3%): re-run 3.41's 0-7 / 7-30 / 30+ split for rule_ent_band_20k with a 45,000 cut beside it, and say whether a 0-7 day
     exclusion at 20,000 would have lifted the out-of-sample replay (pre-state it; one variant). Backtest only; low priority.
+41. A mixed cut for the Entertainment band: 7+ day markets at 20,000 contracts, 0-7 day markets only at 45,000 (3.61: the 0-7d
+    slice fails the tail test at 20,000 but passes at 45,000). Pre-state it: one variant; passes if its out-of-sample replay at
+    1% beats rule_ent_band_20k's (+33.0%/y) with no larger drawdown, and it passes the tail test in both halves. Needs a mask with
+    two cumvol levels (research/band_by_dte.py or a small new script, with a test). Backtest only; low priority.

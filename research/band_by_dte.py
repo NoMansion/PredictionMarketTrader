@@ -3,6 +3,7 @@ scheduled close. Each slice takes the first bar per market inside its window, so
 
     .venv/Scripts/python.exe research/band_by_dte.py 20000
     .venv/Scripts/python.exe research/band_by_dte.py 45000 nine   # queue item 16 (report 3.43): the nine pooled
+    The 7-10000 slice (queue item 40, report 3.61) is the band with its 0-7 day markets left out.
 """
 import sys
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent))
@@ -22,7 +23,7 @@ print(panel.describe(df).splitlines()[0])
 p = Panel(df); f = Features(p)
 for entry in ("mk",):
     fam, mask = find_rule(f, titles_for(df, str(panel.DB)), "NO where YES is at 5-35c", "no", entry)
-    for lo, hi in ((0, 10000), (0, 7), (7, 30), (30, 10000)):
+    for lo, hi in ((0, 10000), (0, 7), (7, 30), (30, 10000), (7, 10000)):  # 7-10000: queue item 40, the band without 0-7d
         m = mask & f.days(lo, hi)
         print(f"\n===== {entry} dte {lo}-{hi} (first bar per market inside the window), min_cumvol {mc:g}")
         print(report(bets_frame(p, m, "no", entry), p, m, "no", entry))
