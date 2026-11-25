@@ -809,10 +809,14 @@ Forward-only (cannot be backtested):
   so 3 items a check-in for now), 100-minute timeout, $8 list-price cap a run; the download restarted at 7:01 pm with
   --with-sports (4,329 Sports series; first pass and census come before the random passes resume); queue items 44-63
   added. Found: the archive's markets in already-listed series stop at the first listing (bars to Sep 19, 2026;
-  archive now to Nov 3), being fixed in the same session.
+  archive's own cutoff is now about Sep 21-24; the live endpoint holds everything since), fixed in the same session.
 - 7:20 pm CST Nov 24 (same session): the download refreshes the history weekly (--refresh-days 7 --forever; new
   series, the live endpoint's settled markets since ~Sep 21, bars for them in the fixed random order; late listings
   never shrink a sample); 4 new Entertainment series found at once; item 64 added. 505 tests pass.
+- 8:20 pm CST Nov 24 (same session; report 3.64): the forward fill-rate gap is a measurement mismatch. The log's 49%
+  (Entertainment) is an order placed at a random moment; the backtest's like-for-like rate is 51% (its 69-80% was each
+  market's FIRST qualifying day). Full trade records confirm the log; a trade-only fill model moves the band by 0.1 pt
+  a bet. research/fill_audit.py, panel.set_fill("trade"), analyze_rule.py --fill; the logs' labels fixed. 511 pass.
 
 ## Next actions
 
@@ -1086,8 +1090,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     Write the deflated verdict plainly. A table, no new code.
 51. Where the band's money is by spread at entry: 1c, 2c, 3-5c, 6-10c (resting at the bid in a wide quote earns the
     spread): per bet, fills and tail test at 20,000. And `research\resting_variants.py` with deeper -1 (a cent inside
-    the spread) for the band: the forward fill rate (49%, the observation log) is below the backtest's model, so is
-    improving the bid worth its price?
+    the spread) for the band: is improving the bid worth its price? (3.64: the forward fill rate matches the
+    backtest's like-for-like figure, so this is a plain test, not a repair.)
 52. Weekend against weekday entry for the band (box-office and streaming weekends): bars dated Fri-Sun against Mon-Thu,
     per bet in both halves. One split, pre-stated.
 53. Attention spikes in the band: bets where 7-day volume (dvol7) is in the top quarter of that market's own history
@@ -1118,6 +1122,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 62. The combined account with the forward fill rate: re-run research\combined.py with fills thinned at random to the
     observation logs' measured rates (the 5-cent rule ~65%, the band ~49%), 200 draws: yearly return and drawdown
     range out of sample. Does the paper fill rate change the account's verdict? Needs a --fill-rate option (+ a test).
+    (3.64: the paper rates match the backtest's any-bar rates, so expect little; also run combined.py with
+    panel.set_fill("trade").)
 63. STANDING, forward: Claude's forecasts against the market. Once 100 forecast markets have settled (19 at 7:00 pm
     Nov 24): Brier score and log loss of Claude's median, the market mid at the forecast and the 0.3 blend, by event,
     with a paired bootstrap; the two forecast blocks (cloud, PC) apart. The experiment's main question
