@@ -757,6 +757,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   +33.0%/y out of sample, half the drawdown); near_close_cumvol + 1 test (490 pass); item 42 added. Jobs ok (12:39 pm cycle ok);
   main $1,009.26, 2 settled.
 
+- 9:15 pm CST Nov 24: queue item 43 (report 3.65): take-profits on hourly bars FAIL (none beats hold out of sample, both
+  rules); exits.py hourly_takes + 1 test (517 pass). Jobs ok, cycle running since 8:55 pm; main $1,011.57, 2 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -1070,7 +1073,8 @@ drawdown, capacity in dollars, and say how many variants were tried.
 42. Forward, once rule_ent_band_20k has 30+ settled bets: split its settled 0-7 day bets by contracts traded at entry (under / over
     45,000) and compare with 3.60-3.62 (the under-45,000 0-7 day bets fail the tail test in the backtest but add yearly return).
     No new account.
-43. Take-profits on hourly bars (3.48 and 3.63 moved only the stops to hourly bars): add an hourly option for the take legs in
+43. DONE 9:15 pm CST Nov 24 (report 3.65): FAILS: no taker take-profit beats hold on hourly bars out of sample in either
+    rule; hourly makes takes worse, as with stops (exits.py hourly_takes + 1 test). Hold stays. Was: Take-profits on hourly bars (3.48 and 3.63 moved only the stops to hourly bars): add an hourly option for the take legs in
     research/exits.py (with a test) and re-run exit_study.py --hourly for the Entertainment band and the 5-cent rule at 45,000
     (the hourly bars are already in data\kalshi_hourly.db). Does any take-profit beat hold out of sample? Backtest only; low priority.
 

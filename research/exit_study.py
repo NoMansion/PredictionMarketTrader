@@ -106,6 +106,7 @@ def main() -> int:
     ap.add_argument("--rules", default=DEFAULT_RULES, help="name|side|entry;...")
     ap.add_argument("--stake", type=float, default=0.01)
     ap.add_argument("--hourly", default=None, help="hourly bars database (research/hourly_bars.py) for stops")
+    ap.add_argument("--hourly-takes", action="store_true", help="with --hourly: taker take-profits on hourly bars too")
     args = ap.parse_args()
     cats = [c.strip() for c in args.categories.split(",") if c.strip()] or None
     df = panel.load(args.db, cats, sample=args.sample, min_cumvol=args.min_cumvol)
@@ -118,7 +119,7 @@ def main() -> int:
     hourly = load_hourly(args.hourly, set(df["ticker"].unique())) if args.hourly else None
     if hourly is not None:
         print(f"hourly bars for {len(hourly)} markets")
-    ex = Exits(p, hourly)
+    ex = Exits(p, hourly, hourly_takes=args.hourly_takes)
     pd.set_option("display.width", 260, "display.max_colwidth", 46)
     tables = []
     for spec in [s for s in args.rules.split(";") if s.strip()]:
@@ -141,6 +142,8 @@ def main() -> int:
                   f"{hold.get('oos_ret', float('nan')):+.2%}")
     if hourly is not None:
         print(f"stops sold on an hourly bar (all policies, all rules): {ex.hourly_stops}")
+        if args.hourly_takes:
+            print(f"take-profits sold on an hourly bar (all policies, all rules): {ex.hourly_take_sales}")
     out = pd.concat(tables, ignore_index=True)
     (HERE / "results").mkdir(exist_ok=True)
     path = HERE / "results" / f"exit_{args.tag}.csv"

@@ -27,6 +27,11 @@ cover only the last hours before a market's close), a stop is also tested on eac
 daily bar being looked at, BEFORE that daily bar's own test; when one holds, the bet is sold at the OPEN of the next
 hourly bar (our side's bid, taker fee), if that bar opens with a two-sided quote within an hour of the daily bar's
 end. Otherwise the daily rule applies as before. Take-profit and time exits stay daily.
+
+Hourly take-profits (Ideas queue item 43): with `hourly_takes=True` as well, a TAKER take-profit (style "tk") is
+tested on the same hourly bars: our side's closing bid of an hourly bar at or above the take level sells at the
+next hourly open's bid (taker fee), as a stop does; on one bar a stop wins over a take. Resting takes (style "mk")
+stay daily: the hourly bars have no fill model.
 """
 from __future__ import annotations
 
@@ -72,12 +77,14 @@ class Result:
 class Exits:
     """Precomputed arrays for following bets after entry. Build once per Panel."""
 
-    def __init__(self, p: Panel, hourly: dict | None = None):
+    def __init__(self, p: Panel, hourly: dict | None = None, hourly_takes: bool = False):
         self.p = p
         d = p.df
         self.hourly = hourly or {}
         self.tick = d["ticker"].to_numpy()
         self.hourly_stops = 0           # stops sold on an hourly bar (counted over every follow() call)
+        self.hourly_takes = hourly_takes
+        self.hourly_take_sales = 0      # taker take-profits sold on an hourly bar
         self.ts = d["ts"].to_numpy("float64")
         self.close = d["close_ts"].to_numpy("float64")
         self.bid = d["bid"].to_numpy("float64")
@@ -120,7 +127,9 @@ class Exits:
         return px, cost, i + (1 if filled_first else 3)
 
     def hourly_stop(self, j: int, side: str, px: float, cost: float, pol: Policy):
-        """A stop on the hourly bars ending inside daily bar j (after bar j-1), sold at the next hourly open."""
+        """A stop (and, with hourly_takes, a taker take-profit) on the hourly bars ending inside daily bar j (after
+        bar j-1), sold at the next hourly open."""
+        want_take = self.hourly_takes and pol.style == "tk" and (pol.take_px is not None or pol.take_gain is not None)
         h = self.hourly.get(self.tick[j])
         if h is None or len(h) == 0:
             return None
@@ -132,8 +141,12 @@ class Exits:
                 continue
             mid = (bid + ask) / 2
             mine = mid if side == "yes" else 1 - mid
-            if not ((pol.stop_drop is not None and mine <= px - pol.stop_drop + 1e-9)
-                    or (pol.stop_px is not None and mine <= pol.stop_px + 1e-9)):
+            stop = ((pol.stop_drop is not None and mine <= px - pol.stop_drop + 1e-9)
+                    or (pol.stop_px is not None and mine <= pol.stop_px + 1e-9))
+            mine_bid = bid if side == "yes" else 1 - ask
+            take = want_take and ((pol.take_px is not None and mine_bid >= pol.take_px - 1e-9)
+                                  or (pol.take_gain is not None and mine_bid >= px + pol.take_gain - 1e-9))
+            if not (stop or take):
                 continue
             for m in range(k + 1, len(h)):
                 if h[m, 0] > hi + 3600:
@@ -143,8 +156,11 @@ class Exits:
                     q = bo if side == "yes" else ao
                     got = q if side == "yes" else 1 - q
                     net = got - self.tfee(j, q)
-                    self.hourly_stops += 1
-                    return (net - cost) / cost, float(h[m, 0]), "stop", got, cost
+                    if stop:
+                        self.hourly_stops += 1
+                    else:
+                        self.hourly_take_sales += 1
+                    return (net - cost) / cost, float(h[m, 0]), "stop" if stop else "take", got, cost
             return None                                            # no tradable next hourly open: daily rule
         return None
 
@@ -158,7 +174,9 @@ class Exits:
         e = self.end[i]
         j = start
         while j <= e:
-            if self.hourly and (pol.stop_drop is not None or pol.stop_px is not None):
+            if self.hourly and (pol.stop_drop is not None or pol.stop_px is not None
+                                or (self.hourly_takes and pol.style == "tk"
+                                    and (pol.take_px is not None or pol.take_gain is not None))):
                 hit = self.hourly_stop(j, side, px, cost, pol)
                 if hit is not None:
                     return hit

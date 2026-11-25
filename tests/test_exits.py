@@ -200,3 +200,22 @@ def test_hourly_stop_sells_at_the_next_hourly_open_inside_the_day(tmp_path):
     dead = h.copy()
     dead[2, 3:] = nan
     assert Exits(p, {tk: dead[:3]}).follow(0, "no", "tk", pol)[2] == "settle"
+
+
+def test_hourly_take_profit_only_when_asked_and_only_for_taker_takes(tmp_path):
+    # NO bought by taker at bar 0 (NO ~0.90). Daily bars never reach a NO bid of 0.97, but an hourly bar inside daily
+    # bar 3 has YES at 0.01/0.02 (NO bid 0.98): with hourly_takes a "take at NO bid >= 0.97, taker" sells at the next
+    # hourly open, YES ask 0.03 -> NO 0.97 less the taker fee. Without hourly_takes, or for a resting take, it holds.
+    p = one_market(tmp_path, [(0.10, 0.12)] * 6, name="T")
+    tk = p.df["ticker"].iloc[0]
+    ts = p.df["ts"].to_numpy("float64")
+    h = np.array([[ts[3] - 3600, 0.01, 0.02, 0.10, 0.12],
+                  [ts[3], 0.02, 0.04, 0.02, 0.03]])
+    take = Policy("t", take_px=0.97)
+    assert Exits(p, {tk: h}).follow(0, "no", "tk", take)[2] == "settle"          # off by default
+    ex = Exits(p, {tk: h}, hourly_takes=True)
+    r, rel, why, got, cost = ex.follow(0, "no", "tk", take)
+    assert why == "take" and got == pytest.approx(0.97) and rel == pytest.approx(ts[3])
+    assert r == pytest.approx((0.97 - 0.07 * 0.03 * 0.97 - cost) / cost, rel=1e-5)
+    assert ex.hourly_take_sales == 1 and ex.hourly_stops == 0
+    assert ex.follow(0, "no", "tk", Policy("m", take_px=0.97, style="mk"))[2] == "settle"

@@ -2352,3 +2352,32 @@ and `analyze_rule.py --fill trade`.
   found later fills earn as much a bet; the logs' filled-and-settled bets will say it forward (none settled yet).
 - Queue items 51 and 62 were written on the premise that the paper fill rate is below the model; they stand as tests of
   their own, but that premise is withdrawn. No account changes. Data: `research/results/fill_audit_20261124.csv`.
+
+## 3.65 Ideas queue 43: take-profits on hourly bars (9:15 pm CST, Nov 24)
+
+`research/exits.py` got `Exits(..., hourly_takes=True)` (`exit_study.py --hourly-takes`): a TAKER take-profit is also
+tested on each hourly bar inside the daily bar (our side's closing bid at or above the level), sold at the next hourly
+open's bid with the taker fee; a stop wins over a take on the same bar; resting takes stay daily (no hourly fill model).
+1 new test (517 pass). Same 25 policies, same hourly bars (last 48 hours before close) as 3.48 / 3.63. Baselines run on
+the same panel with hourly stops and daily takes (the Entertainment panel has grown since 3.48: 573 in / 368 out bets,
+161 out-of-sample events; one market landed between the two runs). Per bet, fees in:
+
+| rule (resting entry, 45,000) | policy | out/bet daily take -> hourly take | out 1% replay a year (hourly) | out dd | tail both halves |
+|---|---|---|---|---|---|
+| Ent band | hold to settlement | +7.78% | +25.3% | 3.37% | yes |
+| Ent band | take at bid >= 0.97, taker | +7.66% -> +7.08% | +26.4% | 3.89% | yes |
+| Ent band | take at bid >= 0.98, taker | +7.55% -> +7.40% | +25.3% | 3.67% | yes |
+| Ent band | take at +3 points, taker | +4.13% -> +1.44% | +3.7% | 7.51% | no |
+| Ent band | take at +10 points, taker | +5.87% -> +4.76% | +13.5% | 7.16% | yes |
+| 5-cent rule (nine) | hold to settlement | +2.55% | +18.1% | 1.55% | yes |
+| 5-cent rule (nine) | take at bid >= 0.97, taker | +1.16% -> +0.50% | +3.5% | 2.00% | yes |
+| 5-cent rule (nine) | take at bid >= 0.98, taker | +1.77% -> +1.26% | +9.0% | 1.59% | yes |
+| 5-cent rule (nine) | take at bid >= 0.99, taker | +2.34% -> +2.31% | +16.5% | 1.55% | yes |
+| 5-cent rule (nine) | take at +3 points, taker | +2.17% -> +2.05% | +14.6% | 1.44% | yes |
+
+- **FAILS: no take-profit beats holding out of sample on hourly bars.** Moving the takes to hourly bars makes every
+  taker take worse or no better, in both rules, as hourly stops did (3.48, 3.63): intraday spikes sell bets that would
+  have settled at $1. The one near-miss, the band's 0.97 taker take (+26.4%/y vs +25.3%/y hold, because money comes back
+  earlier), earns less a bet and has the larger drawdown (3.89% vs 3.37%): not the risk-averse choice.
+- Hold to settlement stays the exit for every rule account. Variants tried: 2 rules x 8 taker take policies, one run.
+- Data: `research/results/exit_{ent,nine}_liquid_45000_hourtake.csv`, baseline `exit_ent_liquid_45000_hourstop_now.csv`.
