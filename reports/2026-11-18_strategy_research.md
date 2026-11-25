@@ -2515,3 +2515,39 @@ edge beyond the half spread a resting order earns).
 - The comonotone null overstates the spread for events whose rungs are not nested, so the true shares are somewhat
   smaller; no independent-draw version was run (it was not pre-stated). Nothing changes in the paper accounts.
   Variants tried: 2 nulls, both pre-stated here.
+
+## 3.72 Ideas queue 50: a multiple-testing ledger for Entertainment (6:15 am CST, Nov 25)
+
+No new code. Data to Nov 24 (Entertainment census: 6,685 markets at 20,000, 15,501 at 5,000). Per-event t: the mean of
+each event's bet returns, events weighted equally, one-sided p from the normal curve. Resting entry.
+
+| rule (live account) | level | half | bets | events | per bet | per-event t | one-sided p |
+|---|---|---|---|---|---|---|---|
+| band, NO vs YES 5-35c (rule_ent_band_20k) | 20,000 | in | 1,024 | 474 | +7.58% | +2.53 | 0.0056 |
+| band | 20,000 | out | 740 | 294 | +6.61% | +2.52 | 0.0059 |
+| fall rule, 10-25c down 3c+ in 7d (rule_ent_fall) | 5,000 | in | 847 | 481 | +8.59% | +3.67 | 0.0001 |
+| fall rule | 5,000 | out | 579 | 260 | +5.16% | -0.04 | 0.52 |
+| 35-50c fall rule (rule_ent_fall_35_50) | 20,000 | in | 217 | 165 | +23.96% | +3.38 | 0.0004 |
+| 35-50c fall rule | 20,000 | out | 125 | 77 | +14.65% | +0.93 | 0.18 |
+
+How many things were tried on Entertainment: round r21 (the busy-sample sweep that found the band) scored 2,890 rules on
+both halves, r20 (random sample) 2,864 more; the follow-ups since 3.24 (queue items 1, 2, 5, 6, 14, 19, 20, 25, 26, 28,
+30-38, 40, 41, 43-49: levels, entries, slices, windows, stops, take-profits, nulls) come to about 125 variants by the
+reports' own counts. Holm at 5%, out-of-sample p only:
+
+| family counted | m | first threshold | band (p 0.0059) | fall rule (0.52) | 35-50c fall (0.18) |
+|---|---|---|---|---|---|
+| the three live accounts only | 3 | 0.0167 | passes | fails | fails |
+| plus the follow-ups since 3.24 | ~128 | 0.0004 | fails | fails | fails |
+| plus the r21 sweep that found the band | ~3,000 | 0.00002 | fails | fails | fails |
+
+- **Deflated verdict, plainly: nothing on Entertainment survives a correction that counts the search.** The band is the
+  only one of the three with a real out-of-sample signal (t 2.5, the same as in sample, and it passes the tail test both
+  halves), but t 2.5 is what the best of ~3,000 tries would show by luck about as often as not; rule 4's bar (t 3 out of
+  sample) is not met either. It passes Holm only if the family is the three accounts now trading, which ignores how
+  they were picked.
+- **The two fall rules have no out-of-sample signal by event.** The 10-25c fall rule's +5.2% a bet out of sample is
+  carried by events with many bets; the event-weighted mean is zero (t -0.04). The 35-50c rule's +14.7% is t 0.9 on 77
+  events. Both pass the tail test out of sample because of their high break-even loss rates, not because of a proven edge.
+- Nothing changes in the paper accounts (they are the forward test that settles this); the band stays the lead, the
+  fall rules stay on probation. New item 71: why the fall rule's per-bet and per-event means differ.

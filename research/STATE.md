@@ -1140,9 +1140,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     rule 4's bar). calibrated_null.py + 1 test. Was: Permutation check of the band at 20,000: shuffle outcomes between events within each price cent (5,000 draws,
     events kept whole) and give the share of draws with a per-bet return at least the observed, in each half. A
     second opinion on the tail test. Backtest only; small script + 1 test.
-50. Multiple-testing ledger for Entertainment: count every variant tried on Entertainment since report 3.24 (rounds and
-    queue items), and apply Holm to the out-of-sample results of the band, the fall rule and the 35-50c fall rule.
-    Write the deflated verdict plainly. A table, no new code.
+50. DONE 6:15 am CST Nov 25 (report 3.72): nothing survives Holm once the search is counted (~128 follow-ups: threshold
+    0.0004; with r21's 2,890 rules ~0.00002). Out-of-sample per-event p: band 0.006 (t 2.5), fall rule 0.52 (t 0.0),
+    35-50c fall 0.18 (t 0.9). Only the band passes, and only with m = 3 (the live accounts). Item 71 added.
 51. Where the band's money is by spread at entry: 1c, 2c, 3-5c, 6-10c (resting at the bid in a wide quote earns the
     spread): per bet, fills and tail test at 20,000. And `research\resting_variants.py` with deeper -1 (a cent inside
     the spread) for the band: is improving the bid worth its price? (3.64: the forward fill rate matches the
@@ -1203,3 +1203,6 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     test on the event sum, both halves at 20,000. Does the edge grow with ladder width? A table; no new code beyond a groupby.
 70. calibrated_null.py for the 5-cent rule (nine, 45,000) and the fall rules, both nulls, both halves: which live rule clears the
     mid null out of sample? Also the band with independent draws per market as the narrow bound beside 3.71's wide one.
+71. The 10-25c fall rule's per-bet against per-event mean (3.72: out of sample +5.2% a bet but event-weighted t 0.0): split
+    its out-of-sample events by bets per event (1, 2-3, 4+) and show per-bet mean and event sum; is it one or two big
+    ladders? A groupby on research\analyze_rule.bets_frame, no new code.
