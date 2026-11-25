@@ -19,3 +19,12 @@ def test_fair_price_null_centres_on_zero_and_rejects_a_big_edge():
     # one event holding every bet: the null is all-or-nothing, so +10% is not rare at all
     y = null_share(cost, p_yes, np.zeros(n), observed=0.10, draws=2000)
     assert y["share_ge"] > 0.7
+
+
+def test_independent_draws_are_narrower_than_whole_events():
+    from calibrated_null import null_share
+    n = 400
+    cost, py = np.full(n, 0.8), np.full(n, 0.2)
+    pooled = null_share(cost, py, np.repeat(np.arange(40), 10), 0.0, draws=400)
+    alone = null_share(cost, py, np.arange(n), 0.0, draws=400)
+    assert alone["null_sd"] < pooled["null_sd"] / 2

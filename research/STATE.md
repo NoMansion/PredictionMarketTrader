@@ -1214,7 +1214,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 69. DONE 12:25 pm CST Nov 25 (report 3.84): edge grows with ladder width in both halves (1 bet: +2-3%, fails the tail;
     4+: +8-11%, passes) but bets-per-event is hindsight. Item 79. WAS: The band's rungs per event (3.70: one rung is worse than all): events with 1, 2-3 and 4+ band bets, per bet and the tail
     test on the event sum, both halves at 20,000. Does the edge grow with ladder width? A table; no new code beyond a groupby.
-70. calibrated_null.py for the 5-cent rule (nine, 45,000) and the fall rules, both nulls, both halves: which live rule clears the
+70. DONE 12:45 pm CST Nov 25 (report 3.86): out of sample only the band clears the nulls; the 5-cent rule (ask null 0.075,
+    mid 0.20) and both fall rules (0.10-0.11 / 0.14-0.21) do not. --independent + test. WAS: calibrated_null.py for the 5-cent rule (nine, 45,000) and the fall rules, both nulls, both halves: which live rule clears the
     mid null out of sample? Also the band with independent draws per market as the narrow bound beside 3.71's wide one.
 71. DONE 12:27 pm CST Nov 25 (report 3.85): out-of-sample profit is all in 40 events with 4+ bets; 1-bet events lose -5.6%
     a bet out. Not risk-averse. WAS: The 10-25c fall rule's per-bet against per-event mean (3.72: out of sample +5.2% a bet but event-weighted t 0.0): split

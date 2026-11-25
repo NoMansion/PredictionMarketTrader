@@ -2830,3 +2830,29 @@ fallen 3c+ in 7 days, 5,000+, resting (rule_ent_fall's level); closes to Nov 24.
   mean is positive while the event-weighted t is 0. Together with 3.79 (fresh slice fails, 14.3% drawdown), the fall rule
   is not risk-averse; rule_ent_fall keeps trading on paper as a record only. Item 79's at-the-bar ladder-width test covers
   this rule too (added there).
+
+### 3.86 Calibrated nulls for the live rules (12:45 pm CST, November 25)
+
+Ideas queue item 70. `research/calibrated_null.py` (3.71) for the three live rules besides the band, and the band with
+one draw per MARKET (`--independent`, new, + a test) as the narrow bound beside 3.71's whole-event one. 2,000 draws.
+Cell: share of null draws with a per-bet return at least the observed one (small = the edge is not luck). Closes to
+Nov 24-25.
+
+| Rule (level) | Half | Bets (events) | Observed per bet | Null "price fair (ask)" | Null "mid" |
+|---|---|---|---|---|---|
+| 5-cent, nine (45,000) | in | 790 (505) | +1.83% | 0.028 | 0.12 |
+| 5-cent, nine (45,000) | out | 519 (304) | +1.78% | 0.075 | 0.20 |
+| fall 10-25c, Ent (5,000) | in | 847 (481) | +8.59% | <0.001 | 0.006 |
+| fall 10-25c, Ent (5,000) | out | 579 (260) | +5.16% | 0.098 | 0.21 |
+| fall 35-50c, Ent (20,000) | in | 217 (165) | +23.96% | <0.001 | 0.005 |
+| fall 35-50c, Ent (20,000) | out | 125 (77) | +14.65% | 0.11 | 0.14 |
+| band, Ent (20,000), per market | in | 1,024 (474) | +7.58% | <0.001 | <0.001 |
+| band, Ent (20,000), per market | out | 740 (294) | +6.61% | <0.001 | 0.002 |
+
+- **Out of sample, no live rule except the band clears even the "price fair" null at 5%** when a ladder's rungs share
+  one draw: the 5-cent rule (0.075), the 10-25c fall rule (0.098) and the 35-50c fall rule (0.11). Against the mid null
+  (what a resting order earns for free from the half spread) they are at 0.14-0.21: indistinguishable from no edge.
+- The 5-cent rule does not clear the mid null even in sample (0.12): its +1.8% a bet is mostly the half spread.
+- The band clears both nulls with markets drawn independently (the narrow bound); with whole events (3.71) it was 0.006
+  out of sample on the mid null. Between the two bounds, the band is the one live rule this test supports.
+- No account changes (the accounts are records; nothing reaches config). It agrees with 3.72's Holm count and 3.85.

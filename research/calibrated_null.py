@@ -50,6 +50,8 @@ def main() -> int:
     ap.add_argument("--categories", required=True)
     ap.add_argument("--min-cumvol", type=float, default=None)
     ap.add_argument("--draws", type=int, default=5000)
+    ap.add_argument("--independent", action="store_true",
+                    help="queue item 70: one uniform per MARKET instead of per event (the narrow bound)")
     ap.add_argument("--db", default=str(panel.DB))
     args = ap.parse_args()
     cats = [c.strip() for c in args.categories.split(",") if c.strip()]
@@ -68,7 +70,8 @@ def main() -> int:
     out = []
     for half, m in (("in", ~oos), ("out", oos)):
         for null, py in (("price fair (ask)", ask), ("mid", (bid + ask) / 2)):
-            x = null_share(cost[m], py[m], d["event"].to_numpy()[m], float(r[m].mean()), args.draws)
+            key = (d["ticker"] if args.independent else d["event"]).to_numpy()[m]
+            x = null_share(cost[m], py[m], key, float(r[m].mean()), args.draws)
             out.append({"half": half, "bets": int(m.sum()), "events": d["event"][m].nunique(), "null": null, **x})
     pd.set_option("display.width", 200)
     print(pd.DataFrame(out).to_string(index=False, float_format=lambda v: f"{v:+.4f}"))
