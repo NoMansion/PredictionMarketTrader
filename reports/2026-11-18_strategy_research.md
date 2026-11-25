@@ -2688,3 +2688,30 @@ inside each group (a market can be in several groups, so the groups overlap). En
   at 20,000 skipping a bar that is STALE(3) (the market's next non-stale band bar is taken instead); passes only if it
   passes the tail test in both halves and its 1% replay beats the whole band out of sample (+37.8% a year, 3.72) with a
   worst drawdown no deeper (7.0%). Counted in the band's multiple-testing tally (item 50).
+
+### 3.79 The refreshed history: Entertainment rules on markets that settled after they were chosen (9:50 am CST, November 25)
+
+Ideas queue item 64, first part. Entertainment's late listings finished at 9:15 pm Nov 24; the sample now runs to markets
+closing **Nov 24, 2026** (the old archive stopped at Sep 19). Same commands as 3.29 / 3.46 / 3.55 (`analyze_rule.py
+--sample liquid --categories Entertainment --side no --entry mk --min-cumvol N`). The "Sep 20+" columns are bets on
+markets that closed on or after Sep 20, 2026: none of them was in any backtest when the rules were picked (3.24-3.55).
+Event tail test on that slice alone. 6 rules re-run, nothing new chosen.
+
+| Rule, level | Then (report) | Now, all: bets, per bet, tail in / out | Replay 1% in / out a year, worst DD out | Sep 20+: bets (events), per bet, losing events, tail |
+|---|---|---|---|---|
+| band, 5,000 | 1,937, +7.28% (3.29); 3,450, +4.57% (3.46) | 3,972, +4.42%, passes / passes | +6.6% / +5.2%, 11.1% | 521 (156), +3.37%, 50, passes (38.7 vs 39.1%) |
+| band, 20,000 | 1,526, +7.39% (3.46) | 1,764, +7.17%, passes / passes | +9.1% / +43.5%, 7.0% | 238 (76), +5.79%, 19, passes (34.5 vs 36.1%) |
+| band, 45,000 | 815, +7.14% (3.46) | 943, +6.56%, passes / passes | +9.3% / +25.9%, 3.4% | 128 (43), +2.88%, 15, too few to pass (48.5 vs 41.2%) |
+| fall 10-25c, 5,000 | +8.95% (3.24) | 1,426, +7.20%, passes / passes | +6.4% / +3.6%, **14.3%** | 169 (67), +2.47%, 20, does not pass (40.4 vs 33.7%) |
+| fall 35-50c, 20,000 | +22.9% (3.55) | 342, +20.56%, passes / passes | +11.9% / +19.3%, 4.3% | 51 (29), +7.41%, 13, too few (61.6 vs 50.6%) |
+| 5-cent, Entertainment, 5,000 | (combined leg) | 2,069, +1.64%, passes (all) | - | 211 (104), +3.18%, 1, passes (4.5 vs 7.3%) |
+
+- **No verdict changes.** Every rule is still positive on the markets it had never seen, and every one still passes the
+  tail test in both halves of the full sample. The band at 20,000 (rule_ent_band_20k's level) passes on the fresh slice
+  alone: +5.8% a bet on 76 events, against +7.4% when chosen.
+- **Every fresh-slice per-bet figure is below the figure at selection** (band 5,000 +3.4 vs +7.3%, 20,000 +5.8 vs +7.4%,
+  fall 10-25c +2.5 vs +9.0%, fall 35-50c +7.4 vs +22.9%): the usual shrink after selection. The 10-25c fall rule is the
+  weakest: its fresh slice does not pass the tail test and its out-of-sample replay now has a 14.3% worst drawdown.
+  Not risk-averse on this record; it keeps trading on paper as a record only.
+- Two months is one season of Entertainment (awards, box office, charts); the fresh slices are 29-156 events. Still to
+  do under item 64: the 5-cent rule on the nine (Politics and Economics late bars are landing now) and the Climate band.
