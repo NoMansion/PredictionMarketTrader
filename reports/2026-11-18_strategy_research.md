@@ -2734,3 +2734,21 @@ Ideas queue item 66, and item 64's Climate part (Climate's late listings finishe
   only out of sample does not meet the rules for judging a result. **No account changes.** Capacity at 20,000: median
   $3,267 traded in the week before entry. Queue item 76 added: re-check once a third month of fresh Climate markets is in,
   as a pre-stated test (20,000, the fresh slice alone), not a new search.
+
+### 3.81 Rotten Tomatoes ladders in the band (10:05 am CST, November 25)
+
+Ideas queue item 67. The band (Entertainment, 20,000, resting; closes to Nov 24) split into KXRT* series (Rotten Tomatoes
+score ladders, one series per film) against the rest, each half, event tail test. One split, pre-stated.
+
+| Group | Half | Bets (events) | Per bet | Losing events | Tail test | Median $ traded week before |
+|---|---|---|---|---|---|---|
+| KXRT* | in | 246 (111) | +7.97% | 27 | passes (31.9 vs 36.3%) | $4,152 |
+| KXRT* | out | 207 (69) | +2.69% | 24 | **fails** (45.3 vs 39.3%) | $5,269 |
+| rest | in | 778 (363) | +7.45% | 79 | passes (25.6 vs 35.1%) | $2,015 |
+| rest | out | 533 (225) | +8.14% | 42 | passes (23.5 vs 34.4%) | $2,545 |
+
+- **RT is weaker than the rest only out of sample** (+2.7% against +8.1% a bet, and it fails the tail test there); in
+  sample it is slightly better (+8.0% against +7.5%). The queue's condition for a "band without RT" variant (RT below
+  the rest in BOTH halves) is not met, so **no variant is tested and no account changes**. RT is about a quarter of the
+  band's bets and its busiest markets; whether RT's out-of-sample slump persists is a forward question for
+  rule_ent_band_20k (item 77).

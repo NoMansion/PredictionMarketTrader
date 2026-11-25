@@ -791,6 +791,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   search is counted (band out-of-sample t 2.5; fall rules t 0.0 / 0.9 by event); band earns more in wider spreads, a bid
   inside the spread is not worth it; no weekday effect; spike split unreadable; Climate band fails in every slice. Items
   71-74 added. Jobs ok; main $1,010.00, 2 settled.
+- 10:05 am CST Nov 25: queue items 55, 61, 64 (part), 66, 67 (reports 3.77-3.81), ITEMS 5: Politics band fails again; stale
+  band quotes are the worst bets (reversed); on markets settled after selection (to Nov 24) every Entertainment rule stays
+  positive, band at 20,000 passes on them alone (+5.8% a bet); Climate band fails in sample at every level; RT split not met.
+  stale_quotes.py + 1 test. Items 75-77 added. Jobs ok; main $1,009.91, 2 settled.
 
 ## How to run a round
 
@@ -1199,9 +1203,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     Climate (after item 64): the band's 2026Q3-Q4 sat below its in-sample mean (3.66); a third low quarter would be worth a line.
 66. DONE 10:00 am CST Nov 25 (report 3.80): Climate band fails both halves at 5,000 (fresh markets too); at 20,000 / 45,000
     fails in sample, passes out of sample and on the Sep 20+ markets (+10.2% / +11.6% a bet). No account changes. Item 76.
-67. KXRT (Rotten Tomatoes ladders) in the band: the band's largest out-of-sample series earns below the band a bet (3.68:
-    without it +7.97% vs +6.61%). RT against the rest per bet and tail test in BOTH halves at 20,000; if RT is below the rest
-    in both, test the band without RT as a pre-stated variant (multiple testing: count it in item 50). Backtest only.
+67. DONE 10:05 am CST Nov 25 (report 3.81): KXRT below the rest out of sample only (+2.7% vs +8.1%, fails there) but above
+    in sample (+8.0% vs +7.5%): the pre-stated condition fails, no variant tested. Item 77 added.
 68. The band's money by series LIFE (3.69: it lives in short-lived series): bets of series whose first market opened within
     30 days of the bet against older series, both halves at 20,000, per bet and tail test. Known at the bar (series first
     open_ts). If new series carry the edge, a 'new series only' variant is pre-stated here. Backtest only.
@@ -1227,3 +1230,5 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     out of sample (+37.8%/y) with a worst drawdown no deeper (7.0%). If it passes, a new paper account under a new name.
 76. PRE-STATED (3.80): the Climate band at 20,000 on markets closing Sep 20, 2026 or later ONLY, once that slice reaches 120+
     events (60 at Nov 24): passes if the tail test passes on that slice. Fresh markets only; no new levels or windows.
+77. Forward, once rule_ent_band_20k has 30+ settled bets: its KXRT* bets against the rest (3.81: RT +2.7% a bet out of sample
+    against +8.1%). A split of settled paper bets; no new code.
