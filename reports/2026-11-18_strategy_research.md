@@ -2664,3 +2664,27 @@ and 45,000. 3 variants, all stated in the queue.
   not a new edge; its in-sample year (+1.6%) is as thin as the pooled rule's, and by year the money is 2026 (2025 per
   bet +0.0%). **No new account.** The pooled rule's out-of-sample reliance on Apr-Jun (3.67) is the open question;
   Politics does not answer it.
+
+### 3.78 Stale quotes in the band (9:35 am CST, November 25)
+
+Ideas queue item 61. Is the band's edge in overpriced YES quotes nobody re-prices? `research\stale_quotes.py 20000`
+(new, + 1 test): a band bar is STALE(k) when its YES mid equals the mid of each of the market's k earlier bars in the
+liquid sample, MOVED when it differs from any, NEW when the market has under k earlier bars. First band bar per market
+inside each group (a market can be in several groups, so the groups overlap). Entertainment, 20,000, resting. 6 cells.
+
+| Group | Bets (events) | Per bet | Tail test in / out | Replay 1%, in / out a year | Worst DD in / out | Median $ traded week before |
+|---|---|---|---|---|---|---|
+| k=3 stale | 194 (101) | +3.63% | **fails** (29.1 vs 25.4%) / **fails** (31.8 vs 25.0%) | +2.3% / +1.7% | 3.9% / 2.5% | $594 |
+| k=3 moved | 1,039 (471) | +8.76% | passes (24.8 vs 35.2%) / passes (22.7 vs 36.8%) | +6.6% / +37.5% | 5.2% / 2.7% | $2,667 |
+| k=3 new | 1,396 (706) | +6.16% | passes / passes | +7.5% / +27.2% | 7.3% / 7.4% | $2,723 |
+| k=7 stale | 27 (21) | +2.48% | too few | -0.8% / +2.3% | 1.6% / 0.0% | $134 |
+| k=7 moved | 722 (318) | +7.50% | passes / passes | +5.3% / +23.3% | 4.6% / 1.9% | $1,634 |
+| k=7 new | 1,563 (736) | +7.08% | passes / passes | +9.0% / +35.7% | 6.4% / 7.4% | $2,773 |
+
+- **The idea is reversed: stale quotes are the band's WORST bets** (+3.6% a bet, fails the tail test in both halves,
+  thin markets: a quarter of entry days under 100 contracts). The edge sits in band bars whose price has just moved.
+  A stale mid in a thin market is probably a quote nobody trades, not an overpriced one.
+- No account: the groups overlap and none was pre-stated as a variant. **Pre-stated for the queue (item 75):** the band
+  at 20,000 skipping a bar that is STALE(3) (the market's next non-stale band bar is taken instead); passes only if it
+  passes the tail test in both halves and its 1% replay beats the whole band out of sample (+37.8% a year, 3.72) with a
+  worst drawdown no deeper (7.0%). Counted in the band's multiple-testing tally (item 50).

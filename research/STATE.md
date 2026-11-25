@@ -1175,8 +1175,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 60. Ladder rungs out of line: in a threshold ladder (one event, "above X" rungs), a rung whose YES mid is above the
     straight line between its two neighbours' mids by 3c+ (a convexity kink, known at the bar). NO on the kinked rung,
     resting, at 20,000 and 45,000, Entertainment and the nine apart. New rule name in families.py (add, + a test).
-61. Stale quotes in the band: bets where the mid has not moved in the last 3 and 7 bars against the rest (an
-    overpriced YES nobody re-prices). One split, pre-stated.
+61. DONE 9:35 am CST Nov 25 (report 3.78): REVERSED: stale band bars (mid unchanged 3 bars) earn +3.6% and fail the tail
+    test both halves; bars that just moved earn +8.8% and pass. stale_quotes.py + 1 test. Item 75 added.
 62. The combined account with the forward fill rate: re-run research\combined.py with fills thinned at random to the
     observation logs' measured rates (the 5-cent rule ~65%, the band ~49%), 200 draws: yearly return and drawdown
     range out of sample. Does the paper fill rate change the account's verdict? Needs a --fill-rate option (+ a test).
@@ -1219,3 +1219,6 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     often fallen into the band) and report capacity in dollars. Backtest only.
 74. Forward, once rule_climate_band has 30+ settled bets: its per-bet return and loss rate against 3.76's backtest (+1.8%
     a bet out of sample, loss rate on break-even): a failed echo kept as a forward record; does paper agree?
+75. PRE-STATED (3.78): the band at 20,000 skipping a STALE(3) bar (take the market's next non-stale band bar instead,
+    research\stale_quotes.stale_flags). Passes if it passes the tail test in both halves AND its 1% replay beats the whole band
+    out of sample (+37.8%/y) with a worst drawdown no deeper (7.0%). If it passes, a new paper account under a new name.
