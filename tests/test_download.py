@@ -787,6 +787,17 @@ def test_running_the_file_as_a_script(tmp_path, api, monkeypatch):
     assert asked == [c for c in kd.CATEGORIES if c != "Sports"] and (tmp_path / "sub" / "s.db").exists()
 
 
+def test_with_sports_adds_sports_last(tmp_path, api, monkeypatch):
+    """`--with-sports`: the default categories, then Sports (listed last, so the others keep their place)."""
+    import src.kalshi_http as kh
+    monkeypatch.setattr(kh, "KalshiHTTP", lambda min_interval: KalshiHTTP(min_interval=0, base=BASE, client=api))
+    monkeypatch.setattr(sys, "path", list(sys.path))
+    monkeypatch.setattr(sys, "argv", ["kalshi_download.py", "--db", str(tmp_path / "s.db"), "--phase", "series", "--with-sports"])
+    runpy.run_path(str(ROOT / "research" / "kalshi_download.py"), run_name="__main__")
+    asked = [p["category"] for _, p in api.calls]
+    assert asked == [c for c in kd.CATEGORIES if c != "Sports"] + ["Sports"]
+
+
 # ---------------------------------------------------------------------------------------------------------------
 # panel.py on a hand-built database
 # ---------------------------------------------------------------------------------------------------------------

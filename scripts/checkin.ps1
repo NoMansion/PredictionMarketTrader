@@ -5,7 +5,12 @@
 # Writes data\checkin\<time>.json (the CLI's full answer, with the models that were really used and the cost) and
 # one line per run to data\checkin.log; shows the answer's last line as a Windows notification.
 param(
-    [int]$TimeoutMinutes = 60,
+    # 100 since 2026-11-24: a check-in may now work up to four queue items (scripts\usage_pace.py; the user: "Test as
+    # many things as you can. There is no time constraint")
+    [int]$TimeoutMinutes = 100,
+    # list-price cap for one run, passed to the CLI as --max-budget-usd (0 = none): a backstop, since a run of four
+    # items costs about $6. Measured 2026-11-24: on the plan's sign-in the CLI stops with subtype error_max_budget_usd
+    [double]$MaxBudgetUsd = 8,
     [string]$Model = "claude-opus-5-5",
     [string]$PromptFile = "",          # default scripts\checkin_prompt.md (another file only for testing the plumbing)
     # skip when the last check-in started less than this long ago. Windows can add a second every-3-hours schedule
@@ -76,6 +81,9 @@ try {
     # no --fallback-model: if Opus is unavailable the run fails instead of answering on another model
     $cliArgs = @("-p", "--model", $Model, "--permission-mode", "auto", "--permission-prompts", "none",
               "--output-format", "json")
+    if ($MaxBudgetUsd -gt 0) {
+        $cliArgs += @("--max-budget-usd", $MaxBudgetUsd.ToString([Globalization.CultureInfo]::InvariantCulture))
+    }
     $p = Start-Process -FilePath $claude -ArgumentList $cliArgs -WorkingDirectory $root -NoNewWindow -PassThru `
         -RedirectStandardInput $pfile -RedirectStandardOutput $out -RedirectStandardError $err
     $null = $p.Handle                  # keep the handle, or ExitCode comes back empty after the program ends
@@ -102,6 +110,7 @@ try {
     $cost = if ($j.total_cost_usd) { "{0:n2}" -f [double]$j.total_cost_usd } else { "?" }
     $mins = if ($j.duration_ms) { "{0:n0}" -f ([double]$j.duration_ms / 60000) } else { "?" }
     $flag = if ($j.is_error) { "ERROR " } else { "" }
+    if ($j.subtype -eq "error_max_budget_usd") { $flag += "BUDGET CAP HIT (`$$MaxBudgetUsd) " }
     if ($bad.Count) { $flag += "OTHER MODEL USED ($($bad -join ', ')) " }
     if (-not $models.Count) { $flag += "NO MODEL REPORTED " }   # cannot confirm it was Opus
     Write-Log ("{0}ok in {1} min, list price `${2}, models {3}: {4}" -f $flag, $mins, $cost, ($models -join ","), $last.Trim())

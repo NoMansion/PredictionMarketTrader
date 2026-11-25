@@ -53,7 +53,8 @@ if ($Stop) {
 
 if (Find-PmtJob $download) { Write-Host "running: history download" }
 else {
-    Start-PmtJob $download "--interval 0.4 --first-pass 2500" $downloadLog
+    # --with-sports since 2026-11-24 (the user: "Test as many things as you can"): Sports is listed and sampled last
+    Start-PmtJob $download "--interval 0.4 --first-pass 2500 --with-sports" $downloadLog
     Write-Host "started: history download"
 }
 

@@ -104,6 +104,24 @@ def test_cli_is_called_on_opus_headless_with_no_fallback_model_and_the_prompt_on
     assert "check things" in seen["stdin"] and "last line please" in seen["stdin"]
 
 
+def test_cli_gets_a_list_price_cap_and_zero_means_none(rig):
+    rig.run()
+    a = rig.seen()["argv"]
+    assert a[a.index("--max-budget-usd") + 1] == "8"
+    rig.run("-MaxBudgetUsd", "2.5", "-MinGapMinutes", "0")
+    a = rig.seen()["argv"]
+    assert a[a.index("--max-budget-usd") + 1] == "2.5"
+    rig.run("-MaxBudgetUsd", "0", "-MinGapMinutes", "0")
+    assert "--max-budget-usd" not in rig.seen()["argv"]
+
+
+def test_a_run_stopped_by_the_cap_is_flagged(rig):
+    rig.behave(stdout=answer(is_error=True, subtype="error_max_budget_usd", result=""))
+    rig.run()
+    line = rig.log()[0]
+    assert "BUDGET CAP HIT ($8)" in line and "ERROR" in line
+
+
 def test_default_prompt_is_the_checkin_prompt_and_default_model_is_opus(rig):
     rig.run(prompt_file=None)
     seen = rig.seen()
@@ -181,7 +199,7 @@ def test_a_fresh_lock_means_another_run_is_going_and_is_left_alone(rig):
 def test_a_stale_lock_from_a_dead_run_is_taken_over(rig):
     lock = rig.data / "checkin.lock"
     lock.write_text("1234", encoding="utf-8")
-    old = time.time() - 70 * 60          # older than the 60-minute timeout plus 5
+    old = time.time() - 110 * 60         # older than the 100-minute timeout plus 5
     os.utime(lock, (old, old))
     rig.run()
     assert "ok in" in rig.log()[0] and rig.seen() is not None

@@ -261,6 +261,9 @@ def main():
     ap.add_argument("--db", default=str(ROOT / "data" / "kalshi_hist.db"))
     ap.add_argument("--phase", default="all", choices=["all", "series", "markets", "recent", "candles"])
     ap.add_argument("--categories", default=",".join(c for c in CATEGORIES if c != "Sports"))
+    ap.add_argument("--with-sports", action="store_true",
+                    help="add Sports (last) to the categories: its own sample, analysed apart from the rest (the user, "
+                         "2026-11-24: \"Test as many things as you can\"; backlog family 16)")
     ap.add_argument("--min-volume", type=float, default=1.0,
                     help="lifetime contracts traded; keep it at 1 (any trade at all): a higher bar selects on hindsight")
     ap.add_argument("--max-markets", type=int, default=10 ** 9)
@@ -275,6 +278,8 @@ def main():
     ap.add_argument("--interval", type=float, default=0.2, help="seconds between requests")
     args = ap.parse_args()
     cats = [c.strip() for c in args.categories.split(",") if c.strip()]
+    if args.with_sports and "Sports" not in cats:
+        cats.append("Sports")
     Path(args.db).parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(args.db, timeout=60)
     db.executescript(SCHEMA)

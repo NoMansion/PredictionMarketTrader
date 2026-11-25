@@ -35,6 +35,12 @@ more Claude usage than the paper loop's own plus the capped filter account (rule
 cycle). If the paper loop's gap has widened (data\paper_loop_state.json above runtime.cycle_every_hours in
 config.yaml: Claude's limit was hit), do health only.
 
+**MORE PER CHECK-IN (the user, 7:00 pm CST 2026-11-24: "Test as many things as you can. There is no time constraint
+and I'm leaving this running at all times now").** The one-item limit above is replaced: a check-in works as many
+queue items as `scripts\usage_pace.py` allows (its last line, "ITEMS n", 0 to 4), commits after each, and starts
+no new item after 60 minutes. Everything else in this section stands (backtests and cheap code only, no more Claude
+usage, the same NOT-covered list). The download now includes Sports (`--with-sports`, family 16 of the backlog).
+
 ## CLAUDE USAGE BUDGET (the user, 11:40 pm CST 2026-11-22: "Aim for 75% usage per week")
 
 The weekly all-models limit resets Sundays at 4:00 pm CST. Measured 4:00 to 11:30 pm Nov 22 (cycles every 2 h,
@@ -43,7 +49,15 @@ check-ins twice per 3 h by a Windows quirk): 4% of the week for about $34 at lis
 each), the filter account ~5%. Pace: ~90% a week. Changes at 11:45 pm Nov 22: runtime.cycle_every_hours 2 -> 2.5,
 and scripts\checkin.ps1 skips a start within 150 minutes of the last one (the quirk). Expected: ~67-70% a week from
 this PC, leaving room for the user's own sessions (the new PC shares the same limit).
-- Check-ins cannot see the plan's usage. They stay at ONE queue item per check-in and must not raise usage.
+- Check-ins cannot see the plan's usage meter. Since 7:30 pm Nov 24 they read `scripts\usage_pace.py` instead: the
+  week's list-price spend from the project's own logs (forecasts in data\pmt.db and data\rules\*.db, check-ins in
+  data\checkin\*.json) at $8.50 a percent, projected to the reset from the last 24 hours, against 75% minus 7% kept
+  for the user's own sessions; the room left is spread over the check-ins still to come, at ~$1.50 an item, as
+  "ITEMS n" (1 to 4; 0 when the projection is over 75%). Calibrated 7:00 pm Nov 24: the app showed 16% of the week
+  with $140 logged (which also holds the user's own sessions), so $8.50 a percent errs on the side of caution.
+  Re-calibrate here when a session sees the meter (change DOLLARS_PER_PCT in the script).
+- A check-in has 100 minutes (was 60) and a list-price cap of $8 a run (`--max-budget-usd`; scripts\checkin.ps1
+  -MaxBudgetUsd); a run stopped by the cap is logged "BUDGET CAP HIT".
 - A session that can see usage (the user's) re-checks the pace; if it runs above 75%, the next dial is
   cycle_every_hours 3 (allowed by the user's word above), then universe.max_candidates_per_cycle. Never the
   forecaster's model, runs or effort.
@@ -128,7 +142,8 @@ branch on the stock trader's repository is no longer used. The cloud container's
 - The paper ledger `data\pmt.db` starts empty: the first local cycle opens a NEW paper account.
   `reports/forward_log.csv` keeps the cloud account's rows (append, never overwrite).
 - Start what is not running: **`research\start_jobs.ps1`** (history download; add `-PaperLoop` for the paper
-  loop, `-Stop` to stop both). Python is `.venv\Scripts\python.exe`, not `python3`.
+  loop, `-Stop` to stop both). Python is `.venv\Scripts\python.exe`, not `python3`. Since 7:01 pm Nov 24 the
+  download runs with `--with-sports` (Sports listed and sampled last, its own sample).
 - **PAPER TRADING RUNS ON THE PC since 3:46 am CST, 2026-11-19** (the user: "Start, PC settings", then "can
   you use both settings or combine them to the best option"). The settings, fixed from this cycle on:
   the forecaster as in `config.yaml` (model opus, 3 runs, high effort, quiet window 5:15 to 6:20 pm): these
@@ -778,6 +793,13 @@ Forward-only (cannot be backtested):
 - 6:35 pm CST Nov 24: queue item 29 (report 3.63): the 5-cent rule's stops on hourly bars all get WORSE (4 of 6 fail the tail test
   out of sample); hold stays; 1,188 markets' hourly bars fetched; item 43 added. Jobs ok (4:42 pm cycle ok); main $1,009.78, 2 settled.
 
+- 7:30 pm CST Nov 24 (the user's session, the user: "Test as many things as you can. There is no time constraint"):
+  check-ins now work up to 4 queue items each by scripts\usage_pace.py (16% of the week used at 7:00 pm, pace ~50%,
+  so 3 items a check-in for now), 100-minute timeout, $8 list-price cap a run; the download restarted at 7:01 pm with
+  --with-sports (4,329 Sports series; first pass and census come before the random passes resume); queue items 44-63
+  added. Found: the archive's markets in already-listed series stop at the first listing (bars to Sep 19, 2026;
+  archive now to Nov 3), being fixed in the same session.
+
 ## Next actions
 
 1. Each check-in: `python3 research/panel.py` (what landed), then for every category with a finished pass run
@@ -839,7 +861,7 @@ Forward-only (cannot be backtested):
    list for pooled rounds: Economics, Politics, Companies, Science and Technology, Elections, Health, World,
    Commodities, Financials.
 
-## Ideas queue (work the first open item each check-in; see "KEEP TRYING THINGS" at the top)
+## Ideas queue (work the open items in order, as many as scripts\usage_pace.py allows; see "KEEP TRYING THINGS" at the top)
 
 Rule names must match `research/families.py` exactly (`analyze_rule.find_rule` says when one does not). Write
 every result, pass or fail, into the report and mark the item here with the date and one line. Add new items at
@@ -1022,3 +1044,67 @@ drawdown, capacity in dollars, and say how many variants were tried.
 43. Take-profits on hourly bars (3.48 and 3.63 moved only the stops to hourly bars): add an hourly option for the take legs in
     research/exits.py (with a test) and re-run exit_study.py --hourly for the Entertainment band and the 5-cent rule at 45,000
     (the hourly bars are already in data\kalshi_hourly.db). Does any take-profit beat hold out of sample? Backtest only; low priority.
+
+Items 44-63 added 7:30 pm CST Nov 24 (the user: "Test as many things as you can"). Robustness of the three live rules
+first (they carry the paper accounts), then Sports once it lands, then new cuts. "The band" = "NO where YES is at
+5-35c", Entertainment, resting, at 20,000 (rule_ent_band_20k); "the 5-cent rule" = "NO at mid <= 5c, <= 30d,
+spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Climate and Weather (rule_climate_band).
+44. Edge decay: per-bet return of the band, the 5-cent rule and the Climate band by calendar quarter (events and bets
+    per quarter, event-clustered), and the slope across quarters. Pre-state: "decaying" if every out-of-sample quarter
+    is below the in-sample mean AND the slope's t < -2. Is the edge shrinking as Kalshi grows? A small script
+    (research/edge_by_quarter.py, + 1 test). Backtest only.
+45. Stability INSIDE the out-of-sample half (does not move the split): the same three rules on Apr-Jun 2026 and on
+    Jul 2026 onward separately: tail test and per bet in each. A rule that earns only in one sub-period is fragile.
+46. Series concentration of the band: bets, events and per-bet return of its top 15 series in each half; then the band
+    without its best series and without its top 3 (by in-sample money). Pre-state: fragile if dropping the top series
+    halves the out-of-sample per-bet return. Same for the Climate band (it has fewer series).
+47. Series selection for the band: the Entertainment series with a positive in-sample band return (10+ events) against
+    the rest, out of sample. Does picking series by their own history add anything (family 11 for the band only)?
+48. One bet per event for the band (RT and streaming ladders give several correlated bets per event): keep only the
+    rung with YES nearest 20c, against all rungs: per bet, tail test, and the 1% replay's drawdown. Correlated rungs
+    may be what makes the drawdown; one per event may be the risk-averse version. If it passes both halves with a
+    lower drawdown, add a paper account under a new name.
+49. Permutation check of the band at 20,000: shuffle outcomes between events within each price cent (5,000 draws,
+    events kept whole) and give the share of draws with a per-bet return at least the observed, in each half. A
+    second opinion on the tail test. Backtest only; small script + 1 test.
+50. Multiple-testing ledger for Entertainment: count every variant tried on Entertainment since report 3.24 (rounds and
+    queue items), and apply Holm to the out-of-sample results of the band, the fall rule and the 35-50c fall rule.
+    Write the deflated verdict plainly. A table, no new code.
+51. Where the band's money is by spread at entry: 1c, 2c, 3-5c, 6-10c (resting at the bid in a wide quote earns the
+    spread): per bet, fills and tail test at 20,000. And `research\resting_variants.py` with deeper -1 (a cent inside
+    the spread) for the band: the forward fill rate (49%, the observation log) is below the backtest's model, so is
+    improving the bid worth its price?
+52. Weekend against weekday entry for the band (box-office and streaming weekends): bars dated Fri-Sun against Mon-Thu,
+    per bet in both halves. One split, pre-stated.
+53. Attention spikes in the band: bets where 7-day volume (dvol7) is in the top quarter of that market's own history
+    to date against the rest. One split, pre-stated.
+54. The Climate band by series group (daily highs, lows, rain, snow, hurricanes and the rest, by series title) and by
+    days to close; and the 5-cent rule on Climate and Weather alone at 20,000 (3.44 did 45,000).
+55. Politics alone at 20,000 for the band (3.33: passes at 45,000 by 0.4 pt) and for the 5-cent rule; and Politics
+    0-5c (3.34). If both halves pass at 20,000 too, add a Politics paper account under a new name.
+56. SPORTS, once its census has landed (data\kalshi_download.log: the Sports census "finished this pass" after
+    "categories with work: ['Sports']"; `research\panel.py` shows it): rounds r26_random_sports and r26_liquid_sports
+    (`run_sweep.py --categories Sports`, both samples, `round_tables.py`), the calibration curve, the 5-cent rule and
+    the band, mk and tk. Sports is its own sample: never pool it with the nine. Say how many bars a market has (game
+    markets live a few days, like Crypto in 3.25, where daily bars were too coarse).
+57. Sports by sport: add a --series-tags option to research/panel.py load() and analyze_rule.py (series.tags holds
+    Soccer, Basketball, Football, Baseball, Tennis, Golf, Hockey, ...; with a test), and run the calibration curve and
+    the 5-cent rule per sport with 30+ events.
+58. Sports futures against game markets: split Sports by scheduled life (14+ days against shorter; season winners,
+    awards and season totals against single games): the favourite-longshot bias of the betting literature is strongest
+    in futures. Calibration curve and the band in each.
+59. Sports hourly bars (after 56, only if the game markets are too short for daily bars): research\hourly_bars.py on the
+    busiest Sports game markets (--categories Sports --max-markets 2000), then the 5-cent rule on hourly entries in the
+    last 48 hours. Low priority.
+60. Ladder rungs out of line: in a threshold ladder (one event, "above X" rungs), a rung whose YES mid is above the
+    straight line between its two neighbours' mids by 3c+ (a convexity kink, known at the bar). NO on the kinked rung,
+    resting, at 20,000 and 45,000, Entertainment and the nine apart. New rule name in families.py (add, + a test).
+61. Stale quotes in the band: bets where the mid has not moved in the last 3 and 7 bars against the rest (an
+    overpriced YES nobody re-prices). One split, pre-stated.
+62. The combined account with the forward fill rate: re-run research\combined.py with fills thinned at random to the
+    observation logs' measured rates (the 5-cent rule ~65%, the band ~49%), 200 draws: yearly return and drawdown
+    range out of sample. Does the paper fill rate change the account's verdict? Needs a --fill-rate option (+ a test).
+63. STANDING, forward: Claude's forecasts against the market. Once 100 forecast markets have settled (19 at 7:00 pm
+    Nov 24): Brier score and log loss of Claude's median, the market mid at the forecast and the 0.3 blend, by event,
+    with a paired bootstrap; the two forecast blocks (cloud, PC) apart. The experiment's main question
+    (README: "the experiment's real product is the forecast log").
