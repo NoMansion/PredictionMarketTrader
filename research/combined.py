@@ -148,7 +148,9 @@ def main() -> int:
         print(f"\n{args.draws} draws, fills kept: 5-cent {args.fill_five:.0%}, 5-35c {args.fill_wide:.0%}; stake 1%; "
               "5th / 50th / 95th percentile")
         print((q * 100).round(1).to_string())
-        q.round(5).to_csv(HERE / "results" / f"combined_fill_draws{args.draws}.csv")
+        lv = (f"_min{args.min_cumvol:.0f}" if args.min_cumvol is not None else "") + (
+            f"_five{args.five_cumvol:.0f}" if args.five_cumvol is not None else "")
+        q.round(5).to_csv(HERE / "results" / f"combined_fill{lv}_draws{args.draws}.csv")
     t = pd.DataFrame(out)
     pd.set_option("display.width", 260, "display.max_colwidth", 48)
     pct = ["in/bet", "out/bet", "in/yr", "in dd", "in at work", "out/yr", "out dd", "out at work"]

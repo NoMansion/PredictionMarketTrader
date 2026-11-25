@@ -795,6 +795,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   band quotes are the worst bets (reversed); on markets settled after selection (to Nov 24) every Entertainment rule stays
   positive, band at 20,000 passes on them alone (+5.8% a bet); Climate band fails in sample at every level; RT split not met.
   stale_quotes.py + 1 test. Items 75-77 added. Jobs ok; main $1,009.91, 2 settled.
+- 12:35 pm CST Nov 25: queue items 60, 68, 69, 70, 71, 62 (reports 3.82-3.87), ITEMS 6: ladder kink rule fails; band
+  edge does not depend on series age but grows with ladder width (hindsight; item 79 pre-states an at-the-bar test); the
+  fall rule's out-of-sample profit is 40 wide ladders; out of sample only the band clears the calibrated nulls; paper fill
+  rates leave the combined account positive (median +11.8%/y out). Items 78-79 added. Jobs ok; main $1,008.54, 2 settled.
 
 ## How to run a round
 
@@ -1183,7 +1187,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     resting, at 20,000 and 45,000, Entertainment and the nine apart. New rule name in families.py (add, + a test).
 61. DONE 9:35 am CST Nov 25 (report 3.78): REVERSED: stale band bars (mid unchanged 3 bars) earn +3.6% and fail the tail
     test both halves; bars that just moved earn +8.8% and pass. stale_quotes.py + 1 test. Item 75 added.
-62. The combined account with the forward fill rate: re-run research\combined.py with fills thinned at random to the
+62. DONE 12:35 pm CST Nov 25 (report 3.87): verdict unchanged; thinned to 65% / 49%, four legs out +0.4 / +11.8 / +26.0%
+    a year (5th/50th/95th), DD median 9.4%. combined.py --draws + test. WAS: The combined account with the forward fill rate: re-run research\combined.py with fills thinned at random to the
     observation logs' measured rates (the 5-cent rule ~65%, the band ~49%), 200 draws: yearly return and drawdown
     range out of sample. Does the paper fill rate change the account's verdict? Needs a --fill-rate option (+ a test).
     (3.64: the paper rates match the backtest's any-bar rates, so expect little; also run combined.py with
@@ -1214,7 +1219,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 69. DONE 12:25 pm CST Nov 25 (report 3.84): edge grows with ladder width in both halves (1 bet: +2-3%, fails the tail;
     4+: +8-11%, passes) but bets-per-event is hindsight. Item 79. WAS: The band's rungs per event (3.70: one rung is worse than all): events with 1, 2-3 and 4+ band bets, per bet and the tail
     test on the event sum, both halves at 20,000. Does the edge grow with ladder width? A table; no new code beyond a groupby.
-70. DONE 12:45 pm CST Nov 25 (report 3.86): out of sample only the band clears the nulls; the 5-cent rule (ask null 0.075,
+70. DONE 12:29 pm CST Nov 25 (report 3.86): out of sample only the band clears the nulls; the 5-cent rule (ask null 0.075,
     mid 0.20) and both fall rules (0.10-0.11 / 0.14-0.21) do not. --independent + test. WAS: calibrated_null.py for the 5-cent rule (nine, 45,000) and the fall rules, both nulls, both halves: which live rule clears the
     mid null out of sample? Also the band with independent draws per market as the narrow bound beside 3.71's wide one.
 71. DONE 12:27 pm CST Nov 25 (report 3.85): out-of-sample profit is all in 40 events with 4+ bets; 1-bet events lose -5.6%

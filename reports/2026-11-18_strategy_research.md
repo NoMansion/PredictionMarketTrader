@@ -2831,7 +2831,7 @@ fallen 3c+ in 7 days, 5,000+, resting (rule_ent_fall's level); closes to Nov 24.
   is not risk-averse; rule_ent_fall keeps trading on paper as a record only. Item 79's at-the-bar ladder-width test covers
   this rule too (added there).
 
-### 3.86 Calibrated nulls for the live rules (12:45 pm CST, November 25)
+### 3.86 Calibrated nulls for the live rules (12:29 pm CST, November 25)
 
 Ideas queue item 70. `research/calibrated_null.py` (3.71) for the three live rules besides the band, and the band with
 one draw per MARKET (`--independent`, new, + a test) as the narrow bound beside 3.71's whole-event one. 2,000 draws.
@@ -2856,3 +2856,26 @@ Nov 24-25.
 - The band clears both nulls with markets drawn independently (the narrow bound); with whole events (3.71) it was 0.006
   out of sample on the mid null. Between the two bounds, the band is the one live rule this test supports.
 - No account changes (the accounts are records; nothing reaches config). It agrees with 3.72's Holm count and 3.85.
+
+### 3.87 The combined account with the paper fill rates (12:35 pm CST, November 25)
+
+Ideas queue item 62. `research/combined.py --stakes 0.01 --draws 200 --min-cumvol 5000 --five-cumvol 45000` (new options
+`--draws`, `--fill-five`, `--fill-wide`, + a test): each draw keeps each backtest fill with the observation logs' measured
+rate (5-cent legs 65%, 5-35c legs 49%; 3.64), then replays the account at 1%. 200 draws; closes to Nov 24-25.
+
+| Account (1% stake) | Full fills: out a year, worst DD | Thinned, out a year: 5th / 50th / 95th pct | Thinned, out worst DD: 5th / 50th / 95th | Thinned, in a year: 5th / 50th / 95th |
+|---|---|---|---|---|
+| all four legs | +6.1%, 14.3% | +0.4 / +11.8 / +26.0% | 6.1 / 9.4 / 14.9% | +0.9 / +5.1 / +8.6% |
+| first three legs | +8.5%, 13.0% | +0.4 / +10.7 / +24.9% | 6.8 / 10.3 / 16.6% | +0.4 / +4.3 / +8.3% |
+| 5-cent nine + band | +4.5%, 8.9% | -2.8 / +6.2 / +16.8% | 7.7 / 12.6 / 18.2% | +0.9 / +4.6 / +8.1% |
+| band alone (Ent, 5,000) | +1.5%, 13.3% | -3.0 / +7.1 / +19.2% | 9.9 / 15.3 / 21.6% | +2.0 / +5.5 / +8.9% |
+| 5-cent nine (45,000) alone | +16.1%, 1.9% | +5.3 / +9.1 / +12.7% | 1.0 / 1.9 / 3.7% | +0.2 / +0.9 / +1.6% |
+
+- **The paper fill rate does not change the verdict**: thinned to the measured rates, the four-leg account's median is
+  still positive in both halves (+5.1% / +11.8% a year), and 95% of draws stay above zero out of sample (+0.4% at the 5th
+  percentile). Every leg alone has draws below zero out of sample except the 5-cent nine.
+- **The spread across draws is the finding**: out of sample the same rules give anything from +0.4% to +26% a year
+  depending only on which orders fill, and the full-fill account sits below the thinned median (fewer bets means less
+  cash tied up when a good bet comes along). One year of out-of-sample record cannot tell these apart.
+- Without `--min-cumvol` (every market, the default since 3.45) the account loses in sample (-24% a year): the 5,000 and
+  45,000 levels remain the condition for any of this.
