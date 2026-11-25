@@ -1146,8 +1146,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 51. DONE 6:15 am CST Nov 25 (report 3.73): per bet rises with spread at entry in both halves (1c +5.6%, 2c +7.5%, 3-5c
     +8.7%, 6-10c +11.1%; 1c out of sample only +3.4%); a bid a cent inside fills more (89% vs 77%) but earns less a bet
     in every spread row: not worth it. Item 72 added.
-52. Weekend against weekday entry for the band (box-office and streaming weekends): bars dated Fri-Sun against Mon-Thu,
-    per bet in both halves. One split, pre-stated.
+52. DONE 6:16 am CST Nov 25 (report 3.74): no weekday effect. Fri-Sun +6.84% / +7.29% a bet, Mon-Thu +8.13% / +6.04%
+    (in / out): both pass the tail test both halves, the leader flips between halves.
 53. Attention spikes in the band: bets where 7-day volume (dvol7) is in the top quarter of that market's own history
     to date against the rest. One split, pre-stated.
 54. The Climate band by series group (daily highs, lows, rain, snow, hurricanes and the rest, by series title) and by

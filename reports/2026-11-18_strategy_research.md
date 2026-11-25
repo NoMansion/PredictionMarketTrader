@@ -2578,3 +2578,17 @@ Nov 24, NO bid resting 3 daily bars. "deeper -1" = a cent better than the best N
   bet in every spread row and in sample overall (+7.06% against +7.58%; replay +6.8% against +9.2% a year); only the
   whole-band out-of-sample row is better (+8.69%), and that row also drops the 1c-spread first bars, so it is partly
   the spread effect above. Accounts stay at the best bid. Variants tried: 5 spread rows x 2 bids, one run.
+
+## 3.74 Ideas queue 52: weekend against weekday entry for the band (6:16 am CST, Nov 25)
+
+No new code. Entertainment band, 20,000, resting, data to Nov 24; each bet split by the weekday of its entry bar (UTC
+date). Replay at 1%, event cap 3%.
+
+| entry day | bets in / out | per bet in / out | losing events in / out (bound vs break-even) | replay 1% /y in / out | worst DD in / out |
+|---|---|---|---|---|---|
+| all | 1,024 / 740 | +7.58% / +6.61% | 106/474 ok / 66/294 ok | +9.1% / +43.5% | 6.5% / 7.0% |
+| Fri-Sun | 440 / 339 | +6.84% / +7.29% | 56/270 (25.2% vs 29.7%) ok / 39/208 (23.8% vs 29.3%) ok | +11.9% / +24.5% | 7.3% / 5.7% |
+| Mon-Thu | 584 / 401 | +8.13% / +6.04% | 65/345 (22.6% vs 30.0%) ok / 44/200 (27.4% vs 31.1%) ok | +7.2% / +24.9% | 4.5% / 5.3% |
+
+- **No weekday effect.** Both parts pass the tail test in both halves, and which part earns more flips between the
+  halves (in sample Mon-Thu by 1.3 points, out of sample Fri-Sun by 1.3). Nothing to use. Variants tried: 1, pre-stated.
