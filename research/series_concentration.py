@@ -65,6 +65,24 @@ def drop_top(b: pd.DataFrame, ks=(0, 1, 3)) -> tuple[pd.DataFrame, dict]:
     return t, {"oos_base": base, "oos_without_top1": one, "fragile": fragile}
 
 
+def select_by_history(b: pd.DataFrame, min_events: int = 10) -> pd.DataFrame:
+    """Queue item 47: series picked by their own in-sample record (10+ in-sample events and a positive in-sample
+    per-bet return) against the rest, out of sample. Groups: picked, rejected (10+ events, not positive), thin
+    (under min_events in sample, including series new out of sample)."""
+    oos = b["oos"].astype(bool)
+    ins = b[~oos].groupby("series").agg(ev=("event", "nunique"), r=("r", "mean"))
+    seasoned = ins[ins["ev"] >= min_events]
+    picked = set(seasoned.index[seasoned["r"] > 0])
+    rejected = set(seasoned.index[seasoned["r"] <= 0])
+    grp = np.where(b["series"].isin(picked), "picked", np.where(b["series"].isin(rejected), "rejected", "thin"))
+    rows = []
+    for name in ("picked", "rejected", "thin"):
+        for half, m in (("in", ~oos), ("out", oos)):
+            g = b[(grp == name) & m.to_numpy()]
+            rows.append({"group": name, "half": half, "series": g["series"].nunique(), **_half(g)})
+    return pd.DataFrame(rows)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--rule", required=True)
@@ -74,6 +92,7 @@ def main() -> int:
     ap.add_argument("--min-cumvol", type=float, default=None)
     ap.add_argument("--db", default=str(panel.DB))
     ap.add_argument("--top", type=int, default=15)
+    ap.add_argument("--select", action="store_true", help="queue item 47: series picked by their in-sample record")
     args = ap.parse_args()
     cats = [c.strip() for c in args.categories.split(",") if c.strip()]
     df = panel.load(args.db, cats, sample="liquid", min_cumvol=args.min_cumvol)
@@ -92,6 +111,8 @@ def main() -> int:
     print(t.drop(columns=["series_dropped"]).to_string(index=False, float_format=fmt))
     print("dropped:", t.loc[t["half"] == "out", ["dropped", "series_dropped"]].to_string(index=False))
     print(f"out-of-sample per bet {v['oos_base']:+.2%}, without top series {v['oos_without_top1']:+.2%}; FRAGILE: {v['fragile']}")
+    if args.select:
+        print(select_by_history(b).to_string(index=False, float_format=fmt))
     return 0
 
 

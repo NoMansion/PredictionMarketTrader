@@ -2453,3 +2453,22 @@ without its top 1 and top 3 series ranked by IN-SAMPLE money (no out-of-sample h
   rule_climate_band keeps running as a record; no setting of it goes anywhere.
 - Climate's out-of-sample half has grown since 3.67 (583 events, 141 losing, against 485 and 122 then): the refreshed
   history is landing in Climate (last close now Nov 24). It still fails the tail test (27.3% bound vs 26.5% break-even).
+
+## 3.69 Ideas queue 47: picking the band's series by their own in-sample record (12:35 am CST, Nov 25)
+
+`research/series_concentration.py --select` (+1 test): Entertainment band, 20,000, resting entry, data to Nov 24.
+Series with 10+ in-sample events and a positive in-sample per-bet return ("picked") against rejected ones (10+ events,
+not positive) and thin ones (fewer than 10 in-sample events, including series new out of sample).
+
+| group | series | in sample per bet (bets, events) | out of sample per bet (bets, events) | tail test out |
+|---|---|---|---|---|
+| picked (KXALBUMSALES, KXNETFLIXRANKSHOW, KXRT) | 3 | +12.66% (77, 36) | +4.97% (232, 85) | FAIL (24 losing, 37.4% vs 36.1%) |
+| rejected | 0 | - | - | - |
+| thin (all others) | 346 / 119 | +7.16% (947, 438) | +7.36% (508, 209) | pass |
+
+- **FAILS: series selection adds nothing to the band.** Only three Entertainment series have 10 in-sample events; all
+  three were positive and so nothing could be rejected. Out of sample the picked three earn LESS a bet than the rest and
+  fail the tail test alone (mostly KXRT, 3.68). With a looser 5-event cut (a side look, not the pre-stated test) two series
+  are rejected; they had 10 out-of-sample bets at -1.1%, too few to matter. The band's money comes from the long tail of
+  short-lived series, which by construction have no history to select on. Family 11 (series selection) stays closed for
+  the band. Variants tried here: 1 pre-stated (+1 side look).

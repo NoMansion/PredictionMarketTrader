@@ -766,6 +766,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 9:20 pm CST Nov 24: queue item 45 (report 3.67): band stable in both out-of-sample sub-periods; 5-cent rule's pass rests on
   Apr-Jun (Jul+ fails the tail test); Climate band fails the tail test in both halves on today's data. Item 66 added.
 
+- 12:35 am CST Nov 25: queue items 46 and 47 (reports 3.68, 3.69): band not carried by one series (fragile: no); Climate band
+  concentrated in a few series both halves; picking band series by in-sample record FAILS. series_concentration.py + 2 tests
+  (521 pass); items 67, 68 added. Jobs ok, cycle running since 11:25 pm; main $1,011.99, 2 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -1103,7 +1107,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     Was: Series concentration of the band: bets, events and per-bet return of its top 15 series in each half; then the band
     without its best series and without its top 3 (by in-sample money). Pre-state: fragile if dropping the top series
     halves the out-of-sample per-bet return. Same for the Climate band (it has fewer series).
-47. Series selection for the band: the Entertainment series with a positive in-sample band return (10+ events) against
+47. DONE 12:35 am CST Nov 25 (report 3.69): FAILS. Only 3 series have 10+ in-sample events, all positive; out of sample they earn
+    +4.97% a bet (tail FAIL) against +7.36% for the rest. Selection adds nothing. series_concentration.py --select + 1 test.
+    Was: Series selection for the band: the Entertainment series with a positive in-sample band return (10+ events) against
     the rest, out of sample. Does picking series by their own history add anything (family 11 for the band only)?
 48. One bet per event for the band (RT and streaming ladders give several correlated bets per event): keep only the
     rung with YES nearest 20c, against all rungs: per bet, tail test, and the 1% replay's drawdown. Correlated rungs
@@ -1168,3 +1174,6 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 67. KXRT (Rotten Tomatoes ladders) in the band: the band's largest out-of-sample series earns below the band a bet (3.68:
     without it +7.97% vs +6.61%). RT against the rest per bet and tail test in BOTH halves at 20,000; if RT is below the rest
     in both, test the band without RT as a pre-stated variant (multiple testing: count it in item 50). Backtest only.
+68. The band's money by series LIFE (3.69: it lives in short-lived series): bets of series whose first market opened within
+    30 days of the bet against older series, both halves at 20,000, per bet and tail test. Known at the bar (series first
+    open_ts). If new series carry the edge, a 'new series only' variant is pre-stated here. Backtest only.
