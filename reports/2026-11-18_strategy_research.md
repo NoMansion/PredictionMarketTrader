@@ -2428,3 +2428,28 @@ Pre-stated: "decaying" if every out-of-sample quarter is below the in-sample mea
   return is positive (+0.7% / +1.7%) but it does not meet rule 1 of the judging rules at 5,000 on today's data. The paper
   account rule_climate_band (+$14.74, 0 settled) is left running as a record (accounts are never changed); no setting of
   it should reach anything else. Data to Sep 18 for the nine and Climate (refresh pending).
+
+## 3.68 Ideas queue 46: series concentration of the band and the Climate band (12:25 am CST, Nov 25)
+
+New `research/series_concentration.py` (+1 test): per-series bets, events and return in each half, then the rule
+without its top 1 and top 3 series ranked by IN-SAMPLE money (no out-of-sample hindsight in the ranking). Pre-stated:
+"fragile" if dropping the top series halves the out-of-sample per-bet return. Resting entry, liquid sample.
+
+| rule | data | series (in / out) | out per bet | without top 1 | without top 3 | tail test out, top 3 dropped | fragile |
+|---|---|---|---|---|---|---|---|
+| Ent band, 20,000 | 6,685 mkts, 1,727 ev, last close Nov 24 | 349 / 122 | +6.61% (740 bets, 294 ev) | +6.61% | +6.40% | pass (65 losing of 290, 26.8% vs 34.1%) | no |
+| Climate band, 5,000 | last close Nov 24 | 87 / 78 | +1.83% (886 bets, 583 ev) | +1.74% | +1.70% | FAIL (as without dropping) | no |
+
+- **The Entertainment band is not carried by a series.** Its in-sample top series are one-off events (Super Bowl
+  guests, ads and performers, Time and Google lists) with no out-of-sample bets at all, so dropping them changes nothing
+  out of sample. Looked at with hindsight, out of sample: the top series (KXRT, Rotten Tomatoes) holds 13% of the money,
+  the top 3 25%, the top 5 35%; without the top 1 the per-bet return RISES to +7.97% (KXRT has many bets at a lower
+  return), without the top 5 it is +6.43%. Broad.
+- **The Climate band is concentrated.** In sample, without its top 3 series (KXHIGHAUS, KXHIGHNY, KXSNOWNYM) it earns
+  -0.79% a bet. Out of sample, with hindsight, its top 5 series hold 118% of the money (the rest lose) and without them
+  it earns -0.78%. It passes the pre-stated test only because the in-sample leaders are not where the out-of-sample money
+  came from. Together with 3.67 (fails the tail test in both halves at 5,000) this says the Climate band has no stable
+  basis on today's data; item 66 (20,000 / 45,000) and item 54 (by series group) are the remaining checks.
+  rule_climate_band keeps running as a record; no setting of it goes anywhere.
+- Climate's out-of-sample half has grown since 3.67 (583 events, 141 losing, against 485 and 122 then): the refreshed
+  history is landing in Climate (last close now Nov 24). It still fails the tail test (27.3% bound vs 26.5% break-even).

@@ -1097,7 +1097,10 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     bet, tail fails on 4 losers in 109 events); Climate band fails the tail test in both sub-periods AND both whole halves
     on today's data. Was: Stability INSIDE the out-of-sample half (does not move the split): the same three rules on Apr-Jun 2026 and on
     Jul 2026 onward separately: tail test and per bet in each. A rule that earns only in one sub-period is fragile.
-46. Series concentration of the band: bets, events and per-bet return of its top 15 series in each half; then the band
+46. DONE 12:25 am CST Nov 25 (report 3.68): band NOT fragile (out +6.61% a bet, +6.61% / +6.40% without its in-sample top 1 / 3;
+    out-of-sample money broad: top series KXRT 13%). Climate band passes the pre-stated test but is concentrated: in sample
+    -0.79% without its top 3, out of sample its top 5 (hindsight) hold 118% of the money. series_concentration.py + 1 test.
+    Was: Series concentration of the band: bets, events and per-bet return of its top 15 series in each half; then the band
     without its best series and without its top 3 (by in-sample money). Pre-state: fragile if dropping the top series
     halves the out-of-sample per-bet return. Same for the Climate band (it has fewer series).
 47. Series selection for the band: the Entertainment series with a positive in-sample band return (10+ events) against
@@ -1162,3 +1165,6 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     Climate (after item 64): the band's 2026Q3-Q4 sat below its in-sample mean (3.66); a third low quarter would be worth a line.
 66. The Climate band at 20,000 and 45,000 (3.67: at 5,000 it fails the tail test in both halves on today's data): per bet and
     tail test in both halves. Does it hold anywhere, or is rule_climate_band's basis gone? A table; no account changes.
+67. KXRT (Rotten Tomatoes ladders) in the band: the band's largest out-of-sample series earns below the band a bet (3.68:
+    without it +7.97% vs +6.61%). RT against the rest per bet and tail test in BOTH halves at 20,000; if RT is below the rest
+    in both, test the band without RT as a pre-stated variant (multiple testing: count it in item 50). Backtest only.
