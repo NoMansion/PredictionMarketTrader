@@ -2313,7 +2313,7 @@ bars only (`--tag nine_liquid_45000_daily`). Same 25 policies as 3.28; 418 stop 
 - Forward: nothing new has settled in the rule accounts (rule_5c_busy 1 bet, lost); main $1,009.78, 2 settled (+$15.60),
   3 open, 5 resting; the 4:42 pm cycle ended ok.
 
-## 3.64 The paper fill rate against the backtest's: a measurement mismatch, not a generous fill model (8:20 pm CST, Nov 24)
+## 3.64 The paper fill rate against the backtest's: a measurement mismatch, not a generous fill model (7:35 pm CST, Nov 24)
 
 The question (raised with the user at 10:25 am and 6:55 pm Nov 24): the Entertainment band's observation log
 (`data\shadow_ent.db`, a hypothetical $20 resting NO bid at the best bid on each qualifying market, left three days)

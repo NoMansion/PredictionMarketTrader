@@ -49,7 +49,7 @@ check-ins twice per 3 h by a Windows quirk): 4% of the week for about $34 at lis
 each), the filter account ~5%. Pace: ~90% a week. Changes at 11:45 pm Nov 22: runtime.cycle_every_hours 2 -> 2.5,
 and scripts\checkin.ps1 skips a start within 150 minutes of the last one (the quirk). Expected: ~67-70% a week from
 this PC, leaving room for the user's own sessions (the new PC shares the same limit).
-- Check-ins cannot see the plan's usage meter. Since 7:30 pm Nov 24 they read `scripts\usage_pace.py` instead: the
+- Check-ins cannot see the plan's usage meter. Since 7:15 pm Nov 24 they read `scripts\usage_pace.py` instead: the
   week's list-price spend from the project's own logs (forecasts in data\pmt.db and data\rules\*.db, check-ins in
   data\checkin\*.json) at $8.50 a percent, projected to the reset from the last 24 hours, against 75% minus 7% kept
   for the user's own sessions; the room left is spread over the check-ins still to come, at ~$1.50 an item, as
@@ -804,7 +804,7 @@ Forward-only (cannot be backtested):
 - 6:35 pm CST Nov 24: queue item 29 (report 3.63): the 5-cent rule's stops on hourly bars all get WORSE (4 of 6 fail the tail test
   out of sample); hold stays; 1,188 markets' hourly bars fetched; item 43 added. Jobs ok (4:42 pm cycle ok); main $1,009.78, 2 settled.
 
-- 7:30 pm CST Nov 24 (the user's session, the user: "Test as many things as you can. There is no time constraint"):
+- 7:15 pm CST Nov 24 (the user's session, the user: "Test as many things as you can. There is no time constraint"):
   check-ins now work up to 4 queue items each by scripts\usage_pace.py (16% of the week used at 7:00 pm, pace ~50%,
   so 3 items a check-in for now), 100-minute timeout, $8 list-price cap a run; the download restarted at 7:01 pm with
   --with-sports (4,329 Sports series; first pass and census come before the random passes resume); queue items 44-63
@@ -813,7 +813,7 @@ Forward-only (cannot be backtested):
 - 7:20 pm CST Nov 24 (same session): the download refreshes the history weekly (--refresh-days 7 --forever; new
   series, the live endpoint's settled markets since ~Sep 21, bars for them in the fixed random order; late listings
   never shrink a sample); 4 new Entertainment series found at once; item 64 added. 505 tests pass.
-- 8:20 pm CST Nov 24 (same session; report 3.64): the forward fill-rate gap is a measurement mismatch. The log's 49%
+- 7:35 pm CST Nov 24 (same session; report 3.64): the forward fill-rate gap is a measurement mismatch. The log's 49%
   (Entertainment) is an order placed at a random moment; the backtest's like-for-like rate is 51% (its 69-80% was each
   market's FIRST qualifying day). Full trade records confirm the log; a trade-only fill model moves the band by 0.1 pt
   a bet. research/fill_audit.py, panel.set_fill("trade"), analyze_rule.py --fill; the logs' labels fixed. 511 pass.
@@ -1063,7 +1063,7 @@ drawdown, capacity in dollars, and say how many variants were tried.
     research/exits.py (with a test) and re-run exit_study.py --hourly for the Entertainment band and the 5-cent rule at 45,000
     (the hourly bars are already in data\kalshi_hourly.db). Does any take-profit beat hold out of sample? Backtest only; low priority.
 
-Items 44-63 added 7:30 pm CST Nov 24 (the user: "Test as many things as you can"). Robustness of the three live rules
+Items 44-63 added 7:15 pm CST Nov 24 (the user: "Test as many things as you can"). Robustness of the three live rules
 first (they carry the paper accounts), then Sports once it lands, then new cuts. "The band" = "NO where YES is at
 5-35c", Entertainment, resting, at 20,000 (rule_ent_band_20k); "the 5-cent rule" = "NO at mid <= 5c, <= 30d,
 spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Climate and Weather (rule_climate_band).
