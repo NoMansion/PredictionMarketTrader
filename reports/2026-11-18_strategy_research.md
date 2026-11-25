@@ -2592,3 +2592,23 @@ date). Replay at 1%, event cap 3%.
 
 - **No weekday effect.** Both parts pass the tail test in both halves, and which part earns more flips between the
   halves (in sample Mon-Thu by 1.3 points, out of sample Fri-Sun by 1.3). Nothing to use. Variants tried: 1, pre-stated.
+
+## 3.75 Ideas queue 53: volume spikes in the band (6:17 am CST, Nov 25)
+
+No new code. Entertainment band, 20,000, resting, data to Nov 24. A bet is a "spike" when its 7-day volume (dvol7) is at
+or above the 75th percentile of that market's STRICTLY earlier bars in the sample; the percentile needs 5 earlier bars
+(added before running: the bar itself cannot be its own history).
+
+| split | bets in / out | per bet in / out | losing events in / out (bound vs break-even) | replay 1% /y in / out | worst DD in / out |
+|---|---|---|---|---|---|
+| all | 1,024 / 740 | +7.58% / +6.61% | ok / ok | +9.1% / +43.5% | 6.5% / 7.0% |
+| spike | 66 / 34 | -2.66% / +10.50% | 12/46 (38.8% vs 23.1%) FAIL / 2/22 (25.9% vs 21.8%) FAIL | -0.9% / +3.2% | 3.2% / 1.0% |
+| not a spike | 91 / 67 | +13.38% / +15.88% | 12/68 ok / 6/43 ok | +6.2% / +9.8% | 3.7% / 1.7% |
+| under 5 earlier bars | 867 / 639 | +7.75% / +5.43% | 93/448 ok / 61/285 ok | +8.3% / +32.7% | 6.6% / 7.5% |
+
+- **The split cannot be read: 85% of the band's bets have no history to compare with.** The liquid sample starts a market
+  at its 20,000-contract bar, and most band bets are on that bar or soon after. Among the 258 bets that have history,
+  spikes are mixed (lose in sample, win out of sample on 34 bets; tail test fails both halves) and the rest earn more.
+  No account; variants tried: 1, pre-stated.
+- Side finding, not pre-stated: the 158 non-spike bets with 5+ earlier bars earn about twice the band a bet in both
+  halves (+13.4% / +15.9%). They are markets that came INTO the band late, after time above 20,000: item 73 tests that.
