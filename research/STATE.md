@@ -1156,8 +1156,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     fail the tail test both halves; non-spikes with history earn +13.4% / +15.9% a bet: item 73 added.
 54. DONE 6:18 am CST Nov 25 (report 3.76): FAILS everywhere. No series group (highs, lows, rain, snow, hurricanes, rest) or
     days-to-close slice of the Climate band passes the tail test in either half; Climate 5-cent rule at 20,000 fails out.
-55. Politics alone at 20,000 for the band (3.33: passes at 45,000 by 0.4 pt) and for the 5-cent rule; and Politics
-    0-5c (3.34). If both halves pass at 20,000 too, add a Politics paper account under a new name.
+55. DONE 9:25 am CST Nov 25 (report 3.77): Politics band at 20,000 FAILS out of sample again (33.9 vs 30.8%); Politics
+    5-cent rule passes both halves at 20,000 and 45,000 (+2.6% / +2.8% a bet) but is a subset of rule_5c_busy: no account.
 56. SPORTS, once its census has landed (data\kalshi_download.log: the Sports census "finished this pass" after
     "categories with work: ['Sports']"; `research\panel.py` shows it): rounds r26_random_sports and r26_liquid_sports
     (`run_sweep.py --categories Sports`, both samples, `round_tables.py`), the calibration curve, the 5-cent rule and

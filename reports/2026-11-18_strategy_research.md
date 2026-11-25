@@ -2642,3 +2642,25 @@ replay 1% +1.0% / +4.4% a year, drawdown 1.3% / 1.1%.
   and the combined account's Climate leg keep trading only as forward records.
 - **The Climate 5-cent rule at 20,000 fails out of sample**, as it did at 45,000 (3.44) and on the random sample (r24).
   Climate stays out of the 5-cent rule's categories. Variants tried: 6 groups + 3 windows + 1, all as the queue stated.
+
+### 3.77 Politics alone at 20,000: the band and the 5-cent rule (9:25 am CST, November 25)
+
+Ideas queue item 55. 3.33 found the band passes in Politics only at 45,000 (by 0.4 points out of sample). Re-run on
+today's data: `analyze_rule.py --sample liquid --categories Politics --min-cumvol <level> --side no --entry mk`, the
+band ("NO where YES is at 5-35c") at 20,000 and the 5-cent rule ("NO at mid <= 5c, <= 30d, spread <= 5c") at 20,000
+and 45,000. 3 variants, all stated in the queue.
+
+| Politics | Bets (events) | Per bet | Losing events in / out | Tail test in / out | Replay 1%, in / out a year | Worst DD in / out |
+|---|---|---|---|---|---|---|
+| band, 20,000 | 1,371 (671) | +2.74% | 92/427 / 77/266 | passes (25.1 vs 26.4%) / **FAILS** (33.9 vs 30.8%) | +1.5% / +2.9% | 11.7% / 7.2% |
+| 5-cent rule, 20,000 | 792 (438) | +2.58% | 7/269 / 3/187 | passes (4.8 vs 6.7%) / passes (4.1 vs 6.5%) | +1.6% / +13.6% | 2.6% / 1.0% |
+| 5-cent rule, 45,000 | 504 (288) | +2.77% | 4/195 / 1/108 | passes (4.6 vs 6.1%) / passes (4.3 vs 5.9%) | +1.1% / +7.7% | 1.9% / 1.0% |
+
+- **The Politics band fails out of sample at 20,000 again** (as 3.33): its pass at 45,000 is one level, not a stable
+  effect. No Politics band account.
+- **The 5-cent rule holds in Politics alone at both levels** (+2.6% / +2.8% a bet, both halves, shallow drawdowns;
+  capacity at 20,000: median $411 traded in the week before entry, 19% of entry days under 100 contracts). Politics
+  is already one of the nine inside rule_5c_busy, so a Politics-only account would be a subset of a live account,
+  not a new edge; its in-sample year (+1.6%) is as thin as the pooled rule's, and by year the money is 2026 (2025 per
+  bet +0.0%). **No new account.** The pooled rule's out-of-sample reliance on Apr-Jun (3.67) is the open question;
+  Politics does not answer it.
