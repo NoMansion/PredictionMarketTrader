@@ -2312,3 +2312,43 @@ bars only (`--tag nine_liquid_45000_daily`). Same 25 policies as 3.28; 418 stop 
 - Capacity is unchanged from 3.28 (same bets). Data: `research/results/exit_nine_liquid_45000_{daily,hourly}.csv`.
 - Forward: nothing new has settled in the rule accounts (rule_5c_busy 1 bet, lost); main $1,009.78, 2 settled (+$15.60),
   3 open, 5 resting; the 4:42 pm cycle ended ok.
+
+## 3.64 The paper fill rate against the backtest's: a measurement mismatch, not a generous fill model (8:20 pm CST, Nov 24)
+
+The question (raised with the user at 10:25 am and 6:55 pm Nov 24): the Entertainment band's observation log
+(`data\shadow_ent.db`, a hypothetical $20 resting NO bid at the best bid on each qualifying market, left three days)
+filled 95 of 194 decided orders, 49%, while its report said "the backtest's model fills about 69% to 80%". If the
+backtest's resting fills were too generous, every resting rule's figures would be too good. New tool:
+`research/fill_audit.py` (+5 tests); `research/panel.py` gets a second fill model, `panel.set_fill("trade")` (+1 test),
+and `analyze_rule.py --fill trade`.
+
+1. **The log measured what it says.** Re-deciding all 216 decided orders of both logs from each market's full public
+   trade record (one request each; no window came near the 5,000-trade cap of the log's own check) gives exactly what
+   was logged: Entertainment 95 of 194 (49%), the 5-cent log 14 of 22 (64%). A wider "through" rule, which also counts
+   a NO buyer trading at or above the order's price (the level must have been cleared), adds no fill at all.
+2. **The backtest's fill rule is not what is generous.** Its resting NO bid fills when a later daily bar's YES bid
+   reaches the order's price OR a trade prints above it. Counting only the print ("trade" model): the band at 20,000
+   goes from 1,526 to 1,513 bets, +7.39% to +7.31% a bet, both halves still pass the tail test (upper bounds unchanged:
+   25.7% / 26.4% against break-even 35.1% / 33.6%), 1% replay out of sample +33.0%/y to +34.7%/y, drawdown 6.6% to 6.5%.
+3. **The 69-80% was the wrong comparison.** The backtest bets on each market's first bar on which the rule held AND
+   the order filled, so an unfilled order is placed again on the next qualifying bar (the paper rule accounts do the
+   same). Its "fill rate" was the share of markets whose FIRST qualifying bar filled. The log places one order per
+   market at whatever moment it first saw the market, mostly well into its time in the band. The backtest's rate for
+   an order placed on ANY qualifying bar is the like-for-like figure:
+
+| rule, level, fill model | markets | first qualifying bar | any qualifying bar | filled on some bar | the log |
+|---|---|---|---|---|---|
+| Entertainment band, 5,000, quote | 3,932 | 70% | **51%** (53,458 bars) | 88% | **49%** (194) |
+| Entertainment band, 5,000, trade | 3,932 | 68% | 50% | 87% | |
+| Entertainment band, 20,000, quote | 1,723 | 78% | 62% (20,312 bars) | 89% | |
+| Entertainment band, 20,000, trade | 1,723 | 77% | 61% | 88% | |
+| 5-cent rule, Economics + Politics, 45,000, quote | 921 | 61% | **50%** (7,795 bars) | 80% | **64%** (22) |
+| 5-cent rule, same, trade | 921 | 59% | 48% | 79% | |
+
+- **Verdict: the paper fill rates agree with the backtest** (49% against 51% for the band; the 5-cent log is above its
+  figure on 22 orders). Nothing in the resting results of 3.7-3.63 is inflated by the fill model; the "trade" model moves
+  each figure by a point or two. The logs' reports now quote the any-bar figure with the first-bar one beside it.
+- What this does NOT settle: whether the fills that happen are the bad ones (adverse selection). 3.56 / 3.58 / 3.60
+  found later fills earn as much a bet; the logs' filled-and-settled bets will say it forward (none settled yet).
+- Queue items 51 and 62 were written on the premise that the paper fill rate is below the model; they stand as tests of
+  their own, but that premise is withdrawn. No account changes. Data: `research/results/fill_audit_20261124.csv`.

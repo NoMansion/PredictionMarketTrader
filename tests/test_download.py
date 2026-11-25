@@ -978,6 +978,23 @@ def test_trade_through_flags_on_a_hand_built_market(hand):
     assert list(a["f3_no"]) == [True, True, True, False]
 
 
+def test_the_trade_fill_model_counts_only_prints_beyond_the_price(hand, monkeypatch):
+    db = sqlite3.connect(str(hand))
+    db.execute("UPDATE candles SET px_lo=.41 WHERE ticker='EV-T10' AND ts=?", (O + 3 * DAY,))              # bar 2
+    db.execute("UPDATE candles SET px_lo=.45, px_hi=.45 WHERE ticker='EV-T10' AND ts=?", (O + 4 * DAY,))   # bar 3
+    db.commit()
+    db.close()
+    monkeypatch.setattr(panel, "FILL", panel.FILL)                 # restored after the test
+    q = bars_of(panel.load(hand), "EV-T10")
+    panel.set_fill("trade")
+    t = bars_of(panel.load(hand), "EV-T10")
+    assert q.loc[0, "f3_yes"] and not t.loc[0, "f3_yes"]           # the ask came down to .40; no trade printed under it
+    assert q.loc[1, "f3_no"] and not t.loc[1, "f3_no"]             # the bid rose to .52; no trade printed above .46
+    assert (t["f3_no"] <= q["f3_no"]).all() and (t["f3_yes"] <= q["f3_yes"]).all()
+    with pytest.raises(ValueError):
+        panel.set_fill("touch")
+
+
 def test_takers_buy_at_the_next_bars_open(hand):
     a = bars_of(panel.load(hand), "EV-T10")
     assert list(a["n_ask_op"].iloc[:3]) == pytest.approx([.45, .45, .51])

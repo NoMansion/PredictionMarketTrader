@@ -161,7 +161,11 @@ def main() -> int:
     ap.add_argument("--min-cumvol", type=float, default=None)
     ap.add_argument("--max-cumvol", type=float, default=None,
                     help="only bars at which the market had traded fewer contracts than this (a layer of the census)")
+    ap.add_argument("--fill", default="quote", choices=["quote", "trade"],
+                    help="resting fills: 'quote' (a later quote reached the price, or a print beyond it) or 'trade' (a "
+                         "print beyond it only; the rate the observation logs' real trades support, report 3.64)")
     args = ap.parse_args()
+    panel.set_fill(args.fill)
     cats = [c.strip() for c in args.categories.split(",") if c.strip()] or None
     df = panel.load(args.db, cats, sample=args.sample, min_cumvol=args.min_cumvol)
     print(panel.describe(df))

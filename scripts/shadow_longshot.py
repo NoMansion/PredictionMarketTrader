@@ -58,10 +58,14 @@ RULE = {"max_mid": 0.05, "max_spread": 0.05, "max_days": 30.0, "min_days": 0.25}
 # A second band (2026-11-21, at the user's word): NO against YES at 5-35c in busy Entertainment markets, the lead of
 # report 3.24. Its own file (data/shadow_ent.db); the paper account rule_ent_band trades the same rule (rules.yaml).
 BANDS = {
-    "5c": {"rule": RULE, "db": "shadow.db", "categories": "economics,politics", "min_volume": 45000.0, "fill_note": "55% to 60%",
+    "5c": {"rule": RULE, "db": "shadow.db", "categories": "economics,politics", "min_volume": 45000.0,
+           # backtest, 3 daily bars, report 3.64: 48-50% for an order placed on any qualifying day (what an observation
+           # at a random moment sees), 59-61% on a market's first qualifying day
+           "fill_note": "48% to 50% on any qualifying day (59-61% on a market's first)",
            "listing": "kalshi_listing.json"},
     "ent": {"rule": {"min_mid": 0.05, "max_mid": 0.345, "max_spread": 0.10, "max_days": 400.0, "min_days": 0.25},
-            "db": "shadow_ent.db", "categories": "entertainment", "min_volume": 5000.0, "fill_note": "69% to 80%",
+            "db": "shadow_ent.db", "categories": "entertainment", "min_volume": 5000.0,
+            "fill_note": "50% to 51% on any qualifying day at 5,000 (68-70% on a market's first)",   # report 3.64
             "listing": "rules/kalshi_listing.json"},           # the rule accounts' listing covers Entertainment
 }
 
@@ -224,7 +228,7 @@ def observe(venue: Kalshi, db, listing: dict, categories: set[str], now: float, 
     return out
 
 
-def report(db, fill_note: str = "55% to 60%") -> str:
+def report(db, fill_note: str = "48% to 50% on any qualifying day") -> str:
     open_db(db)
     rows = db.execute("SELECT no_ask, ask_contracts, ask_usd_1c, fill_px, fill_shares, fee, stake, result, category FROM obs").fetchall()
     if not rows:

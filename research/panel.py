@@ -37,6 +37,20 @@ def set_split(date: str) -> None:
     SPLIT_TS = int(pd.Timestamp(date, tz="UTC").timestamp())
 
 
+# How a resting order fills in the backtest. "quote" (the model since 2026-11-18): a later bar's opposite quote reached
+# the order's price, or a trade printed beyond it. "trade": only a trade printed beyond it. The observation logs' real
+# trades (research/fill_audit.py, report 3.64) fill resting NO bids at about the "trade" rate, not the "quote" rate:
+# without our order in the book, a quote can move to our price at no cost to anyone, which a real order would stop.
+FILL = "quote"
+
+
+def set_fill(model: str) -> None:
+    global FILL
+    if model not in ("quote", "trade"):
+        raise ValueError(f"fill model {model!r}: 'quote' or 'trade'")
+    FILL = model
+
+
 CENSUS_MARGIN = 1.03       # a market's bars add up to at most 1.023 times its lifetime volume (measured on 9,240 markets)
 
 
@@ -177,6 +191,10 @@ def load(db_path: str | Path = DB, categories: list[str] | None = None, min_bars
         plo = pd.concat([g["px_lo"].shift(-i) for i in range(1, k + 1)], axis=1).min(axis=1)
         hi = pd.concat([g["bid_hi"].shift(-i) for i in range(1, k + 1)], axis=1).max(axis=1)
         phi = pd.concat([g["px_hi"].shift(-i) for i in range(1, k + 1)], axis=1).max(axis=1)
+        if FILL == "trade":                         # only a print beyond the order's price (see FILL)
+            df[f"f{k}_yes"] = df["quoted"] & (plo < df["bid"] - 1e-6)
+            df[f"f{k}_no"] = df["quoted"] & (phi > df["ask"] + 1e-6)
+            continue
         # a resting YES bid at `bid` fills if the ask came down to it or a trade printed below it
         df[f"f{k}_yes"] = df["quoted"] & ((lo <= df["bid"] + 1e-6) | (plo < df["bid"] - 1e-6))
         # a resting NO bid at 1 - ask fills if the YES bid rose to the ask or a trade printed above it
