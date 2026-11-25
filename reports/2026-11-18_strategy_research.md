@@ -2551,3 +2551,30 @@ reports' own counts. Holm at 5%, out-of-sample p only:
   events. Both pass the tail test out of sample because of their high break-even loss rates, not because of a proven edge.
 - Nothing changes in the paper accounts (they are the forward test that settles this); the band stays the lead, the
   fall rules stay on probation. New item 71: why the fall rule's per-bet and per-event means differ.
+
+## 3.73 Ideas queue 51: the band by spread at entry, and a bid a cent inside the spread (6:15 am CST, Nov 25)
+
+No new code (research/resting_variants.variant and describe on the band's mask). Entertainment band, 20,000, data to
+Nov 24, NO bid resting 3 daily bars. "deeper -1" = a cent better than the best NO bid (possible only where the spread is
+2c or more). Each spread row takes a market's first bar with that spread, so a market can appear in more than one row.
+
+| spread at entry | bid | bets | events | fill | per bet | in: per bet, losing | out: per bet, losing | replay 1% /y in / out | worst DD in / out |
+|---|---|---|---|---|---|---|---|---|---|
+| all | best bid | 1,764 | 765 | 77% | +7.17% | +7.58%, 106/474 ok | +6.61%, 66/294 ok | +9.2% / +37.8% | 6.4% / 7.0% |
+| all | 1c inside | 1,535 | 694 | 89% | +7.70% | +7.06%, 98/440 ok | +8.69%, 45/257 ok | +6.8% / +38.7% | 5.8% / 5.4% |
+| 1c | best bid | 1,093 | 509 | 77% | +5.56% | +7.32%, 57/298 ok | +3.42%, 46/213 ok | +7.2% / +15.5% | 5.6% / 5.9% |
+| 2c | best bid | 838 | 444 | 76% | +7.52% | +6.71%, 51/274 ok | +8.75%, 25/172 ok | +5.9% / +25.1% | 4.0% / 4.9% |
+| 2c | 1c inside | 909 | 462 | 93% | +7.12% | +6.46% | +8.12% | +4.8% / +27.1% | 3.1% / 4.8% |
+| 3-5c | best bid | 1,030 | 527 | 76% | +8.67% | +8.19%, 72/333 ok | +9.46%, 38/195 ok | +7.4% / +35.2% | 4.1% / 4.4% |
+| 3-5c | 1c inside | 1,115 | 548 | 89% | +8.14% | +7.53% | +9.18% | +6.3% / +34.0% | 5.2% / 3.9% |
+| 6-10c | best bid | 470 | 321 | 67% | +11.12% | +11.49%, 37/228 ok | +10.32%, 19/93 ok | +9.1% / +14.4% | 4.6% / 2.7% |
+| 6-10c | 1c inside | 535 | 350 | 81% | +10.49% | +10.83% | +9.73% | +8.7% / +15.9% | 4.4% / 2.7% |
+
+- **The band's money rises with the spread at entry, in both halves**: 1c +5.6% a bet, 2c +7.5%, 3-5c +8.7%, 6-10c
+  +11.1%. Every row passes the tail test in both halves. The tightest quotes (1c, the most bets) are the weakest out of
+  sample (+3.4%). Consistent with "a resting bid in a wide quote earns part of the spread", and with wide quotes marking
+  markets the crowd prices carelessly. Not a pre-stated test: item 72 pre-states a "spread 2c+" cut.
+- **Bidding a cent inside the spread is not clearly worth it.** It fills more (89-93% against 76-77%) but earns less a
+  bet in every spread row and in sample overall (+7.06% against +7.58%; replay +6.8% against +9.2% a year); only the
+  whole-band out-of-sample row is better (+8.69%), and that row also drops the 1c-spread first bars, so it is partly
+  the spread effect above. Accounts stay at the best bid. Variants tried: 5 spread rows x 2 bids, one run.

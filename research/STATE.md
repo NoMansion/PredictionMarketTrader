@@ -1143,10 +1143,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 50. DONE 6:15 am CST Nov 25 (report 3.72): nothing survives Holm once the search is counted (~128 follow-ups: threshold
     0.0004; with r21's 2,890 rules ~0.00002). Out-of-sample per-event p: band 0.006 (t 2.5), fall rule 0.52 (t 0.0),
     35-50c fall 0.18 (t 0.9). Only the band passes, and only with m = 3 (the live accounts). Item 71 added.
-51. Where the band's money is by spread at entry: 1c, 2c, 3-5c, 6-10c (resting at the bid in a wide quote earns the
-    spread): per bet, fills and tail test at 20,000. And `research\resting_variants.py` with deeper -1 (a cent inside
-    the spread) for the band: is improving the bid worth its price? (3.64: the forward fill rate matches the
-    backtest's like-for-like figure, so this is a plain test, not a repair.)
+51. DONE 6:15 am CST Nov 25 (report 3.73): per bet rises with spread at entry in both halves (1c +5.6%, 2c +7.5%, 3-5c
+    +8.7%, 6-10c +11.1%; 1c out of sample only +3.4%); a bid a cent inside fills more (89% vs 77%) but earns less a bet
+    in every spread row: not worth it. Item 72 added.
 52. Weekend against weekday entry for the band (box-office and streaming weekends): bars dated Fri-Sun against Mon-Thu,
     per bet in both halves. One split, pre-stated.
 53. Attention spikes in the band: bets where 7-day volume (dvol7) is in the top quarter of that market's own history
@@ -1206,3 +1205,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 71. The 10-25c fall rule's per-bet against per-event mean (3.72: out of sample +5.2% a bet but event-weighted t 0.0): split
     its out-of-sample events by bets per event (1, 2-3, 4+) and show per-bet mean and event sum; is it one or two big
     ladders? A groupby on research\analyze_rule.bets_frame, no new code.
+72. PRE-STATED (3.73): the band at 20,000 with spread 2c+ at entry (a market's first bar in the band with spread >= 2c;
+    1c bars skipped, not bet). Passes if it passes the tail test in both halves AND its 1% replay beats the whole band
+    out of sample (+37.8%/y on research/resting_variants' engine) with a worst drawdown no deeper (7.0%). If it passes,
+    a new paper account rule_ent_band_20k_wide (new name; nothing changed). Backtest only.
