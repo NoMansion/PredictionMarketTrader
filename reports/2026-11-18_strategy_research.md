@@ -2612,3 +2612,33 @@ or above the 75th percentile of that market's STRICTLY earlier bars in the sampl
   No account; variants tried: 1, pre-stated.
 - Side finding, not pre-stated: the 158 non-spike bets with 5+ earlier bars earn about twice the band a bet in both
   halves (+13.4% / +15.9%). They are markets that came INTO the band late, after time above 20,000: item 73 tests that.
+
+## 3.76 Ideas queue 54: the Climate band by series group and days to close; the Climate 5-cent rule at 20,000 (6:18 am CST, Nov 25)
+
+No new code. Climate and Weather, liquid sample at 5,000 (45,407 markets, data to Nov 24), NO against YES at 5-35c,
+resting. Series groups by ticker (KXHIGH*, KXLOW*, KXRAIN*, snow series, KXHUR*/KXTROP*, the rest). Cells: bets, per bet,
+losing events, bound vs break-even. Replay at 1% in / out.
+
+| slice | in sample | out of sample | replay /y in / out | worst DD in / out |
+|---|---|---|---|---|
+| all | 1,099, +0.71%, 188/731, 28.5% vs 26.5% FAIL | 1,104, +1.81%, 169/680, 27.7% vs 27.4% FAIL | +2.0% / +29.5% | 15.6% / 12.2% |
+| daily highs | 641, +0.31%, FAIL | 571, +2.51%, FAIL | +0.4% / +30.8% | 13.4% / 6.8% |
+| lows | 39, +9.70%, FAIL | 80, -3.30%, FAIL | +18.2% / -4.2% | 1.8% / 6.3% |
+| rain | 99, +6.44%, FAIL | 350, +2.85%, FAIL | +3.0% / +12.4% | 3.4% / 7.1% |
+| snow | 133, -5.98%, FAIL | 20, +14.10%, FAIL | -2.6% / +40.2% | 15.1% / 2.0% |
+| hurricanes, tropical | 74, +7.64%, FAIL | 12, +4.25%, FAIL | +2.2% / +1.5% | 3.8% / 1.0% |
+| the rest | 113, -1.80%, FAIL | 71, -7.13%, FAIL | +0.3% / -8.0% | 5.1% / 7.3% |
+| 0-7 days | 724, +1.09%, FAIL | 872, +2.01%, FAIL | +1.6% / +35.3% | 13.1% / 8.0% |
+| 8-30 days | 262, -2.05%, FAIL | 193, +0.61%, FAIL | -2.1% / +0.2% | 15.5% / 9.4% |
+| 31 days+ | 113, +4.70%, FAIL | 39, +3.08%, FAIL | +2.2% / +1.5% | 4.6% / 2.0% |
+
+5-cent rule (NO at mid 5c or less, 30 days or less, spread 5c or less), Climate and Weather alone at 20,000: in sample 150
+bets, +3.03%, 2/120 losing (5.2% vs 5.3%) passes by a hair; out of sample 199 bets, +1.55%, 4/150 (6.0% vs 4.7%) FAILS;
+replay 1% +1.0% / +4.4% a year, drawdown 1.3% / 1.1%.
+
+- **No part of the Climate band passes the tail test in either half**, by series group or by days to close. The
+  out-of-sample replay's +29.5% a year is the daily-high markets at 0-7 days, whose loss rate sits right on break-even;
+  with a 12-16% drawdown it is not risk-averse. The Climate band stays a failed echo (as 3.67); rule_climate_band
+  and the combined account's Climate leg keep trading only as forward records.
+- **The Climate 5-cent rule at 20,000 fails out of sample**, as it did at 45,000 (3.44) and on the random sample (r24).
+  Climate stays out of the 5-cent rule's categories. Variants tried: 6 groups + 3 windows + 1, all as the queue stated.

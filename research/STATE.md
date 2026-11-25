@@ -1148,10 +1148,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     in every spread row: not worth it. Item 72 added.
 52. DONE 6:16 am CST Nov 25 (report 3.74): no weekday effect. Fri-Sun +6.84% / +7.29% a bet, Mon-Thu +8.13% / +6.04%
     (in / out): both pass the tail test both halves, the leader flips between halves.
-53. DONE 6:20 am CST Nov 25 (report 3.75): cannot be read: 85% of band bets have under 5 earlier bars. Spikes (100 bets)
+53. DONE 6:17 am CST Nov 25 (report 3.75): cannot be read: 85% of band bets have under 5 earlier bars. Spikes (100 bets)
     fail the tail test both halves; non-spikes with history earn +13.4% / +15.9% a bet: item 73 added.
-54. The Climate band by series group (daily highs, lows, rain, snow, hurricanes and the rest, by series title) and by
-    days to close; and the 5-cent rule on Climate and Weather alone at 20,000 (3.44 did 45,000).
+54. DONE 6:18 am CST Nov 25 (report 3.76): FAILS everywhere. No series group (highs, lows, rain, snow, hurricanes, rest) or    days-to-close slice of the Climate band passes the tail test in either half; Climate 5-cent rule at 20,000 fails out.
 55. Politics alone at 20,000 for the band (3.33: passes at 45,000 by 0.4 pt) and for the 5-cent rule; and Politics
     0-5c (3.34). If both halves pass at 20,000 too, add a Politics paper account under a new name.
 56. SPORTS, once its census has landed (data\kalshi_download.log: the Sports census "finished this pass" after
@@ -1213,3 +1212,5 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     before its first band bar, against those bet within its first 5 bars. Passes if the late group passes the tail test
     in both halves with per bet above the band's in both halves; check its overlap with the fall rule (a late entrant has
     often fallen into the band) and report capacity in dollars. Backtest only.
+74. Forward, once rule_climate_band has 30+ settled bets: its per-bet return and loss rate against 3.76's backtest (+1.8%
+    a bet out of sample, loss rate on break-even): a failed echo kept as a forward record; does paper agree?
