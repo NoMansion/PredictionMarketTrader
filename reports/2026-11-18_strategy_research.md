@@ -2381,3 +2381,24 @@ the same panel with hourly stops and daily takes (the Entertainment panel has gr
   earlier), earns less a bet and has the larger drawdown (3.89% vs 3.37%): not the risk-averse choice.
 - Hold to settlement stays the exit for every rule account. Variants tried: 2 rules x 8 taker take policies, one run.
 - Data: `research/results/exit_{ent,nine}_liquid_45000_hourtake.csv`, baseline `exit_ent_liquid_45000_hourstop_now.csv`.
+
+## 3.66 Ideas queue 44: is the edge decaying? Per-bet return by calendar quarter (9:25 pm CST, Nov 24)
+
+New `research/edge_by_quarter.py` (+1 test, 518 pass): first bar per market as `analyze_rule.py`, grouped by the quarter
+of the market's close; slope = OLS of each bet's return on the quarter index, standard error clustered by event.
+Pre-stated: "decaying" if every out-of-sample quarter is below the in-sample mean AND the slope's t < -2. Resting entry.
+
+| rule | data (last close) | in-sample mean / bet | 2026Q2 | 2026Q3 | 2026Q4 | slope a quarter (t) | decaying |
+|---|---|---|---|---|---|---|---|
+| Ent band, 20,000 | 6,685 mkts, 1,727 ev (Nov 24) | +7.58% | +8.69% (240 bets, 102 ev) | +5.57% (316, 141) | +5.69% (184, 59) | +0.29 pt (+0.59) | no |
+| 5-cent rule, nine, 45,000 | 8,893 mkts (Sep 18) | +1.83% | +3.65% (233, 130) | +0.99% (165, 109) | - | -0.005 pt (-0.06) | no |
+| Climate band, 5,000 | 39,080 mkts (Sep 18) | +0.71% | +1.24% (401, 262) | +2.27% (354, 223) | - | -0.03 pt (-0.08) | no |
+
+- **No sign of decay in any of the three rules** by the pre-stated test: in each, one out-of-sample quarter is above its
+  in-sample mean and no slope is near t -2. Quarterly errors are wide (2-4 points a bet for the band), so this rules out
+  a steep decline, not a slow one.
+- Worth watching: the band's last two quarters (+5.6%, +5.7% a bet) sit below its in-sample mean (+7.6%), within one
+  standard error. 2026Q4 is the refreshed history (markets settled since Sep 21, queue item 64's data) and is still
+  positive. The 5-cent rule's 2026Q3 (+1.0%) is below its mean too; its Q2 was the best quarter on record.
+- The Climate band's in-sample mean is only +0.7% a bet, its 2024Q4 -7.1% (179 bets): its out-of-sample quarters are its
+  best. Same caveat as 3.27 (thin edge). No account changes.

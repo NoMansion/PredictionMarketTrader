@@ -760,6 +760,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 9:15 pm CST Nov 24: queue item 43 (report 3.65): take-profits on hourly bars FAIL (none beats hold out of sample, both
   rules); exits.py hourly_takes + 1 test (517 pass). Jobs ok, cycle running since 8:55 pm; main $1,011.57, 2 settled.
 
+- 9:20 pm CST Nov 24: queue item 44 (report 3.66): no edge decay by quarter in the band, the 5-cent rule or the Climate band;
+  edge_by_quarter.py + 1 test (518 pass). Item 65 added (re-check 44 once 2026Q4 is fuller).
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -1082,7 +1085,8 @@ Items 44-63 added 7:15 pm CST Nov 24 (the user: "Test as many things as you can"
 first (they carry the paper accounts), then Sports once it lands, then new cuts. "The band" = "NO where YES is at
 5-35c", Entertainment, resting, at 20,000 (rule_ent_band_20k); "the 5-cent rule" = "NO at mid <= 5c, <= 30d,
 spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Climate and Weather (rule_climate_band).
-44. Edge decay: per-bet return of the band, the 5-cent rule and the Climate band by calendar quarter (events and bets
+44. DONE 9:20 pm CST Nov 24 (report 3.66): NOT decaying, any of the three (slopes t +0.6 / -0.1 / -0.1); the band's last two
+    quarters +5.6% / +5.7% a bet vs +7.6% in sample, within one SE (watch). edge_by_quarter.py + 1 test. Was: Edge decay: per-bet return of the band, the 5-cent rule and the Climate band by calendar quarter (events and bets
     per quarter, event-clustered), and the slope across quarters. Pre-state: "decaying" if every out-of-sample quarter
     is below the in-sample mean AND the slope's t < -2. Is the edge shrinking as Kalshi grows? A small script
     (research/edge_by_quarter.py, + 1 test). Backtest only.
@@ -1149,3 +1153,5 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     change with about two more months out of sample. Then the same for the 5-cent rule on the nine and the Climate
     band once their categories have landed. Give the last close date used. This is the first test of the rules on
     markets that settled after they were chosen; a rule that fails here is a result to put plainly to the user.
+65. Re-run research\edge_by_quarter.py for the three rules once the refreshed history has filled 2026Q4 for the nine and
+    Climate (after item 64): the band's 2026Q3-Q4 sat below its in-sample mean (3.66); a third low quarter would be worth a line.
