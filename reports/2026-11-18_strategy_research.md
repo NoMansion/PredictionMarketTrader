@@ -2752,3 +2752,24 @@ score ladders, one series per film) against the rest, each half, event tail test
   the rest in BOTH halves) is not met, so **no variant is tested and no account changes**. RT is about a quarter of the
   band's bets and its busiest markets; whether RT's out-of-sample slump persists is a forward question for
   rule_ent_band_20k (item 77).
+
+### 3.82 Ladder rungs out of line: NO on a rung 3c+ above its neighbours' line (12:30 pm CST, November 25)
+
+Ideas queue item 60. New rule in `research/families.py` (family 6, `ladder_kink`, + a test): a rung whose YES mid is 3c or
+more above the average of the rungs just above and below it (both quoted, known at the bar); buy NO on it, resting.
+Liquid sample, closes to Nov 24 (the nine's Health, World, Commodities and Financials late bars not yet landed).
+4 variants tried (2 groups x 2 levels), stated in the queue.
+
+| Group, level | Bets (events) | Per bet | Tail test in / out | Replay 1% in / out a year | Worst DD in / out |
+|---|---|---|---|---|---|
+| Entertainment, 20,000 | 328 (136) | +7.87% | fails (77.3 vs 72.3%) / fails (71.2 vs 63.6%) | +6.1% / +32.4% | 23.5% / 24.5% |
+| Entertainment, 45,000 | 108 (55) | -7.20% | fails / fails | -9.8% / +3.7% | 16.4% / 10.6% |
+| nine, 20,000 | 632 (284) | +6.91% | fails (68.2 vs 65.6%) / fails (75.8 vs 71.4%) | +3.4% / +20.8% | 24.2% / **51.3%** |
+| nine, 45,000 | 287 (143) | +36.9% | passes (68.5 vs 73.3%) / passes, barely (74.6 vs 75.0%) | +20.1% / +75.3% | 11.8% / 16.3% |
+
+- **FAILS as a strategy.** Three of four cells fail the tail test in both halves. The one pass (the nine at 45,000) is
+  not borne out one level down (the nine at 20,000, which contains it, fails both halves with a 51% drawdown), its
+  2023-24 bets lose, its out-of-sample bound clears break-even by 0.4 points, and the profit sits in a few macro ladders
+  (KXGDP, KXPAYROLLS, KXAAAGASM: 61% of it). It is a 28c longshot-NO bet that loses 60% of the time: drawdowns of 12-16% at
+  a 1% stake are not risk-averse. **No account.** Capacity at 45,000: median $40,900 traded in the week before entry.
+- Item 78 added: the nine at 45,000 re-checked as a pre-stated test once all nine categories' late bars have landed.

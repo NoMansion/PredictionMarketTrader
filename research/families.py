@@ -191,6 +191,23 @@ def f_ladder(f: Features):
             yield "6 ladder", f"this rung priced {eps * 100:g}c or more ABOVE the rung below: buy NO on this rung", inv_no, "no", entry
 
 
+    # Queue item 60 (report 3.82): a rung priced 3c+ ABOVE the straight line between its two neighbours (a convexity
+    # kink, known at the bar). NO on the kinked rung. Added; the names above are unchanged.
+    kink = live & ladder_kink(f.mid, d["up_mid"].to_numpy("float32"), d["dn_mid"].to_numpy("float32"), 0.03)
+    for entry in ENTRIES:
+        yield "6 ladder", "rung 3c+ above the line between its neighbours: buy NO on this rung", kink, "no", entry
+
+
+def ladder_kink(mid, up_mid, dn_mid, eps):
+    """True where both neighbour rungs are quoted and this rung's mid is eps or more above their average."""
+    up = np.asarray(up_mid, "float64")
+    dn = np.asarray(dn_mid, "float64")
+    m = np.asarray(mid, "float64")
+    ok = np.isfinite(up) & np.isfinite(dn) & (up > 0) & (dn > 0) & (m > 0)
+    with np.errstate(invalid="ignore"):
+        return ok & (m >= (up + dn) / 2 + eps - 1e-9)
+
+
 # 16. Markets that can close early ("will X happen before ...") against markets with a fixed date
 def f_early(f: Features):
     for (lo, hi), early, side, entry in itertools.product(PRICE, (True, False), SIDES, ENTRIES):

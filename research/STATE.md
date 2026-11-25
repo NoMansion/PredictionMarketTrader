@@ -1176,7 +1176,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 59. Sports hourly bars (after 56, only if the game markets are too short for daily bars): research\hourly_bars.py on the
     busiest Sports game markets (--categories Sports --max-markets 2000), then the 5-cent rule on hourly entries in the
     last 48 hours. Low priority.
-60. Ladder rungs out of line: in a threshold ladder (one event, "above X" rungs), a rung whose YES mid is above the
+60. DONE 12:30 pm CST Nov 25 (report 3.82): FAILS. 3 of 4 cells fail the tail test both halves; the nine at 45,000 passes
+    barely (74.6 vs 75.0% out) but the nine at 20,000 fails both with a 51% DD; 2023-24 lose. ladder_kink + test. Item 78.
+    WAS: Ladder rungs out of line: in a threshold ladder (one event, "above X" rungs), a rung whose YES mid is above the
     straight line between its two neighbours' mids by 3c+ (a convexity kink, known at the bar). NO on the kinked rung,
     resting, at 20,000 and 45,000, Entertainment and the nine apart. New rule name in families.py (add, + a test).
 61. DONE 9:35 am CST Nov 25 (report 3.78): REVERSED: stale band bars (mid unchanged 3 bars) earn +3.6% and fail the tail
@@ -1232,3 +1234,6 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     events (60 at Nov 24): passes if the tail test passes on that slice. Fresh markets only; no new levels or windows.
 77. Forward, once rule_ent_band_20k has 30+ settled bets: its KXRT* bets against the rest (3.81: RT +2.7% a bet out of sample
     against +8.1%). A split of settled paper bets; no new code.
+78. PRE-STATED (3.82): the ladder kink rule (nine, 45,000, resting) on markets closing Sep 20, 2026 or later, once Health,
+    World, Commodities and Financials late bars have landed: passes only if the tail test passes on that slice AND at 20,000
+    in the out-of-sample half. No new levels or thresholds.

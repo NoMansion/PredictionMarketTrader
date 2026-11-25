@@ -207,3 +207,12 @@ def test_same_day_bets_are_not_ordered_by_how_they_ended(fair):
     assert len(days) > 200
     ascending = np.mean([(np.diff(r) > 0).all() for r in days])
     assert ascending < 0.4                                                 # about 1 in 6 by chance; it was all of them
+
+
+def test_ladder_kink_needs_both_neighbours_and_a_3c_bump():
+    from families import ladder_kink
+    mid = np.array([0.40, 0.40, 0.40, 0.40, 0.40])
+    up = np.array([0.30, 0.34, np.nan, 0.30, 0.30])       # the rung above: less likely
+    dn = np.array([0.44, 0.44, 0.50, np.nan, 0.43])       # the rung below: more likely
+    # line 0.37 -> bump 3c: kink; line 0.39: no; missing neighbour: no; line 0.365: kink
+    assert ladder_kink(mid, up, dn, 0.03).tolist() == [True, False, False, False, True]
