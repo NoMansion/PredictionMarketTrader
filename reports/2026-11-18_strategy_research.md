@@ -2879,3 +2879,74 @@ rate (5-cent legs 65%, 5-35c legs 49%; 3.64), then replays the account at 1%. 20
   cash tied up when a good bet comes along). One year of out-of-sample record cannot tell these apart.
 - Without `--min-cumvol` (every market, the default since 3.45) the account loses in sample (-24% a year): the 5,000 and
   45,000 levels remain the condition for any of this.
+
+## 3.88 Ideas queue 72: the band at 20,000 with spread 2c+ at entry (3:35 pm CST, Nov 25)
+
+PRE-STATED in 3.73. research/band_prestated.py 72 (new; the engine of 3.73: research/resting_variants.variant, best NO
+bid resting 3 daily bars, replay at 1%). Entertainment, 20,000, data closing to Nov 24, 2026. A market's first band bar
+with spread >= 2c; 1c bars are skipped, not bet.
+
+| cut | bets | events | per bet in / out | losing events in / out | replay 1% /y in / out | worst DD in / out |
+|---|---|---|---|---|---|---|
+| whole band | 1,764 | 765 | +7.58% / +6.61% | 106/474 ok / 66/294 ok | +9.2% / +37.8% | 6.4% / 7.0% |
+| spread 2c+ | 1,441 | 675 | +7.64% / +9.27% | 98/430 ok / 44/248 ok | +8.1% / +43.6% | 5.8% / 5.1% |
+
+- **PASSES the pre-stated test**: tail test in both halves, out-of-sample replay above the whole band (+43.6% against
+  +37.8% a year) with a shallower worst drawdown (5.1% against 7.0%). In sample its replay is a little lower (+8.1%
+  against +9.2%): the gain is out of sample. Variants tried: 1 (pre-stated).
+- As pre-stated, a new paper account **rule_ent_band_20k_wide** (rules.yaml; nothing old changed). It needed one new
+  leg setting, `min_spread` (src/rules.py, default 0 so every existing leg is unchanged; + a test).
+
+## 3.89 Ideas queue 75: the band skipping STALE(3) bars (3:36 pm CST, Nov 25)
+
+PRE-STATED in 3.78. Same engine and data. Each market's first band bar that is not STALE(3) (research/stale_quotes).
+
+| cut | bets | per bet in / out | losing in / out | replay 1% /y in / out | worst DD in / out |
+|---|---|---|---|---|---|
+| whole band | 1,764 | +7.58% / +6.61% | 106/474 ok / 66/294 ok | +9.2% / +37.8% | 6.4% / 7.0% |
+| skip STALE(3) | 1,763 | +7.58% / +6.63% | 106/474 ok / 66/294 ok | +9.5% / +35.2% | 6.4% / 6.9% |
+
+- **FAILS** (replay +35.2% a year, below +37.8%). Skipping changes one bet: a market's first band bar is almost never
+  stale, so 3.78's stale bars are later bars of markets already bet. Nothing to use. The 10-25c fall rule on 4+ market
+  events is reported in 3.91.
+
+## 3.90 Ideas queue 73: late entrants to the band (3:37 pm CST, Nov 25)
+
+PRE-STATED in 3.75. Same engine and data. Late = the market had 5+ bars in the liquid sample before its first band bar.
+Capacity: the median dollars of NO traded on the entry bar (contracts x (1 - mid)).
+
+| cut | bets | events | per bet in / out | losing in / out | replay 1% /y in / out | worst DD in / out | median $ a day at entry |
+|---|---|---|---|---|---|---|---|
+| whole band | 1,764 | 765 | +7.58% / +6.61% | 106/474 ok / 66/294 ok | +9.2% / +37.8% | 6.4% / 7.0% | $6,540 |
+| late (5+ bars before) | 203 | 139 | +10.14% / +14.35% | 19/88 ok / 7/51 ok | +5.7% / +11.2% | 5.7% / 2.0% | $3,920 |
+| early (under 5 bars) | 1,561 | 739 | +7.23% / +5.66% | 96/455 ok / 61/286 ok | +8.4% / +27.9% | 5.5% / 7.5% | $6,700 |
+| late, 3c+ fall in 7d | 164 | 124 | +12.54% / +15.24% | 17/78 ok / 7/46 ok | +5.9% / +9.6% | 5.0% / 2.3% | $4,460 |
+| late, no such fall | 108 | 72 | +10.42% / +16.13% | 8/50 ok / 1/22 ok | +5.0% / +5.5% | 3.7% / 1.0% | $1,290 |
+
+- **PASSES the pre-stated test**: the late group passes the tail test in both halves with a per-bet return above the
+  band's in both (+10.1% / +14.4% against +7.6% / +6.6%). It is small: 203 bets in five years, 51 events out of sample,
+  so as an account alone it earns less a year than the whole band (+11.2% against +37.8% out) at a third of the drawdown.
+- **Overlap with the fall rule**: most late entrants had fallen into the band (164 of the 203 markets have a band bar
+  after a 3c+ 7-day fall; the two late rows each take a market's first bar in them, so they overlap). The ones that did
+  not fall also earn (+16% out of sample, 22 events), but are thin ($1,290 a day).
+- No account: 3.75 pre-stated a test, not an account. Item 80 pre-states the account test. Variants tried: 1 split.
+
+## 3.91 Ideas queue 79: the band only on events listing 4+ markets at the bar (3:38 pm CST, Nov 25)
+
+PRE-STATED in 3.84. Checked first: Features.ev_total is every market the event EVER listed (panel.py: a count over the
+whole markets table), so it is hindsight; the test uses research/band_prestated.listed_at_bar (markets of the event with
+open_ts at or before the bar; + a test). The two agree on 88.6% / 88.8% of band bars. Same engine and data.
+
+| cut | bets | events | per bet in / out | losing in / out | replay 1% /y in / out | worst DD in / out |
+|---|---|---|---|---|---|---|
+| whole band (20,000) | 1,764 | 765 | +7.58% / +6.61% | 106/474 ok / 66/294 ok | +9.2% / +37.8% | 6.4% / 7.0% |
+| 4+ listed at bar | 1,679 | 682 | +7.63% / +6.87% | 96/403 ok / 63/282 ok | +10.3% / +39.4% | 6.3% / 7.4% |
+| 1-3 listed at bar | 85 | 84 | +6.88% / -7.94% | 10/71 no / 3/13 no | +3.3% / -1.1% | 3.1% / 2.0% |
+| fall 10-25c (5,000), all | 1,426 | 737 | +8.59% / +5.16% | 96/481 ok / 62/260 ok | +6.2% / +3.7% | 5.8% / 14.4% |
+| fall 10-25c, 4+ listed at bar | 1,320 | 635 | +7.75% / +5.25% | 90/401 ok / 58/238 ok | +7.1% / +6.0% | 5.2% / 12.7% |
+
+- **FAILS on the drawdown condition**: the tail test passes both halves and the replay beats the whole band (+39.4%
+  against +37.8% a year), but its worst out-of-sample drawdown is deeper (7.4% against 7.0%). The cut drops only 85
+  bets, because nearly every band bet is already in a wide event at the bar; those 85 do lose out of sample (13 events).
+- The fall rule on 4+ events (a record, 3.85; its mask rebuilt as a tradable quote, mid 10-25c, 7-day fall 3c+, at 5,000): a little better out of sample (+6.0% against +3.7% a year, drawdown 12.7%
+  against 14.4%), still far from risk-averse. No account. Variants tried: 1 pre-stated cut + 1 record.

@@ -76,6 +76,8 @@ def test_the_real_rules_file_loads():
     assert acc["rule_ent_fall"].legs[0].min_fall_7d == 0.03
     hi = acc["rule_ent_fall_35_50"].legs[0]
     assert (hi.min_yes_mid, hi.max_yes_mid, hi.min_volume, hi.min_fall_7d) == (0.35, 0.495, 20000, 0.03)
+    w = acc["rule_ent_band_20k_wide"].legs[0]
+    assert (w.min_spread, w.min_volume, w.max_yes_mid) == (0.02, 20000, 0.345) and acc["rule_ent_band_20k"].legs[0].min_spread == 0.0
 
 
 def write(tmp_path, text):
@@ -159,6 +161,9 @@ def test_leg_check_on_a_fresh_book():
     assert fall.check(book(0.2, 0.22), mk(), NOW) == "no price from 7 days ago"
     assert fall.check(book(0.2, 0.22), mk(), NOW, fall_7d=0.02).startswith("YES fell +0.020")
     assert fall.check(book(0.2, 0.22), mk(), NOW, fall_7d=0.05) == ""
+    narrow = Leg(label="n", categories=("x",), min_spread=0.02)
+    assert narrow.check(book(0.20, 0.21), mk(), NOW).startswith("spread 0.010 below 0.02")
+    assert narrow.check(book(0.20, 0.22), mk(), NOW) == ""
 
 
 def test_fall_from_candles():

@@ -799,6 +799,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   edge does not depend on series age but grows with ladder width (hindsight; item 79 pre-states an at-the-bar test); the
   fall rule's out-of-sample profit is 40 wide ladders; out of sample only the band clears the calibrated nulls; paper fill
   rates leave the combined account positive (median +11.8%/y out). Items 78-79 added. Jobs ok; main $1,008.54, 2 settled.
+- 3:40 pm CST Nov 25: queue items 72, 75, 73, 79 (reports 3.88-3.91), ITEMS 5: band spread 2c+ PASSES -> new paper account
+  rule_ent_band_20k_wide (Leg.min_spread); late entrants pass but small; skip-stale and 4+ listed-at-bar fail. band_prestated.py
+  + tests (531 pass). Items 80-81 added. Jobs ok; main $1,008.54, 2 settled.
 
 ## How to run a round
 
@@ -1226,17 +1229,19 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     a bet out. Not risk-averse. WAS: The 10-25c fall rule's per-bet against per-event mean (3.72: out of sample +5.2% a bet but event-weighted t 0.0): split
     its out-of-sample events by bets per event (1, 2-3, 4+) and show per-bet mean and event sum; is it one or two big
     ladders? A groupby on research\analyze_rule.bets_frame, no new code.
-72. PRE-STATED (3.73): the band at 20,000 with spread 2c+ at entry (a market's first bar in the band with spread >= 2c;
+72. DONE 3:35 pm CST Nov 25 (report 3.88): PASSES (tail both halves; replay out +43.6%/y vs +37.8%, DD 5.1% vs 7.0%).
+    New paper account rule_ent_band_20k_wide (rules.yaml, Leg.min_spread + test). WAS: PRE-STATED (3.73): the band at 20,000 with spread 2c+ at entry (a market's first bar in the band with spread >= 2c;
     1c bars skipped, not bet). Passes if it passes the tail test in both halves AND its 1% replay beats the whole band
     out of sample (+37.8%/y on research/resting_variants' engine) with a worst drawdown no deeper (7.0%). If it passes,
     a new paper account rule_ent_band_20k_wide (new name; nothing changed). Backtest only.
-73. PRE-STATED (3.75): late entrants to the band. Band bets (20,000, resting) whose market had 5+ bars in the liquid sample
+73. DONE 3:37 pm CST Nov 25 (report 3.90): PASSES (late +10.1% / +14.4% a bet vs band +7.6% / +6.6%, tail ok both) but
+    small (203 bets, replay out +11.2%/y, DD 2.0%); most fell into the band. No account (not pre-stated): item 80. WAS: PRE-STATED (3.75): late entrants to the band. Band bets (20,000, resting) whose market had 5+ bars in the liquid sample
     before its first band bar, against those bet within its first 5 bars. Passes if the late group passes the tail test
     in both halves with per bet above the band's in both halves; check its overlap with the fall rule (a late entrant has
     often fallen into the band) and report capacity in dollars. Backtest only.
 74. Forward, once rule_climate_band has 30+ settled bets: its per-bet return and loss rate against 3.76's backtest (+1.8%
     a bet out of sample, loss rate on break-even): a failed echo kept as a forward record; does paper agree?
-75. PRE-STATED (3.78): the band at 20,000 skipping a STALE(3) bar (take the market's next non-stale band bar instead,
+75. DONE 3:36 pm CST Nov 25 (report 3.89): FAILS (skips 1 bet; replay out +35.2%/y < +37.8%). WAS: PRE-STATED (3.78): the band at 20,000 skipping a STALE(3) bar (take the market's next non-stale band bar instead,
     research\stale_quotes.stale_flags). Passes if it passes the tail test in both halves AND its 1% replay beats the whole band
     out of sample (+37.8%/y) with a worst drawdown no deeper (7.0%). If it passes, a new paper account under a new name. Also the 10-25c fall rule (5,000) on
     4+ market events, as a record (3.85).
@@ -1247,8 +1252,15 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 78. PRE-STATED (3.82): the ladder kink rule (nine, 45,000, resting) on markets closing Sep 20, 2026 or later, once Health,
     World, Commodities and Financials late bars have landed: passes only if the tail test passes on that slice AND at 20,000
     in the out-of-sample half. No new levels or thresholds.
-79. PRE-STATED (3.84): the band at 20,000 (resting) only on events listing 4+ markets at the bar (Features.ev_total if it
+79. DONE 3:38 pm CST Nov 25 (report 3.91): FAILS on drawdown (replay out +39.4%/y but DD 7.4% > 7.0%); ev_total is
+    hindsight, band_prestated.listed_at_bar + test. Fall rule on 4+ events: +6.0%/y out, DD 12.7%. WAS: PRE-STATED (3.84): the band at 20,000 (resting) only on events listing 4+ markets at the bar (Features.ev_total if it
     counts markets listed by the bar, else count markets with open_ts <= bar ts; check first, with a test). Passes if it
     passes the tail test in both halves AND its 1% replay beats the whole band out of sample (+37.8%/y) with a worst
     drawdown no deeper (7.0%). If it passes, a new paper account under a new name. Also the 10-25c fall rule (5,000) on
     4+ market events, as a record (3.85).
+80. PRE-STATED (3.90): late entrants as an account. The band at 20,000 (resting) on markets with 5+ bars before their first
+    band bar, run beside the whole band in research/combined.py-style replay at 1%: passes if adding it as a second leg to
+    rule_ent_band_20k (no double bets on one market) raises the out-of-sample replay with a worst drawdown no deeper than
+    the band's (7.0%). The paper rule would need the market's bar count (Kalshi candles, as fall_from_candles). Backtest first.
+81. Forward, once rule_ent_band_20k_wide has 30+ settled bets: its per-bet return and fill rate against rule_ent_band_20k
+    (its superset) and 3.88's backtest (+9.3% a bet out of sample). A split of settled paper bets; no new code.

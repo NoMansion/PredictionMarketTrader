@@ -59,6 +59,7 @@ class Leg:
     min_volume: float = 0.0             # contracts traded so far, at least
     max_volume: float | None = None     # ... and fewer than this (the quiet-market controls)
     min_fall_7d: float | None = None    # YES mid at least this much lower than 7 days ago
+    min_spread: float = 0.0             # YES ask - YES bid at least this (queue item 72, report 3.88: the band's 2c+ cut)
 
     def listed_fits(self, m: Market, now: float) -> bool:
         """A loose first cut on the listing (its quotes can be hours old): 3 cents of slack on the price."""
@@ -91,6 +92,8 @@ class Leg:
             return f"YES mid {yes.mid:.3f} outside {self.min_yes_mid:.3f}-{self.max_yes_mid:.3f}"
         if yes.spread > min(self.max_spread, 0.10) + 1e-9:
             return f"spread {yes.spread:.3f} above {min(self.max_spread, 0.10):.2f}"
+        if yes.spread < self.min_spread - 1e-9:
+            return f"spread {yes.spread:.3f} below {self.min_spread:.2f}"
         days = m.days_to_end(now)
         if days is None or not self.min_days < days <= self.max_days:
             return "days to the close outside the rule" if days is not None else "no close time"

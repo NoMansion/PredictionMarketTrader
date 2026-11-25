@@ -99,6 +99,16 @@ accounts:
     legs:
       - {label: "Entertainment 35-50c, down 3c+ in 7d, 20,000+", categories: [Entertainment], min_yes_mid: 0.35, max_yes_mid: 0.495, min_volume: 20000, min_fall_7d: 0.03}
 
+  # ---- added 2026-11-25, 3:40 pm CST (Ideas queue 72, report 3.88): the band at 20,000 entered only on a quote with a
+  # spread of 2c or more. The pre-stated test passed: tail test both halves (98/430, 44/248 losing events), replay 1% out
+  # of sample +43.6%/y against the whole band's +37.8%, worst drawdown 5.1% against 7.0%. rule_ent_band_20k is unchanged.
+  rule_ent_band_20k_wide:
+    about: "Entertainment band at 20,000+ (NO against YES at 5-35c), resting, only when the YES spread is 2c or more (report 3.88)"
+    entry: resting
+    stake_pct: 0.01
+    legs:
+      - {label: "NO vs YES 5-35c, Entertainment, 20,000+, spread 2c+", categories: [Entertainment], min_yes_mid: 0.05, max_yes_mid: 0.345, min_volume: 20000, min_spread: 0.02}
+
   rule_climate_band:
     about: "NO against YES at 5-35c in busy Climate and Weather markets, resting: the same-signed echo of the Entertainment lead (report 3.27)"
     entry: resting
