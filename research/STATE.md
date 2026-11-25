@@ -775,6 +775,9 @@ Forward-only (cannot be backtested):
 - 6:25 am CST Nov 24: queue item 37 (report 3.59): the 5,000-20,000 layer is the whole 5,000 account (no split possible); the 35-50c
   5,000 failure is the no-fall bets. No account change; item 39 added. Jobs ok, cycle ended ok 6:08 am; main $1,005.19, 1 settled.
 
+- 6:35 pm CST Nov 24: queue item 29 (report 3.63): the 5-cent rule's stops on hourly bars all get WORSE (4 of 6 fail the tail test
+  out of sample); hold stays; 1,188 markets' hourly bars fetched; item 43 added. Jobs ok (4:42 pm cycle ok); main $1,009.78, 2 settled.
+
 ## Next actions
 
 1. Each check-in: `python3 research/panel.py` (what landed), then for every category with a finished pass run
@@ -948,7 +951,8 @@ drawdown, capacity in dollars, and say how many variants were tried.
     added. Was: Isolate the fall effect in Entertainment (report 3.47): the band's 10-25c bets WITHOUT a 3c+ fall in 7 days against those
     with one, at 20,000 and 45,000, resting. Needs a new rule name in research/families.py (add, do not rename) and a test. If
     the no-fall bets lose or are flat in both halves, the band's money is the fall, worth writing for the user.
-29. The 5-cent rule's stops on hourly bars (report 3.48 found hourly bars make every Entertainment-band stop worse): fetch
+29. DONE 6:35 pm CST Nov 24 (report 3.63): every stop gets WORSE on hourly bars out of sample (4 of 6 fail the tail test;
+    stopped out 1.5-2x as often); hold to settlement stays for the 5-cent rule; item 43 added. Was: The 5-cent rule's stops on hourly bars (report 3.48 found hourly bars make every Entertainment-band stop worse): fetch
     hourly bars for its markets at 45,000 on the nine (`research/hourly_bars.py --sample liquid --min-cumvol 45000 --categories
     <nine> --rules "NO at mid <= 5c, <= 30d, spread <= 5c|no|mk" --max-markets 1000`, resumes), then `research/exit_study.py
     --tag nine_liquid_45000_hourly --hourly data\kalshi_hourly.db` against the same run without --hourly. Low priority: hold
@@ -1015,3 +1019,6 @@ drawdown, capacity in dollars, and say how many variants were tried.
 42. Forward, once rule_ent_band_20k has 30+ settled bets: split its settled 0-7 day bets by contracts traded at entry (under / over
     45,000) and compare with 3.60-3.62 (the under-45,000 0-7 day bets fail the tail test in the backtest but add yearly return).
     No new account.
+43. Take-profits on hourly bars (3.48 and 3.63 moved only the stops to hourly bars): add an hourly option for the take legs in
+    research/exits.py (with a test) and re-run exit_study.py --hourly for the Entertainment band and the 5-cent rule at 45,000
+    (the hourly bars are already in data\kalshi_hourly.db). Does any take-profit beat hold out of sample? Backtest only; low priority.

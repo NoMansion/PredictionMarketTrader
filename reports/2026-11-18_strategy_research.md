@@ -2282,3 +2282,33 @@ with no larger drawdown and it passes the tail test in both halves. `research/ba
 - Variants: 1 pre-stated. 490 tests pass. Forward: nothing new has settled in the rule accounts (rule_5c_busy 1 bet, lost);
   main $1,009.26, 2 settled (+$15.60), 3 open, 5 resting; the 12:39 pm cycle ended ok. Item 42 added (forward check of the
   same split once rule_ent_band_20k has settled bets).
+
+## 3.63 Ideas queue 29: the 5-cent rule's stops on hourly bars (6:35 pm CST, Nov 24)
+
+The same test as 3.48, on the 5-cent rule ("NO at mid <= 5c, <= 30d, spread <= 5c", resting) in busy markets (45,000
+contracts traded) of the nine categories: 8,893 markets, 3,202 events, closes to 2026-09-18; 790 bets in sample, 398 out.
+`research/hourly_bars.py` fetched the last 48 hours of 60-minute bars for all 1,188 markets the rule bets on (1,173 with
+bars); `research/exit_study.py --tag nine_liquid_45000_hourly --hourly data\kalshi_hourly.db` against the same run on daily
+bars only (`--tag nine_liquid_45000_daily`). Same 25 policies as 3.28; 418 stop sales moved to an hourly bar.
+
+| stop policy | in/bet daily -> hourly | out/bet daily -> hourly | out 1% replay a year | out tail test | stopped out (out) |
+|---|---|---|---|---|---|
+| -5 points | +1.30% -> +0.87% | +1.01% -> +0.18% | +6.8% -> +0.6% | passes -> FAILS | 9.8% -> 14.8% |
+| -10 points | +1.61% -> +1.34% | +1.73% -> +1.00% | +11.3% -> +6.1% | passes -> passes | 4.3% -> 7.5% |
+| -20 points | +1.56% -> +1.62% | +2.00% -> +0.98% | +13.5% -> +6.3% | passes -> FAILS | 2.3% -> 4.8% |
+| our mid <= 0.90 | +1.37% -> +0.97% | +1.12% -> +0.52% | +7.7% -> +3.1% | passes -> FAILS | 8.8% -> 12.1% |
+| our mid <= 0.85 | +1.57% -> +1.36% | +1.69% -> +1.05% | +11.0% -> +6.5% | passes -> passes | 4.3% -> 7.0% |
+| our mid <= 0.75 | +1.57% -> +1.61% | +1.97% -> +1.09% | +13.2% -> +7.1% | passes -> FAILS | 2.3% -> 4.3% |
+| hold to settlement (no stop) | +1.83% | +2.55% (t 4.72) | +18.1%, worst drawdown 1.55% | passes (4 losing events) | - |
+
+- **Every stop gets worse on hourly bars out of sample**, as in the Entertainment band (3.48): stops fire about one and a
+  half to two times as often, sell near an intraday low, and the bet then settles as a win. Four of the six stops now fail
+  the tail test out of sample. Holding to settlement stays the policy for rule_5c_busy; no verdict of 3.28 changes.
+- The in-sample pick moves from "take 0.99 resting + stop -10" (daily; +10.6%/y out of sample) to "take at bid >= 0.98,
+  resting" (hourly; +16.6%/y out of sample, drawdown 1.35%) because its stop leg got worse; both trail hold (+18.1%/y).
+  Take-profits are still tested on daily bars only (item 43). 25 policies x 2 bar types tried; no t above 3 is claimed for
+  any exit.
+- Caveat as in 3.48: hourly bars cover the last 48 hours only, so earlier stops are still daily; that can only add stop-outs.
+- Capacity is unchanged from 3.28 (same bets). Data: `research/results/exit_nine_liquid_45000_{daily,hourly}.csv`.
+- Forward: nothing new has settled in the rule accounts (rule_5c_busy 1 bet, lost); main $1,009.78, 2 settled (+$15.60),
+  3 open, 5 resting; the 4:42 pm cycle ended ok.
