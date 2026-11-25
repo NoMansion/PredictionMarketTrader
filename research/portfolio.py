@@ -85,7 +85,9 @@ def simulate(bets: np.ndarray, stake_frac: float = 0.01, event_cap: float = 0.03
             curve_t.append(close)
             curve_e.append(cash + sum(b[1] for b in open_bets))
 
-    for ts, close, r, ev in bets:
+    for row in bets:                    # an optional 5th column multiplies the stake of that bet (queue item 80)
+        ts, close, r, ev = row[:4]
+        mult = float(row[4]) if len(row) > 4 else 1.0
         settle(ts)
         staked = sum(b[1] for b in open_bets)
         equity = cash + staked
@@ -94,7 +96,7 @@ def simulate(bets: np.ndarray, stake_frac: float = 0.01, event_cap: float = 0.03
         if equity <= 0:
             break
         in_event = sum(b[1] for b in open_bets if b[3] == ev)
-        stake = min(stake_frac * equity, event_cap * equity - in_event, max_exposure * equity - staked, cash)
+        stake = min(stake_frac * mult * equity, event_cap * equity - in_event, max_exposure * equity - staked, cash)
         if stake < min_stake:
             acct.skipped += 1
             continue

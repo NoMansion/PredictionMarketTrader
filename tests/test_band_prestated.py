@@ -19,3 +19,14 @@ def test_bars_before_first_masked_bar():
     ticker = np.array(["a"] * 4 + ["b"] * 3)
     mask = np.array([0, 0, 1, 1, 1, 0, 1], dtype=bool)
     assert bars_before_first(ticker, mask) == {"a": 2, "b": 0}
+
+
+def test_simulate_stake_multiplier_column():
+    import portfolio
+    day = 86400.0
+    base = np.array([[0, day, 0.10, 1], [2 * day, 3 * day, 0.10, 2]], dtype="float64")
+    one = portfolio.simulate(base, stake_frac=0.01, event_cap=0.5)
+    same = portfolio.simulate(np.c_[base, [1.0, 1.0]], stake_frac=0.01, event_cap=0.5)
+    two = portfolio.simulate(np.c_[base, [2.0, 1.0]], stake_frac=0.01, event_cap=0.5)
+    assert same.total == one.total
+    assert abs(two.total - (1.002 * 1.001 * 1.0) + 1) < 1e-3 and two.total > one.total

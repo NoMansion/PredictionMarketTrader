@@ -41,7 +41,7 @@ def variant(p: Panel, mask: np.ndarray, deeper: float, window: int) -> pd.DataFr
     r = ((1 - d["y"].to_numpy()) - cost) / cost
     rows = p.first_per_market(filled)
     placed = p.first_per_market(ok)
-    out = pd.DataFrame({"ts": d["ts"].to_numpy()[rows], "close": d["close_ts"].to_numpy()[rows], "r": r[rows],
+    out = pd.DataFrame({"ticker": d["ticker"].to_numpy()[rows], "ts": d["ts"].to_numpy()[rows], "close": d["close_ts"].to_numpy()[rows], "r": r[rows],
                         "event": p.event[rows], "oos": p.oos[rows], "cost": cost[rows]})
     out.attrs["fill_rate"] = float(filled[placed].mean()) if placed.size else float("nan")
     return out

@@ -78,6 +78,20 @@ def main() -> int:
         rows["4+ listed at bar"] = band & (n >= 4)
         rows["1-3 listed at bar"] = band & (n < 4)
         print(f"ev_total >= 4 on band bars {np.mean(f.ev_total[band] >= 4):.1%}; listed-at-bar >= 4 {np.mean(n[band] >= 4):.1%}")
+    if item == "80":
+        import portfolio
+        bb = bars_before_first(d["ticker"].to_numpy(), band)
+        b = variant(p, band, 0.0, 3)
+        late = b["ticker"].map(lambda t: bb.get(t, -1) >= 5).to_numpy()
+        for label, part, lt in (("in", b[~b["oos"]], late[~b["oos"].to_numpy()]), ("out", b[b["oos"]], late[b["oos"].to_numpy()])):
+            for mult in (1.0, 2.0):
+                x = part[["ts", "close", "r", "event"]].copy()
+                x["m"] = np.where(lt, mult, 1.0)
+                x = x.sort_values("ts").to_numpy("float64")
+                x[:, 1] = np.maximum(x[:, 1], x[:, 0] + 86400)
+                a = portfolio.simulate(x, stake_frac=0.01)
+                print(f"{label}: late stake x{mult:g}: {len(x)} bets ({int(lt.sum())} late), replay {a.cagr:+.1%}/y, worst DD {a.max_dd:.1%}")
+        return 0
     out = []
     for name, m in rows.items():
         b = variant(p, m, 0.0, 3)

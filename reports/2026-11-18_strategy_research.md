@@ -2950,3 +2950,21 @@ open_ts at or before the bar; + a test). The two agree on 88.6% / 88.8% of band 
   bets, because nearly every band bet is already in a wide event at the bar; those 85 do lose out of sample (13 events).
 - The fall rule on 4+ events (a record, 3.85; its mask rebuilt as a tradable quote, mid 10-25c, 7-day fall 3c+, at 5,000): a little better out of sample (+6.0% against +3.7% a year, drawdown 12.7%
   against 14.4%), still far from risk-averse. No account. Variants tried: 1 pre-stated cut + 1 record.
+
+## 3.92 Ideas queue 80: a double stake on the band's late entrants (3:55 pm CST, Nov 25)
+
+Item 80 as first written (late entrants as a second leg beside rule_ent_band_20k) was moot: every late entrant is
+already a band bet, so a second leg adds no bet. Restated, and RUN AFTER 3.90 HAD BEEN SEEN (so not independent of it):
+the same band at 20,000, resting, with the stake doubled (2% instead of 1%) on markets with 5+ bars before their first
+band bar. research/band_prestated.py 80; research/portfolio.simulate takes an optional 5th column, a stake multiplier
+(default 1, every earlier replay unchanged; + a test). Data closing to Nov 24, event cap 3%.
+
+| stake on late entrants | bets (late) in / out | replay 1% /y in / out | worst DD in / out |
+|---|---|---|---|
+| 1% (the band as it is) | 1,024 (122) / 740 (81) | +9.2% / +37.8% | 6.4% / 7.0% |
+| 2% | same bets | +10.3% / +46.2% | 6.0% / 6.4% |
+
+- Better in both halves on return and drawdown. **A LEAD, not a pass**: the size tilt was chosen knowing that late
+  entrants earned more per bet in both halves (3.90), so this replay restates that result in account form; it is not
+  new evidence. No account (the paper rule also cannot count a market's bars yet). Item 82 holds the check that would be
+  new evidence: the late split on the next months of settled markets. Variants tried: 1 multiplier.

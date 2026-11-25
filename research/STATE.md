@@ -801,7 +801,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   rates leave the combined account positive (median +11.8%/y out). Items 78-79 added. Jobs ok; main $1,008.54, 2 settled.
 - 3:40 pm CST Nov 25: queue items 72, 75, 73, 79 (reports 3.88-3.91), ITEMS 5: band spread 2c+ PASSES -> new paper account
   rule_ent_band_20k_wide (Leg.min_spread); late entrants pass but small; skip-stale and 4+ listed-at-bar fail. band_prestated.py
-  + tests (531 pass). Items 80-81 added. Jobs ok; main $1,008.54, 2 settled.
+  + tests (531 pass). Items 80-81 added. 3:55 pm: item 80 (3.92): a 2% stake on late entrants replays better in both
+  halves but was chosen after 3.90: a lead; simulate stake column + test (532 pass); item 82. Jobs ok; main $1,008.54, 2 settled.
 
 ## How to run a round
 
@@ -1258,9 +1259,15 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     passes the tail test in both halves AND its 1% replay beats the whole band out of sample (+37.8%/y) with a worst
     drawdown no deeper (7.0%). If it passes, a new paper account under a new name. Also the 10-25c fall rule (5,000) on
     4+ market events, as a record (3.85).
-80. PRE-STATED (3.90): late entrants as an account. The band at 20,000 (resting) on markets with 5+ bars before their first
+80. DONE 3:55 pm CST Nov 25 (report 3.92): as written moot (late entrants are already band bets); restated after 3.90 was
+    seen: 2% stake on late entrants gives replay out +46.2%/y, DD 6.4% (band +37.8%, 7.0%), in +10.3% / 6.0%. A LEAD only. Item 82.
+    portfolio.simulate stake-multiplier column + test. WAS: late entrants as an account. The band at 20,000 (resting) on markets with 5+ bars before their first
     band bar, run beside the whole band in research/combined.py-style replay at 1%: passes if adding it as a second leg to
     rule_ent_band_20k (no double bets on one market) raises the out-of-sample replay with a worst drawdown no deeper than
     the band's (7.0%). The paper rule would need the market's bar count (Kalshi candles, as fall_from_candles). Backtest first.
 81. Forward, once rule_ent_band_20k_wide has 30+ settled bets: its per-bet return and fill rate against rule_ent_band_20k
     (its superset) and 3.88's backtest (+9.3% a bet out of sample). A split of settled paper bets; no new code.
+82. PRE-STATED (3.92): the late-entrant split on fresh markets. Once Entertainment has 60+ band events closing after
+    Nov 24, 2026 (markets settled after 3.90 was written): late entrants (5+ bars before their first band bar, 20,000,
+    resting) must earn more a bet than the rest on that slice alone, with the tail test passing there. Only then is a
+    late-entrant stake tilt worth coding into src/rules.py (a bar count from Kalshi candles). No new levels.
