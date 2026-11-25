@@ -54,7 +54,9 @@ if ($Stop) {
 if (Find-PmtJob $download) { Write-Host "running: history download" }
 else {
     # --with-sports since 2026-11-24 (the user: "Test as many things as you can"): Sports is listed and sampled last
-    Start-PmtJob $download "--interval 0.4 --first-pass 2500 --with-sports" $downloadLog
+    # --refresh-days 7 --forever since 2026-11-24: markets settled since each series was first listed come in weekly,
+    # and the download never finishes (research/kalshi_download.py phase_refresh)
+    Start-PmtJob $download "--interval 0.4 --first-pass 2500 --with-sports --refresh-days 7 --forever" $downloadLog
     Write-Host "started: history download"
 }
 

@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS markets (ticker TEXT PRIMARY KEY, series TEXT, event 
     open_ts INTEGER, close_ts INTEGER, result TEXT, settle REAL, volume REAL, open_interest REAL, last_price REAL,
     strike_type TEXT, floor_strike REAL, cap_strike REAL, src TEXT, candles_done INTEGER DEFAULT 0, rnd INTEGER,
     exp_ts INTEGER, early INTEGER);
+CREATE TABLE IF NOT EXISTS refreshed (category TEXT, what TEXT, ts INTEGER, PRIMARY KEY (category, what));
 CREATE INDEX IF NOT EXISTS markets_series ON markets (series);
 CREATE INDEX IF NOT EXISTS markets_todo ON markets (candles_done, category, volume);
 CREATE TABLE IF NOT EXISTS candles (ticker TEXT, ts INTEGER, bid REAL, ask REAL, bid_hi REAL, bid_lo REAL, ask_hi REAL,
@@ -93,8 +94,11 @@ def shuffle_key(ticker: str) -> int:
 
 def frontier(db, category: str, min_volume: float) -> int:
     """Markets of the category with a shuffle key below this number have all been attempted: they ARE the random
-    sample. (2**32 when the whole category is done.)"""
-    row = db.execute("SELECT MIN(rnd) FROM markets WHERE category=? AND candles_done=0 AND volume>=?", (category, min_volume)).fetchone()
+    sample. (2**32 when the whole category is done.) Late listings (phase_refresh) waiting for bars do not count:
+    they join the sample as their bars come in, in the same random order."""
+    late = {r[1] for r in db.execute("PRAGMA table_info(markets)")} >= {"late"}   # migrate() adds it
+    row = db.execute("SELECT MIN(rnd) FROM markets WHERE category=? AND candles_done=0 AND volume>=?"
+                     + (" AND COALESCE(late, 0)=0" if late else ""), (category, min_volume)).fetchone()
     return int(row[0]) if row and row[0] is not None else 2 ** 32
 
 
@@ -121,11 +125,11 @@ def phase_markets(db, k, categories, max_per_series, which):
     and a series that cannot be read now is simply left for the next run."""
     bit = 1 if which == "hist" else 2
     path, extra = ("/historical/markets", {}) if which == "hist" else ("/markets", {"status": "settled"})
-    todo = db.execute(f"SELECT ticker, category FROM series WHERE (markets_done & ?) = 0 AND category IN "
+    todo = db.execute(f"SELECT ticker, category, COALESCE(late, 0) FROM series WHERE (markets_done & ?) = 0 AND category IN "
                       f"({','.join('?' * len(categories))}) ORDER BY category, ticker", [bit] + categories).fetchall()
     log(f"markets[{which}]: {len(todo)} series to list")
     failures = 0
-    for i, (series, cat) in enumerate(todo):
+    for i, (series, cat, late) in enumerate(todo):
         batch, ok = [], True
         try:
             for m in k.pages(path, "markets", tries=3, series_ticker=series, **extra):
@@ -144,9 +148,7 @@ def phase_markets(db, k, categories, max_per_series, which):
                     db.commit()
                     return
                 time.sleep(60)
-        db.executemany("INSERT OR IGNORE INTO markets (ticker, series, event, category, title, sub, open_ts, close_ts, result, "
-                       "settle, volume, open_interest, last_price, strike_type, floor_strike, cap_strike, src, rnd, exp_ts, early) "
-                       "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", batch)
+        insert_markets(db, batch, late=1 if late else None)     # a series found by a refresh: its markets are late too
         if ok:
             failures = 0
             db.execute("UPDATE series SET markets_done = markets_done | ? WHERE ticker=?", (bit, series))
@@ -155,6 +157,123 @@ def phase_markets(db, k, categories, max_per_series, which):
             total = db.execute("SELECT COUNT(*) FROM markets").fetchone()[0]
             log(f"markets[{which}]: {i}/{len(todo)} series, {total} markets so far ({cat} {series}: {len(batch)}); "
                 f"{k.requests} requests, {k.rate_limited} rate limits, interval {k.min_interval:.2f}s")
+
+
+def insert_markets(db, rows, late=None) -> int:
+    """INSERT OR IGNORE market_row() tuples; returns how many were new."""
+    before = db.total_changes
+    db.executemany("INSERT OR IGNORE INTO markets (ticker, series, event, category, title, sub, open_ts, close_ts, result, "
+                   "settle, volume, open_interest, last_price, strike_type, floor_strike, cap_strike, src, rnd, exp_ts, early, "
+                   "late) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [(*r, late) for r in rows])
+    return db.total_changes - before
+
+
+# The refresh goes category by category in this order (the rules the paper accounts trade first, the big ones last).
+REFRESH_ORDER = ["Entertainment", "Climate and Weather", "Politics", "Economics", "Elections", "Science and Technology",
+                 "Companies", "Health", "World", "Mentions", "Social", "Commodities", "Financials", "Sports"]
+REFRESH_SKIP = {"Crypto"}       # closed for the daily-bar engine (report 3.25); its random pass alone takes weeks
+REFRESH_BIG = {"Commodities", "Financials"}     # mostly daily price ranges: hours of bars, so not before a first pass
+
+
+def relist_series(db, k, cat, every_days, now) -> int:
+    """New series of a category since it was last listed (a new show, artist, city): added with late=1."""
+    row = db.execute("SELECT ts FROM refreshed WHERE category=? AND what='series'", (cat,)).fetchone()
+    if row and row[0] >= now - every_days * 86400:
+        return 0
+    try:
+        rows = k.get("/series", category=cat).get("series") or []
+    except KalshiError as e:
+        log(f"refresh[series]: {cat}: {e}")
+        return 0
+    before = db.total_changes
+    db.executemany("INSERT OR IGNORE INTO series (ticker, category, title, fee_type, fee_multiplier, frequency, tags, late) "
+                   "VALUES (?,?,?,?,?,?,?,1)",
+                   [(s["ticker"], cat, s.get("title"), s.get("fee_type"), num(s.get("fee_multiplier")), s.get("frequency"),
+                     ",".join(s.get("tags") or [])) for s in rows])
+    new = db.total_changes - before
+    db.execute("INSERT OR REPLACE INTO refreshed (category, what, ts) VALUES (?, 'series', ?)", (cat, now))
+    db.commit()
+    log(f"refresh[series]: {cat}: {new} new series")
+    return new
+
+
+def relist_markets(db, k, cat, which, every_days, now, max_per_series) -> int:
+    """List again every series of the category whose last `which` listing ("recent": the live endpoint's settled
+    markets, which reach back to the archive cutoff, about two months; "hist": the archive) is older than every_days.
+    New markets are added with late=1. Returns how many were new."""
+    col = "recent_ts" if which == "recent" else "hist_ts"
+    path, extra = ("/historical/markets", {}) if which == "hist" else ("/markets", {"status": "settled"})
+    todo = [r[0] for r in db.execute(f"SELECT ticker FROM series WHERE category=? AND (markets_done & 1) = 1 AND "
+                                     f"({col} IS NULL OR {col} < ?) ORDER BY ticker", (cat, now - every_days * 86400))]
+    if not todo:
+        return 0
+    log(f"refresh[{which}]: {cat}: {len(todo)} series to list again")
+    saved = k.min_interval
+    if which == "recent":                           # the live endpoint is the touchy one
+        k.min_interval = max(k.min_interval, 0.6)
+    try:
+        return _relist(db, k, cat, which, col, path, extra, todo, now, max_per_series)
+    finally:
+        if which == "recent":                       # back to the bars' pace
+            k.min_interval = saved
+
+
+def _relist(db, k, cat, which, col, path, extra, todo, now, max_per_series) -> int:
+    new = failures = 0
+    for i, series in enumerate(todo):
+        batch, ok = [], True
+        try:
+            for m in k.pages(path, "markets", tries=3, series_ticker=series, **extra):
+                if m.get("result") not in ("yes", "no"):
+                    continue
+                batch.append(market_row(m, series, cat, which))
+                if len(batch) >= max_per_series:
+                    break
+        except KalshiError as e:
+            ok = e.status_code == 404
+            if not ok:
+                failures += 1
+                log(f"refresh[{which}]: {series}: {e}")
+                if failures >= 5:
+                    log(f"refresh[{which}]: the endpoint keeps refusing: the rest waits for the next round")
+                    db.commit()
+                    return new
+                time.sleep(60)
+        new += insert_markets(db, batch, late=1)
+        if ok:
+            failures = 0
+            db.execute(f"UPDATE series SET {col}=? WHERE ticker=?", (now, series))
+        db.commit()
+        if i % 200 == 0:
+            log(f"refresh[{which}]: {cat}: {i}/{len(todo)} series, {new} new markets so far; {k.requests} requests, "
+                f"{k.rate_limited} rate limits")
+    log(f"refresh[{which}]: {cat}: {new} new markets")
+    return new
+
+
+def phase_refresh(db, k, categories, refresh_days, max_per_series, max_days, min_volume, hist_days=56, now=None) -> int:
+    """Keep the history current. Each series is listed once by phase_markets, so without this a market that settles
+    later is never seen (found 2026-11-24: bars ended at the archive cutoff of the first listing, Sep 19, 2026).
+    Category by category (REFRESH_ORDER): new series; the live endpoint's settled markets every refresh_days; the
+    archive every hist_days (it lags about two months, so this only fills the days between the first listing and its
+    cutoff); then bars for every late listing, in the fixed random order. Late listings waiting for bars are left out
+    of the census floor and the random frontier (frontier(), panel.py), so a refresh never shrinks a sample: they join
+    it as their bars arrive. A category still on its first listing is left to the first pass."""
+    now = int(now or time.time())
+    order = [c for c in REFRESH_ORDER if c in categories] + [c for c in categories if c not in REFRESH_ORDER]
+    did = 0
+    for cat in order:
+        if cat in REFRESH_SKIP or not db.execute("SELECT 1 FROM series WHERE category=? LIMIT 1", (cat,)).fetchone():
+            continue
+        if db.execute("SELECT 1 FROM series WHERE category=? AND (markets_done & 1) = 0 AND COALESCE(late, 0)=0 LIMIT 1",
+                      (cat,)).fetchone():
+            continue
+        did += relist_series(db, k, cat, refresh_days, now)
+        phase_markets(db, k, [cat], max_per_series, "hist")            # the new series' archive markets (late)
+        did += relist_markets(db, k, cat, "recent", refresh_days, now, max_per_series)
+        did += relist_markets(db, k, cat, "hist", hist_days, now, max_per_series)
+        did += phase_candles(db, k, [cat], min_volume, 10 ** 9, max_days, late_only=True) or 0
+    return did
 
 
 def phase_backfill(db, k, categories, census_volume):
@@ -200,19 +319,22 @@ def candle_rows(ticker, cs):
     return [r for r in out if r[1]]
 
 
-def phase_candles(db, k, categories, min_volume, max_markets, max_days, biggest_first=False):
+def phase_candles(db, k, categories, min_volume, max_markets, max_days, biggest_first=False, late_only=False):
     """biggest_first=False: the fixed random order (the random sample). True: every market with at least
-    min_volume lifetime contracts, biggest first (the census of busy markets; research/panel.py, sample="liquid")."""
+    min_volume lifetime contracts, biggest first (the census of busy markets; research/panel.py, sample="liquid").
+    late_only: only the late listings of phase_refresh (in the random order). Returns the markets attempted."""
     order = "volume DESC" if biggest_first else "rnd"
+    only = " AND COALESCE(late, 0)=1" if late_only else ""
     done = 0
-    cats = [c for c in categories if db.execute("SELECT 1 FROM markets WHERE category=? AND candles_done=0 AND volume>=? LIMIT 1",
-                                                (c, min_volume)).fetchone()]
-    log(f"candles ({'census, volume >= %g' % min_volume if biggest_first else 'random order'}): categories with work: {cats}")
+    cats = [c for c in categories if db.execute("SELECT 1 FROM markets WHERE category=? AND candles_done=0 AND volume>=?"
+                                                f"{only} LIMIT 1", (c, min_volume)).fetchone()]
+    kind = "late listings" if late_only else ("census, volume >= %g" % min_volume if biggest_first else "random order")
+    log(f"candles ({kind}): categories with work: {cats}")
     retry_later: set[str] = set()                   # failed for a passing reason in this pass: not picked again in it
     while cats and done < max_markets:
         for cat in list(cats):                      # round-robin across categories
             rows = db.execute("SELECT ticker, series, open_ts, close_ts, src FROM markets WHERE category=? AND candles_done=0 "
-                              f"AND volume>=? ORDER BY {order} LIMIT ?", (cat, min_volume, 40 + len(retry_later))).fetchall()
+                              f"AND volume>=?{only} ORDER BY {order} LIMIT ?", (cat, min_volume, 40 + len(retry_later))).fetchall()
             rows = [r for r in rows if r[0] not in retry_later][:40]
             if not rows:
                 cats.remove(cat)
@@ -254,6 +376,22 @@ def phase_candles(db, k, categories, min_volume, max_markets, max_days, biggest_
                 n = db.execute("SELECT COUNT(*) FROM markets WHERE candles_done=1").fetchone()[0]
                 log(f"candles: {n} markets with bars; {k.requests} requests, {k.rate_limited} rate limits, interval {k.min_interval:.2f}s")
     log(f"candles: finished this pass ({done} markets)")
+    return done
+
+
+def migrate(db):
+    """Columns added after the first databases were made (kept out of SCHEMA, which other tools and tests use with
+    positional inserts): the shuffle, the schedule, and the refresh's late flag and listing times."""
+    have = {r[1] for r in db.execute("PRAGMA table_info(markets)")}
+    if "rnd" not in have:                           # databases from before the shuffle
+        db.execute("ALTER TABLE markets ADD COLUMN rnd INTEGER")
+    for col in ("exp_ts", "early", "late"):         # ... the scheduled end date, the refresh
+        if col not in have:
+            db.execute(f"ALTER TABLE markets ADD COLUMN {col} INTEGER")
+    have_s = {r[1] for r in db.execute("PRAGMA table_info(series)")}
+    for col in ("late", "hist_ts", "recent_ts"):
+        if col not in have_s:
+            db.execute(f"ALTER TABLE series ADD COLUMN {col} INTEGER")
 
 
 def main():
@@ -276,6 +414,12 @@ def main():
     ap.add_argument("--max-per-series", type=int, default=200000)
     ap.add_argument("--max-days", type=int, default=400)
     ap.add_argument("--interval", type=float, default=0.2, help="seconds between requests")
+    ap.add_argument("--refresh-days", type=float, default=0.0,
+                    help="list every series again this often (phase_refresh): new series, markets settled since (0 = off)")
+    ap.add_argument("--forever", action="store_true",
+                    help="never finish: the random pass in chunks, with the refresh between them; an idle round waits an hour")
+    ap.add_argument("--chunk", type=int, default=20000, help="--forever: markets per random-pass chunk (about 2.5 h)")
+    ap.add_argument("--rounds", type=int, default=0, help="--forever: stop after this many rounds (0 = never; for tests)")
     args = ap.parse_args()
     cats = [c.strip() for c in args.categories.split(",") if c.strip()]
     if args.with_sports and "Sports" not in cats:
@@ -283,12 +427,7 @@ def main():
     Path(args.db).parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(args.db, timeout=60)
     db.executescript(SCHEMA)
-    have_cols = {r[1] for r in db.execute("PRAGMA table_info(markets)")}
-    if "rnd" not in have_cols:                      # databases from before the shuffle
-        db.execute("ALTER TABLE markets ADD COLUMN rnd INTEGER")
-    for col in ("exp_ts", "early"):                 # ... and from before the scheduled end date was kept
-        if col not in have_cols:
-            db.execute(f"ALTER TABLE markets ADD COLUMN {col} INTEGER")
+    migrate(db)
     todo = db.execute("SELECT ticker FROM markets WHERE rnd IS NULL").fetchall()
     if todo:
         db.executemany("UPDATE markets SET rnd=? WHERE ticker=?", [(shuffle_key(t[0]), t[0]) for t in todo])
@@ -298,8 +437,12 @@ def main():
     k = KalshiHTTP(min_interval=args.interval)
     if args.phase in ("all", "series"):
         phase_series(db, k, cats)
+    def refresh(categories=cats):
+        return phase_refresh(db, k, categories, args.refresh_days, args.max_per_series, args.max_days, args.min_volume)
     if args.phase == "all":
         phase_backfill(db, k, cats, args.census_volume)        # everything listed before the schedule columns existed
+        if args.refresh_days > 0:                   # the categories already analysed get their new markets first; the
+            refresh([c for c in cats if c not in REFRESH_BIG])  # two giant ones wait for the first --forever round
         # First pass, one category at a time: list its markets, then fetch bars for its biggest ones. Analysis can
         # start on the first categories while the later ones are still downloading.
         for cat in cats:
@@ -316,6 +459,21 @@ def main():
                     phase_candles(db, k, [cat], args.census_volume, args.census_max - got, args.max_days, biggest_first=True)
     if args.phase in ("all", "markets"):                # also picks up any series a throttled pass left behind
         phase_markets(db, k, cats, args.max_per_series, "hist")
+    if args.phase == "all" and args.forever:
+        rounds = 0
+        while True:
+            did = phase_candles(db, k, cats, args.min_volume, args.chunk, args.max_days) or 0
+            if args.refresh_days > 0:
+                did += refresh()
+            phase_markets(db, k, cats, args.max_per_series, "hist")
+            rounds += 1
+            if args.rounds and rounds >= args.rounds:
+                break
+            if not did:
+                log("nothing to do: looking again in an hour")
+                time.sleep(3600)
+        db.close()
+        return
     if args.phase in ("all", "candles"):
         phase_candles(db, k, cats, args.min_volume, args.max_markets, args.max_days)
     if args.phase in ("all", "recent"):                 # last: the live endpoint is the touchy one

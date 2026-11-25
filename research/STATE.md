@@ -144,6 +144,17 @@ branch on the stock trader's repository is no longer used. The cloud container's
 - Start what is not running: **`research\start_jobs.ps1`** (history download; add `-PaperLoop` for the paper
   loop, `-Stop` to stop both). Python is `.venv\Scripts\python.exe`, not `python3`. Since 7:01 pm Nov 24 the
   download runs with `--with-sports` (Sports listed and sampled last, its own sample).
+- **THE HISTORY IS REFRESHED WEEKLY since 7:20 pm Nov 24** (`--refresh-days 7 --forever`, research/kalshi_download.py
+  phase_refresh). Until then each series had been listed once, so the bars stopped at the archive cutoff of that
+  first listing (Sep 19, 2026) and nothing that settled later was in any backtest. Now, category by category
+  (Entertainment, Climate and Weather, Politics, Economics, ... ; Commodities and Financials after Sports' first
+  pass; Crypto never): new series, the live endpoint's settled markets (back to the archive cutoff, ~Sep 21), the
+  archive every 8 weeks, then bars for every "late" listing in the fixed random order. Late listings waiting for
+  bars are left out of the census floor and the random frontier (panel.not_late), so the samples only grow: the late
+  markets in a sample at any moment are a random draw of them. WHILE a category's late bars are coming in
+  (download log: "candles (late listings): categories with work: [<it>]" not yet followed by "finished this pass"),
+  its figures move between check-ins: give the last close date of the markets you used when you quote one. The
+  download no longer finishes: an idle round waits an hour.
 - **PAPER TRADING RUNS ON THE PC since 3:46 am CST, 2026-11-19** (the user: "Start, PC settings", then "can
   you use both settings or combine them to the best option"). The settings, fixed from this cycle on:
   the forecaster as in `config.yaml` (model opus, 3 runs, high effort, quiet window 5:15 to 6:20 pm): these
@@ -799,6 +810,9 @@ Forward-only (cannot be backtested):
   --with-sports (4,329 Sports series; first pass and census come before the random passes resume); queue items 44-63
   added. Found: the archive's markets in already-listed series stop at the first listing (bars to Sep 19, 2026;
   archive now to Nov 3), being fixed in the same session.
+- 7:20 pm CST Nov 24 (same session): the download refreshes the history weekly (--refresh-days 7 --forever; new
+  series, the live endpoint's settled markets since ~Sep 21, bars for them in the fixed random order; late listings
+  never shrink a sample); 4 new Entertainment series found at once; item 64 added. 505 tests pass.
 
 ## Next actions
 
@@ -1108,3 +1122,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     Nov 24): Brier score and log loss of Claude's median, the market mid at the forecast and the 0.3 blend, by event,
     with a paired bootstrap; the two forecast blocks (cloud, PC) apart. The experiment's main question
     (README: "the experiment's real product is the forecast log").
+64. THE REFRESHED HISTORY (see Background jobs: markets settled since Sep 21, 2026 are coming in), FIRST once
+    Entertainment's late bars have landed: re-run the band, the fall rule (10-25c and 35-50c) and the 5-cent rule's
+    Entertainment twin exactly as in reports 3.29 / 3.46 / 3.55 (same commands, same levels), and say which verdicts
+    change with about two more months out of sample. Then the same for the 5-cent rule on the nine and the Climate
+    band once their categories have landed. Give the last close date used. This is the first test of the rules on
+    markets that settled after they were chosen; a rule that fails here is a result to put plainly to the user.

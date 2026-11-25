@@ -40,9 +40,20 @@ def set_split(date: str) -> None:
 CENSUS_MARGIN = 1.03       # a market's bars add up to at most 1.023 times its lifetime volume (measured on 9,240 markets)
 
 
+def not_late(db) -> str:
+    """SQL that leaves out late listings (kalshi_download.phase_refresh: markets that settled after their series was
+    first listed). While they wait for bars they must not move the census floor or the random frontier, or a refresh
+    would shrink every sample until it finished; they are fetched in the fixed random order and join the samples as
+    their bars arrive, so the late markets already in a sample are a random draw of them."""
+    cols = {r[1] for r in db.execute("PRAGMA table_info(markets)")}
+    return " AND COALESCE(late, 0)=0" if "late" in cols else ""
+
+
 def census_floor(db, category: str) -> float:
-    """Lifetime volume above which EVERY market of the category has been attempted by the download."""
-    v = db.execute("SELECT MAX(volume) FROM markets WHERE category=? AND candles_done=0", (category,)).fetchone()[0]
+    """Lifetime volume above which EVERY market of the category has been attempted by the download (late listings
+    still waiting for bars apart)."""
+    v = db.execute(f"SELECT MAX(volume) FROM markets WHERE category=? AND candles_done=0{not_late(db)}",
+                   (category,)).fetchone()[0]
     return float(v or 0.0)
 
 
@@ -86,8 +97,8 @@ def load(db_path: str | Path = DB, categories: list[str] | None = None, min_bars
         where += f" AND ({parts})"
         args += list(floors)
     if sample == "random" and "rnd" in cols:
-        fr = dict(db.execute("SELECT category, MIN(rnd) FROM markets WHERE candles_done=0 AND volume>=? GROUP BY category",
-                             (min_volume,)).fetchall())
+        fr = dict(db.execute(f"SELECT category, MIN(rnd) FROM markets WHERE candles_done=0 AND volume>=?{not_late(db)} "
+                             "GROUP BY category", (min_volume,)).fetchall())
         cats = [r[0] for r in db.execute("SELECT DISTINCT category FROM markets")]
         parts = " OR ".join(f"(m.category = ? AND m.rnd < {int(fr.get(c, 2 ** 32))})" for c in cats)
         where += f" AND ({parts})"

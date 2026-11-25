@@ -173,6 +173,7 @@ def k(api):
 def db(tmp_path):
     con = sqlite3.connect(str(tmp_path / "hist.db"))
     con.executescript(kd.SCHEMA)
+    kd.migrate(con)
     yield con
     con.close()
 
@@ -243,11 +244,11 @@ def test_candle_rows_match_the_table_columns(db):
 def test_schema_is_idempotent_and_keys_bars_by_ticker_and_time(db):
     db.executescript(kd.SCHEMA)                      # a second run on an existing database changes nothing
     tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    assert tables == {"series", "markets", "candles"}
+    assert tables == {"series", "markets", "candles", "refreshed"}
     idx = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='index' AND name NOT LIKE 'sqlite_%'")}
     assert {"markets_series", "markets_todo"} <= idx
     cols = [r[1] for r in db.execute("PRAGMA table_info(markets)")]
-    assert cols[-5:] == ["src", "candles_done", "rnd", "exp_ts", "early"]
+    assert cols[-6:] == ["src", "candles_done", "rnd", "exp_ts", "early", "late"]
     row = ("T", O) + (0.5,) * 14
     db.execute("INSERT INTO candles VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", row)
     db.execute("INSERT OR IGNORE INTO candles VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", row)
@@ -785,6 +786,106 @@ def test_running_the_file_as_a_script(tmp_path, api, monkeypatch):
     runpy.run_path(str(ROOT / "research" / "kalshi_download.py"), run_name="__main__")
     asked = [p["category"] for _, p in api.calls]
     assert asked == [c for c in kd.CATEGORIES if c != "Sports"] and (tmp_path / "sub" / "s.db").exists()
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# the refresh: markets that settled after their series was first listed
+# ---------------------------------------------------------------------------------------------------------------
+
+T = O + 400 * DAY
+
+
+def late_of(db, ticker):
+    return db.execute("SELECT late, src, candles_done FROM markets WHERE ticker=?", (ticker,)).fetchone()
+
+
+def test_refresh_adds_newly_settled_markets_late_and_fetches_their_bars(db, api, k, capsys):
+    add_series(db, "S", done=1)
+    put(db, "S-A", done=1)                                       # known before
+    api.recent = {"S": [mkt("S-A"), mkt("S-NEW", volume=900.0)]}  # the live endpoint repeats what it still holds
+    api.hist = {"S": [mkt("S-A"), mkt("S-GAP")]}                 # the archive's days between first listing and cutoff
+    api.candles = {"S-NEW": [cbar(O + DAY)], "S-GAP": [cbar(O + DAY)]}
+    did = kd.phase_refresh(db, k, ["Economics"], 7, 10 ** 6, 400, 1.0, now=T)
+    assert late_of(db, "S-A") == (None, "hist", 1)
+    assert late_of(db, "S-NEW") == (1, "recent", 1) and late_of(db, "S-GAP") == (1, "hist", 1)
+    assert "/series/S/markets/S-NEW/candlesticks" in api.paths() and cpath("S-GAP") in api.paths()
+    assert did == 2 + 2                                          # two new markets, two bars fetched
+    assert db.execute("SELECT recent_ts, hist_ts FROM series").fetchone() == (T, T)
+    lines = logged(capsys)
+    assert "refresh[recent]: Economics: 1 new markets" in lines and "refresh[hist]: Economics: 1 new markets" in lines
+
+
+def test_refresh_waits_for_its_period(db, api, k):
+    add_series(db, "S", done=1)
+    api.recent = {"S": [mkt("S-1")]}
+    api.candles = {"S-1": [cbar(O + DAY)]}
+    kd.phase_refresh(db, k, ["Economics"], 7, 10 ** 6, 400, 1.0, now=T)
+    api.calls.clear()
+    assert kd.phase_refresh(db, k, ["Economics"], 7, 10 ** 6, 400, 1.0, now=T + DAY) == 0
+    assert api.calls == []                                       # nothing is due a day later
+    api.recent["S"].append(mkt("S-2"))
+    api.candles["S-2"] = []
+    kd.phase_refresh(db, k, ["Economics"], 7, 10 ** 6, 400, 1.0, now=T + 8 * DAY)
+    asked = [p for p, _ in api.calls]
+    assert "/markets" in asked and HIST not in asked             # a week later the live endpoint, not the archive (56 d)
+    assert late_of(db, "S-2") == (1, "recent", 2)
+
+
+def test_new_series_are_added_late_with_their_markets(db, api, k, capsys):
+    add_series(db, "OLD", done=1)
+    api.series = {"Economics": [{"ticker": "OLD"}, {"ticker": "NEW", "fee_multiplier": "1"}]}
+    api.hist = {"NEW": [mkt("NEW-1")]}
+    api.candles = {"NEW-1": [cbar(O + DAY)]}
+    kd.phase_refresh(db, k, ["Economics"], 7, 10 ** 6, 400, 1.0, now=T)
+    assert dict(db.execute("SELECT ticker, late FROM series")) == {"OLD": None, "NEW": 1}
+    assert late_of(db, "NEW-1") == (1, "hist", 1)
+    assert "refresh[series]: Economics: 1 new series" in logged(capsys)
+
+
+def test_refresh_leaves_crypto_and_categories_on_their_first_listing_alone(db, api, k):
+    add_series(db, "C", category="Crypto", done=1)
+    add_series(db, "E1", done=1)
+    add_series(db, "E2", done=0)                                 # Economics is still being listed for the first time
+    assert kd.phase_refresh(db, k, ["Crypto", "Economics"], 7, 10 ** 6, 400, 1.0, now=T) == 0
+    assert api.calls == []
+
+
+def test_late_listings_waiting_for_bars_leave_the_samples_alone(db):
+    put(db, "A", volume=50.0, done=1, rnd=10)
+    put(db, "B", volume=60.0, done=0, rnd=90)                    # an old market not yet fetched: the frontier
+    put(db, "L", volume=10 ** 6, done=0, rnd=5)                  # a late listing waiting for bars
+    db.execute("UPDATE markets SET late=1 WHERE ticker='L'")
+    db.commit()
+    assert kd.frontier(db, "Economics", 1.0) == 90 and panel.census_floor(db, "Economics") == 60.0
+    db.execute("UPDATE markets SET candles_done=1 WHERE ticker='L'")
+    db.commit()
+    assert kd.frontier(db, "Economics", 1.0) == 90 and panel.census_floor(db, "Economics") == 60.0
+
+
+def test_late_only_bars_skip_everything_else(db, api, k):
+    put(db, "OLD", done=0, rnd=1)
+    put(db, "NEW", done=0, rnd=2)
+    db.execute("UPDATE markets SET late=1 WHERE ticker='NEW'")
+    db.commit()
+    api.candles = {"OLD": [cbar(O + DAY)], "NEW": [cbar(O + DAY)]}
+    assert kd.phase_candles(db, k, ["Economics"], 1.0, 10 ** 6, 400, late_only=True) == 1
+    assert done_of(db, "NEW") == 1 and done_of(db, "OLD") == 0
+
+
+def test_forever_rounds_refresh_between_chunks_and_an_idle_round_waits_an_hour(tmp_path, api, run, sleeps, capsys):
+    path = tmp_path / "f.db"
+    api.series = {"Economics": [{"ticker": "S"}]}
+    api.hist = {"S": [mkt(f"S-{i}") for i in range(5)]}
+    api.recent = {"S": [mkt("S-R")]}
+    api.candles = {f"S-{i}": [cbar(O + DAY)] for i in range(5)} | {"S-R": [cbar(O + DAY)]}
+    run("--db", path, "--categories", "Economics", "--first-pass", 2, "--census-volume", 0, "--forever", "--chunk", 2,
+        "--refresh-days", 7, "--rounds", 4)
+    db = sqlite3.connect(str(path))
+    assert db.execute("SELECT COUNT(*) FROM markets WHERE candles_done=1").fetchone()[0] == 6
+    assert late_of(db, "S-R")[:2] == (1, "recent")
+    db.close()
+    assert 3600 in sleeps                                        # the last rounds found nothing to do
+    assert "nothing to do: looking again in an hour" in logged(capsys)
 
 
 def test_with_sports_adds_sports_last(tmp_path, api, monkeypatch):
