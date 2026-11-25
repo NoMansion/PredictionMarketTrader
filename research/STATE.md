@@ -773,6 +773,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 3:30 am CST Nov 25: queue item 48 (report 3.70): one bet per event for the band FAILS (less a bet, tail fails out, deeper
   drawdown); one_per_event.py + 1 test; item 69 added. Jobs ok (run_rules running since 3:00 am); main $1,011.87, 2 settled.
 
+- 3:45 am CST Nov 25: queue item 49 (report 3.71): the band against a correctly-priced null: beats a fair price (1.7% of draws
+  out of sample), beyond the half spread only 5.4%; calibrated_null.py + 1 test (523 pass); item 70 added.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -1120,7 +1123,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     rung with YES nearest 20c, against all rungs: per bet, tail test, and the 1% replay's drawdown. Correlated rungs
     may be what makes the drawdown; one per event may be the risk-averse version. If it passes both halves with a
     lower drawdown, add a paper account under a new name.
-49. Permutation check of the band at 20,000: shuffle outcomes between events within each price cent (5,000 draws,
+49. DONE 3:45 am CST Nov 25 (report 3.71): the shuffle as written is degenerate; a correctly-priced null with events whole
+    instead: share of draws >= observed vs fair price 0.3% in / 1.7% out; vs mid 1.3% in / 5.4% out (suggestive, short of
+    rule 4's bar). calibrated_null.py + 1 test. Was: Permutation check of the band at 20,000: shuffle outcomes between events within each price cent (5,000 draws,
     events kept whole) and give the share of draws with a per-bet return at least the observed, in each half. A
     second opinion on the tail test. Backtest only; small script + 1 test.
 50. Multiple-testing ledger for Entertainment: count every variant tried on Entertainment since report 3.24 (rounds and
@@ -1184,3 +1189,5 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     open_ts). If new series carry the edge, a 'new series only' variant is pre-stated here. Backtest only.
 69. The band's rungs per event (3.70: one rung is worse than all): events with 1, 2-3 and 4+ band bets, per bet and the tail
     test on the event sum, both halves at 20,000. Does the edge grow with ladder width? A table; no new code beyond a groupby.
+70. calibrated_null.py for the 5-cent rule (nine, 45,000) and the fall rules, both nulls, both halves: which live rule clears the
+    mid null out of sample? Also the band with independent draws per market as the narrow bound beside 3.71's wide one.

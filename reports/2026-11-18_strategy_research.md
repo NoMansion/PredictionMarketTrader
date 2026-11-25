@@ -2492,3 +2492,26 @@ bet day (known at the bar); every other bet of the event dropped. Replay at 1% a
   The rung nearest 20c alone is the riskier bet. No new account. Variants tried: 1 (target 20c, pre-stated).
 - Side note: the all-rungs band's out-of-sample replay is now +43.5% a year (3.61 had +33.0%), with the refreshed
   history landing in Entertainment; item 64 is the proper re-test.
+
+## 3.71 Ideas queue 49: the band against a correctly-priced null (3:45 am CST, Nov 25)
+
+`research/calibrated_null.py` (+1 test): Entertainment band, 20,000, resting entry, data to Nov 24. The queue's wording
+(shuffle outcomes within each price cent) cannot test anything: a shuffle inside a price cell keeps each cell's win count,
+so the per-bet mean never moves. Replaced, before running, by draws under the null that the price is right: 5,000 draws,
+one uniform per event (all rungs of an event move together, the most correlated and so the widest null), each bet
+resolving YES if the uniform is below p_yes. Two nulls: p_yes = the ask (the price paid is fair) and p_yes = the mid (no
+edge beyond the half spread a resting order earns).
+
+| half | bets | events | observed per bet | null: price fair (mean, sd) | share of draws >= observed | null: mid (mean, sd) | share >= observed |
+|---|---|---|---|---|---|---|---|
+| in | 1,024 | 474 | +7.58% | +0.0%, 2.8% | 0.3% | +2.0%, 2.7% | 1.3% |
+| out | 740 | 294 | +6.61% | +0.1%, 3.2% | 1.7% | +1.7%, 3.1% | 5.4% |
+
+- **A milder confirmation than the tail test.** Against a fair price the band is unlikely to be luck in both halves
+  (1-in-60 out of sample). Against the mid, the part of the return that is not simply the half spread is 1-in-18 out
+  of sample: suggestive, not proof, and well short of the t-above-3 bar (about 1-in-750) of rule 4. Under this most
+  correlated null roughly 1.7 points of the band's 6.6 come from resting inside the spread; the rest (about 5 points)
+  is the over-priced-YES claim, and it is only about 1.6 sd from the null out of sample.
+- The comonotone null overstates the spread for events whose rungs are not nested, so the true shares are somewhat
+  smaller; no independent-draw version was run (it was not pre-stated). Nothing changes in the paper accounts.
+  Variants tried: 2 nulls, both pre-stated here.
