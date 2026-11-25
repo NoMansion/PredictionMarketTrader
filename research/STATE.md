@@ -770,6 +770,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   concentrated in a few series both halves; picking band series by in-sample record FAILS. series_concentration.py + 2 tests
   (521 pass); items 67, 68 added. Jobs ok, cycle running since 11:25 pm; main $1,011.99, 2 settled.
 
+- 3:30 am CST Nov 25: queue item 48 (report 3.70): one bet per event for the band FAILS (less a bet, tail fails out, deeper
+  drawdown); one_per_event.py + 1 test; item 69 added. Jobs ok (run_rules running since 3:00 am); main $1,011.87, 2 settled.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -1111,7 +1114,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     +4.97% a bet (tail FAIL) against +7.36% for the rest. Selection adds nothing. series_concentration.py --select + 1 test.
     Was: Series selection for the band: the Entertainment series with a positive in-sample band return (10+ events) against
     the rest, out of sample. Does picking series by their own history add anything (family 11 for the band only)?
-48. One bet per event for the band (RT and streaming ladders give several correlated bets per event): keep only the
+48. DONE 3:30 am CST Nov 25 (report 3.70): FAILS. Rung nearest 20c only: out +3.13% a bet (all rungs +6.61%), tail FAIL out,
+    worst drawdown 9.0% vs 7.0% (deeper in both halves): extra rungs diversify within the event. one_per_event.py + 1 test.
+    Was: One bet per event for the band (RT and streaming ladders give several correlated bets per event): keep only the
     rung with YES nearest 20c, against all rungs: per bet, tail test, and the 1% replay's drawdown. Correlated rungs
     may be what makes the drawdown; one per event may be the risk-averse version. If it passes both halves with a
     lower drawdown, add a paper account under a new name.
@@ -1177,3 +1182,5 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 68. The band's money by series LIFE (3.69: it lives in short-lived series): bets of series whose first market opened within
     30 days of the bet against older series, both halves at 20,000, per bet and tail test. Known at the bar (series first
     open_ts). If new series carry the edge, a 'new series only' variant is pre-stated here. Backtest only.
+69. The band's rungs per event (3.70: one rung is worse than all): events with 1, 2-3 and 4+ band bets, per bet and the tail
+    test on the event sum, both halves at 20,000. Does the edge grow with ladder width? A table; no new code beyond a groupby.

@@ -2472,3 +2472,23 @@ not positive) and thin ones (fewer than 10 in-sample events, including series ne
   are rejected; they had 10 out-of-sample bets at -1.1%, too few to matter. The band's money comes from the long tail of
   short-lived series, which by construction have no history to select on. Family 11 (series selection) stays closed for
   the band. Variants tried here: 1 pre-stated (+1 side look).
+
+## 3.70 Ideas queue 48: one bet per event for the band (3:30 am CST, Nov 25)
+
+`research/one_per_event.py` (+1 test): Entertainment band (NO against YES at 5-35c), 20,000 contracts, resting entry,
+data to Nov 24 (6,685 markets, 1,727 events). Per event, only the rung whose YES mid is nearest 20c on the event's first
+bet day (known at the bar); every other bet of the event dropped. Replay at 1% a bet, event cap 3%.
+
+| version | half | bets | events | per bet | losing events | upper bound vs break-even | replay /y | worst drawdown |
+|---|---|---|---|---|---|---|---|---|
+| all rungs | in | 1,024 | 474 | +7.58% | 106 | 25.7% vs 35.3% pass | +9.1% | 6.5% |
+| all rungs | out | 740 | 294 | +6.61% | 66 | 26.8% vs 34.5% pass | +43.5% | 7.0% |
+| one per event | in | 474 | 474 | +5.01% | 75 | 18.8% vs 19.8% pass | +4.4% | 7.5% |
+| one per event | out | 291 | 291 | +3.13% | 46 | 19.8% vs 18.4% FAIL | +8.5% | 9.0% |
+
+- **FAILS on both pre-stated counts.** One bet per event earns less a bet, fails the tail test out of sample, and has a
+  DEEPER drawdown in both halves. The extra rungs are not what makes the drawdown: they diversify within the event
+  (a losing event usually loses on one rung, while its other rungs win), so the summed event return loses less often.
+  The rung nearest 20c alone is the riskier bet. No new account. Variants tried: 1 (target 20c, pre-stated).
+- Side note: the all-rungs band's out-of-sample replay is now +43.5% a year (3.61 had +33.0%), with the refreshed
+  history landing in Entertainment; item 64 is the proper re-test.
