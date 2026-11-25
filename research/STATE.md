@@ -763,6 +763,9 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 9:20 pm CST Nov 24: queue item 44 (report 3.66): no edge decay by quarter in the band, the 5-cent rule or the Climate band;
   edge_by_quarter.py + 1 test (518 pass). Item 65 added (re-check 44 once 2026Q4 is fuller).
 
+- 9:20 pm CST Nov 24: queue item 45 (report 3.67): band stable in both out-of-sample sub-periods; 5-cent rule's pass rests on
+  Apr-Jun (Jul+ fails the tail test); Climate band fails the tail test in both halves on today's data. Item 66 added.
+
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -1090,7 +1093,9 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     per quarter, event-clustered), and the slope across quarters. Pre-state: "decaying" if every out-of-sample quarter
     is below the in-sample mean AND the slope's t < -2. Is the edge shrinking as Kalshi grows? A small script
     (research/edge_by_quarter.py, + 1 test). Backtest only.
-45. Stability INSIDE the out-of-sample half (does not move the split): the same three rules on Apr-Jun 2026 and on
+45. DONE 9:20 pm CST Nov 24 (report 3.67): band stable (tail passes Apr-Jun and Jul+); 5-cent rule FRAGILE (Jul+ +0.99% a
+    bet, tail fails on 4 losers in 109 events); Climate band fails the tail test in both sub-periods AND both whole halves
+    on today's data. Was: Stability INSIDE the out-of-sample half (does not move the split): the same three rules on Apr-Jun 2026 and on
     Jul 2026 onward separately: tail test and per bet in each. A rule that earns only in one sub-period is fragile.
 46. Series concentration of the band: bets, events and per-bet return of its top 15 series in each half; then the band
     without its best series and without its top 3 (by in-sample money). Pre-state: fragile if dropping the top series
@@ -1155,3 +1160,5 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     markets that settled after they were chosen; a rule that fails here is a result to put plainly to the user.
 65. Re-run research\edge_by_quarter.py for the three rules once the refreshed history has filled 2026Q4 for the nine and
     Climate (after item 64): the band's 2026Q3-Q4 sat below its in-sample mean (3.66); a third low quarter would be worth a line.
+66. The Climate band at 20,000 and 45,000 (3.67: at 5,000 it fails the tail test in both halves on today's data): per bet and
+    tail test in both halves. Does it hold anywhere, or is rule_climate_band's basis gone? A table; no account changes.

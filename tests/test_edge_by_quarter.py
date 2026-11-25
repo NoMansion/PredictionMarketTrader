@@ -28,3 +28,13 @@ def test_a_steadily_shrinking_edge_is_decaying_and_a_flat_one_is_not():
     assert v["slope_per_quarter"] < -0.04 and v["slope_t"] < -2 and v["oos_all_below_is"] and v["decaying"]
     flat = [(s, list(0.05 + rng.normal(0, 0.01, 40))) for s in starts]
     assert not by_quarter(_frame(flat, oos_from=5))[1]["decaying"]
+
+
+def test_sub_periods_split_by_close_date_and_run_the_tail_test():
+    from edge_by_quarter import sub_periods
+    starts = ["2026-05-15", "2026-08-15"]
+    b = _frame([(starts[0], [0.05] * 30), (starts[1], [0.05] * 29 + [-1.0])], oos_from=0)
+    t = sub_periods(b)
+    assert list(t["bets"]) == [30, 30] and list(t["events"]) == [30, 30]
+    assert abs(t["per_bet"].iloc[0] - 0.05) < 1e-12 and list(t["losing_ev"]) == [0, 1]
+    assert t["period"].iloc[1] == "2026-07-01 to last"

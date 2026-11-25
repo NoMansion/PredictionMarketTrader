@@ -2,6 +2,9 @@
 event-clustered standard error per quarter) and the slope of per-bet return across quarters (OLS of each bet's return
 on the quarter index, standard error clustered by event).
 
+Queue item 45 (--periods): per bet and the tail test (analyze_rule.tail on each event's summed return) in
+sub-periods of the out-of-sample half, by close date: Apr-Jun 2026 and Jul 2026 onward (the split is not moved).
+
 Pre-stated verdict: "decaying" if EVERY out-of-sample quarter's per-bet return is below the in-sample mean AND the
 slope's t < -2. Backtest only.
 
@@ -18,7 +21,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import panel  # noqa: E402
-from analyze_rule import bets_frame, find_rule  # noqa: E402
+from analyze_rule import bets_frame, find_rule, tail  # noqa: E402
 from backtest import Panel  # noqa: E402
 from families import Features  # noqa: E402
 from run_sweep import titles_for  # noqa: E402
@@ -63,6 +66,26 @@ def by_quarter(b: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     return t, verdict
 
 
+PERIODS = (("2026-04-01", "2026-07-01"), ("2026-07-01", None))
+
+
+def sub_periods(b: pd.DataFrame, periods=PERIODS) -> pd.DataFrame:
+    """Per bet and tail test of the bets closing in each [start, end) period (end None: open-ended)."""
+    rows = []
+    for start, end in periods:
+        lo = pd.Timestamp(start).timestamp()
+        hi = pd.Timestamp(end).timestamp() if end else float("inf")
+        g = b[(b["close_ts"] >= lo) & (b["close_ts"] < hi)]
+        d = {"period": f"{start} to {end or 'last'}", "bets": len(g), "events": g["event"].nunique(),
+             "per_bet": float(g["r"].mean()) if len(g) else float("nan")}
+        if len(g):
+            tt = tail(g.groupby("event")["r"].sum().to_numpy("float64"))
+            d.update({"losing_ev": tt["losing"], "upper95": tt["upper95"], "breakeven": tt["breakeven"],
+                      "tail_ok": tt["proven"]})
+        rows.append(d)
+    return pd.DataFrame(rows)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--rule", required=True)
@@ -71,6 +94,7 @@ def main() -> int:
     ap.add_argument("--categories", required=True)
     ap.add_argument("--min-cumvol", type=float, default=None)
     ap.add_argument("--db", default=str(panel.DB))
+    ap.add_argument("--periods", action="store_true", help="also the out-of-sample sub-periods (queue item 45)")
     args = ap.parse_args()
     cats = [c.strip() for c in args.categories.split(",") if c.strip()]
     df = panel.load(args.db, cats, sample="liquid", min_cumvol=args.min_cumvol)
@@ -78,11 +102,14 @@ def main() -> int:
     p = Panel(df)
     f = Features(p)
     _, mask = find_rule(f, titles_for(df, args.db), args.rule, args.side, args.entry)
-    t, v = by_quarter(bets_frame(p, mask, args.side, args.entry))
+    b = bets_frame(p, mask, args.side, args.entry)
+    t, v = by_quarter(b)
     pd.set_option("display.width", 200)
     print(t.to_string(index=False, float_format=lambda x: f"{x:+.4f}"))
     print(f"in-sample mean {v['is_mean']:+.2%}; slope {v['slope_per_quarter']:+.3%} a quarter, t {v['slope_t']:+.2f}; "
           f"every out-of-sample quarter below in-sample mean: {v['oos_all_below_is']}; DECAYING: {v['decaying']}")
+    if args.periods:
+        print(sub_periods(b).to_string(index=False, float_format=lambda x: f"{x:+.4f}"))
     return 0
 
 

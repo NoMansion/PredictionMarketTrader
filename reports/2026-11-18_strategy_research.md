@@ -2382,7 +2382,7 @@ the same panel with hourly stops and daily takes (the Entertainment panel has gr
 - Hold to settlement stays the exit for every rule account. Variants tried: 2 rules x 8 taker take policies, one run.
 - Data: `research/results/exit_{ent,nine}_liquid_45000_hourtake.csv`, baseline `exit_ent_liquid_45000_hourstop_now.csv`.
 
-## 3.66 Ideas queue 44: is the edge decaying? Per-bet return by calendar quarter (9:25 pm CST, Nov 24)
+## 3.66 Ideas queue 44: is the edge decaying? Per-bet return by calendar quarter (9:20 pm CST, Nov 24)
 
 New `research/edge_by_quarter.py` (+1 test, 518 pass): first bar per market as `analyze_rule.py`, grouped by the quarter
 of the market's close; slope = OLS of each bet's return on the quarter index, standard error clustered by event.
@@ -2402,3 +2402,29 @@ Pre-stated: "decaying" if every out-of-sample quarter is below the in-sample mea
   positive. The 5-cent rule's 2026Q3 (+1.0%) is below its mean too; its Q2 was the best quarter on record.
 - The Climate band's in-sample mean is only +0.7% a bet, its 2024Q4 -7.1% (179 bets): its out-of-sample quarters are its
   best. Same caveat as 3.27 (thin edge). No account changes.
+
+## 3.67 Ideas queue 45: stability inside the out-of-sample half (9:20 pm CST, Nov 24)
+
+`research/edge_by_quarter.py --periods` (+1 test, 519 pass): per bet and the tail test (each event's summed return,
+`analyze_rule.tail`) on bets closing Apr-Jun 2026 and Jul 2026 onward. The split is not moved. Resting entry.
+
+| rule | period | bets | events | per bet | losing events | loss-rate bound 95% vs break-even | tail test |
+|---|---|---|---|---|---|---|---|
+| Ent band, 20,000 | Apr-Jun 2026 | 240 | 102 | +8.69% | 21 | 28.3% vs 37.4% | pass |
+| Ent band, 20,000 | Jul-Nov 24 2026 | 500 | 195 | +5.61% | 45 | 28.6% vs 33.0% | pass |
+| 5-cent rule, nine, 45,000 | Apr-Jun 2026 | 233 | 130 | +3.65% | 0 | 2.3% vs 6.2% | pass |
+| 5-cent rule, nine, 45,000 | Jul-Sep 18 2026 | 165 | 109 | +0.99% | 4 | 8.2% vs 5.1% | FAIL |
+| Climate band, 5,000 | Apr-Jun 2026 | 401 | 262 | +1.24% | 70 | 31.6% vs 28.3% | FAIL |
+| Climate band, 5,000 | Jul-Sep 18 2026 | 354 | 223 | +2.27% | 52 | 28.5% vs 26.4% | FAIL |
+
+- **The Entertainment band is stable**: it passes the tail test in both sub-periods on its own, with the later one
+  (which includes the refreshed history to Nov 24) weaker a bet but larger.
+- **The 5-cent rule is fragile by the item's own test**: its out-of-sample pass rests on Apr-Jun 2026 (no losing event
+  in 130). From July it earns +0.99% a bet and 4 losing events in 109 put the bound above break-even. A lopsided rule
+  with 100-odd events can fail on four losers, so this is a warning, not a verdict; item 64 (the refreshed history, to
+  Nov 2026) is the real test, and the paper account rule_5c_busy (1 settled, a loss) keeps running.
+- **The Climate band fails the tail test in both sub-periods and, re-checked on the current data, on each whole half**
+  (in sample 188 losing of 731 events, bound 28.5% vs break-even 26.5%; out 122 of 485, 28.6% vs 27.4%). Its per-bet
+  return is positive (+0.7% / +1.7%) but it does not meet rule 1 of the judging rules at 5,000 on today's data. The paper
+  account rule_climate_band (+$14.74, 0 settled) is left running as a record (accounts are never changed); no setting of
+  it should reach anything else. Data to Sep 18 for the nine and Climate (refresh pending).
