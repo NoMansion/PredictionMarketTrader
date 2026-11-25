@@ -787,6 +787,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 4:10 am CST Nov 25 (the user's session; the user said yes): scripts\usage_pace.py now prices an extra queue item at the
   measured ~$0.50 (was $1.50) and allows up to 8 a check-in (was 4): ITEMS 2 -> 5 at 4:10 am, week heading for 58%.
   The 60-minute rule, the 100-minute timeout and the $8 cap are unchanged. checkin_prompt.md "(0 to 8)"; 1 test added.
+- 6:20 am CST Nov 25: queue items 50-54 (reports 3.72-3.76), ITEMS 5: Holm deflates every Entertainment rule once the
+  search is counted (band out-of-sample t 2.5; fall rules t 0.0 / 0.9 by event); band earns more in wider spreads, a bid
+  inside the spread is not worth it; no weekday effect; spike split unreadable; Climate band fails in every slice. Items
+  71-74 added. Jobs ok; main $1,010.00, 2 settled.
 
 ## How to run a round
 
@@ -1150,7 +1154,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     (in / out): both pass the tail test both halves, the leader flips between halves.
 53. DONE 6:17 am CST Nov 25 (report 3.75): cannot be read: 85% of band bets have under 5 earlier bars. Spikes (100 bets)
     fail the tail test both halves; non-spikes with history earn +13.4% / +15.9% a bet: item 73 added.
-54. DONE 6:18 am CST Nov 25 (report 3.76): FAILS everywhere. No series group (highs, lows, rain, snow, hurricanes, rest) or    days-to-close slice of the Climate band passes the tail test in either half; Climate 5-cent rule at 20,000 fails out.
+54. DONE 6:18 am CST Nov 25 (report 3.76): FAILS everywhere. No series group (highs, lows, rain, snow, hurricanes, rest) or
+    days-to-close slice of the Climate band passes the tail test in either half; Climate 5-cent rule at 20,000 fails out.
 55. Politics alone at 20,000 for the band (3.33: passes at 45,000 by 0.4 pt) and for the 5-cent rule; and Politics
     0-5c (3.34). If both halves pass at 20,000 too, add a Politics paper account under a new name.
 56. SPORTS, once its census has landed (data\kalshi_download.log: the Sports census "finished this pass" after
