@@ -2753,7 +2753,7 @@ score ladders, one series per film) against the rest, each half, event tail test
   band's bets and its busiest markets; whether RT's out-of-sample slump persists is a forward question for
   rule_ent_band_20k (item 77).
 
-### 3.82 Ladder rungs out of line: NO on a rung 3c+ above its neighbours' line (12:30 pm CST, November 25)
+### 3.82 Ladder rungs out of line: NO on a rung 3c+ above its neighbours' line (12:20 pm CST, November 25)
 
 Ideas queue item 60. New rule in `research/families.py` (family 6, `ladder_kink`, + a test): a rung whose YES mid is 3c or
 more above the average of the rungs just above and below it (both quoted, known at the bar); buy NO on it, resting.
@@ -2774,7 +2774,7 @@ Liquid sample, closes to Nov 24 (the nine's Health, World, Commodities and Finan
   a 1% stake are not risk-averse. **No account.** Capacity at 45,000: median $40,900 traded in the week before entry.
 - Item 78 added: the nine at 45,000 re-checked as a pre-stated test once all nine categories' late bars have landed.
 
-### 3.83 The band by series life: new series against older ones (12:50 pm CST, November 25)
+### 3.83 The band by series life: new series against older ones (12:23 pm CST, November 25)
 
 Ideas queue item 68. The band (Entertainment, NO where YES is 5-35c, 20,000+, resting; closes to Nov 24) split by whether
 the bet's series had its first market open within 30 days before the bet (known at the bar). `research/band_splits.py
@@ -2791,7 +2791,7 @@ the bet's series had its first market open within 30 days before the bet (known 
   per-bet return (out of sample +6.8% against +6.6%). The pre-stated "new series only" variant is not taken up, and
   nothing changes. 3.69's "short-lived series" finding is about series that list few markets, not series that are new.
 
-### 3.84 The band by bets per event (12:55 pm CST, November 25)
+### 3.84 The band by bets per event (12:25 pm CST, November 25)
 
 Ideas queue item 69. The band (Entertainment, 20,000+, resting; closes to Nov 24) split by how many band bets its event
 took. `research/band_splits.py --split per_event`. One split, pre-stated.
@@ -2810,7 +2810,7 @@ took. `research/band_splits.py --split per_event`. One split, pre-stated.
 - **Not a rule as it stands**: how many rungs will enter the band is known only afterwards. What is known at the bar is
   how many rungs the event already lists and how many are already in the band. Queue item 79 pre-states that test.
 
-### 3.85 The 10-25c fall rule by bets per event (1:00 pm CST, November 25)
+### 3.85 The 10-25c fall rule by bets per event (12:27 pm CST, November 25)
 
 Ideas queue item 71 (3.72: +5.2% a bet out of sample but event-weighted t 0.0). Entertainment, NO where YES at 10-25c has
 fallen 3c+ in 7 days, 5,000+, resting (rule_ent_fall's level); closes to Nov 24. `research/band_splits.py --split per_event

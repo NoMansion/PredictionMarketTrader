@@ -67,6 +67,12 @@ def account(p: Panel, res: Result, stake: float) -> tuple[portfolio.Account, por
     return portfolio.simulate(bets(p, a[0]), stake_frac=stake), portfolio.simulate(bets(p, a[1]), stake_frac=stake)
 
 
+def thin(res: Result, rate: float, rng: np.random.Generator) -> Result:
+    """Keep each bet with probability `rate` (queue item 62: the paper fill rates of the observation logs)."""
+    k = rng.random(res.rows.size) < rate
+    return Result(res.rows[k], res.r[k], res.release[k], res.reason[k], res.exit_px[k], res.cost[k])
+
+
 def leg_level(df: pd.DataFrame, min_cumvol: float) -> np.ndarray:
     """Bars at which the market had traded at least `min_cumvol` contracts so far (known at the bar, rule 0)."""
     return df["cumvol"].to_numpy("float64") >= float(min_cumvol)
@@ -83,6 +89,10 @@ def main() -> int:
     ap.add_argument("--five-cumvol", type=float, default=None,
                     help="the 5-cent nine-category leg only on bars where the market has traded this many contracts "
                          "(report 3.7's 45,000 level); the other legs keep the default level")
+    ap.add_argument("--draws", type=int, default=0,
+                    help="queue item 62: also run this many draws with fills thinned at random (1%% stake only)")
+    ap.add_argument("--fill-five", type=float, default=0.65, help="fill rate kept for the 5-cent legs in the draws")
+    ap.add_argument("--fill-wide", type=float, default=0.49, help="fill rate kept for the 5-35c legs in the draws")
     args = ap.parse_args()
     cats = sorted({c for leg in LEGS for c in leg[4]})
     df = panel.load(args.db, cats, sample="liquid", min_cumvol=args.min_cumvol)
@@ -120,6 +130,25 @@ def main() -> int:
                         "in/yr": a.cagr, "in dd": a.max_dd, "in sharpe": a.sharpe, "in at work": a.exposure,
                         "out/yr": o.cagr, "out dd": o.max_dd, "out sharpe": o.sharpe, "out at work": o.exposure,
                         "out years": o.years})
+    if args.draws:
+        rng = np.random.default_rng(62)
+        rates = [args.fill_five if leg[1] == FIVE else args.fill_wide for leg in LEGS]
+        rows = []
+        for d in range(args.draws):
+            thinned = [thin(res, rate, rng) for (_, res), rate in zip(legs, rates)]
+            dc = [(label, [thinned[i]]) for i, (label, _) in enumerate(legs)]
+            dc += [("ALL FOUR LEGS in one account", thinned), ("the first three legs", thinned[:3]),
+                   ("5-cent nine + NO 5-35c Entertainment", [thinned[0], thinned[1]])]
+            for label, parts in dc:
+                a, o = account(p, first_per_market(p, merge(parts)), 0.01)
+                rows.append({"draw": d, "account": label, "in/yr": a.cagr, "in dd": a.max_dd, "out/yr": o.cagr,
+                             "out dd": o.max_dd})
+        dr = pd.DataFrame(rows)
+        q = dr.groupby("account", sort=False)[["in/yr", "in dd", "out/yr", "out dd"]].quantile([0.05, 0.5, 0.95]).unstack()
+        print(f"\n{args.draws} draws, fills kept: 5-cent {args.fill_five:.0%}, 5-35c {args.fill_wide:.0%}; stake 1%; "
+              "5th / 50th / 95th percentile")
+        print((q * 100).round(1).to_string())
+        q.round(5).to_csv(HERE / "results" / f"combined_fill_draws{args.draws}.csv")
     t = pd.DataFrame(out)
     pd.set_option("display.width", 260, "display.max_colwidth", 48)
     pct = ["in/bet", "out/bet", "in/yr", "in dd", "in at work", "out/yr", "out dd", "out at work"]

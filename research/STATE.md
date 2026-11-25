@@ -1176,7 +1176,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 59. Sports hourly bars (after 56, only if the game markets are too short for daily bars): research\hourly_bars.py on the
     busiest Sports game markets (--categories Sports --max-markets 2000), then the 5-cent rule on hourly entries in the
     last 48 hours. Low priority.
-60. DONE 12:30 pm CST Nov 25 (report 3.82): FAILS. 3 of 4 cells fail the tail test both halves; the nine at 45,000 passes
+60. DONE 12:20 pm CST Nov 25 (report 3.82): FAILS. 3 of 4 cells fail the tail test both halves; the nine at 45,000 passes
     barely (74.6 vs 75.0% out) but the nine at 20,000 fails both with a 51% DD; 2023-24 lose. ladder_kink + test. Item 78.
     WAS: Ladder rungs out of line: in a threshold ladder (one event, "above X" rungs), a rung whose YES mid is above the
     straight line between its two neighbours' mids by 3c+ (a convexity kink, known at the bar). NO on the kinked rung,
@@ -1207,16 +1207,16 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     fails in sample, passes out of sample and on the Sep 20+ markets (+10.2% / +11.6% a bet). No account changes. Item 76.
 67. DONE 10:05 am CST Nov 25 (report 3.81): KXRT below the rest out of sample only (+2.7% vs +8.1%, fails there) but above
     in sample (+8.0% vs +7.5%): the pre-stated condition fails, no variant tested. Item 77 added.
-68. DONE 12:50 pm CST Nov 25 (report 3.83): no difference; new and older series both pass both halves (out +6.8% / +6.6%
+68. DONE 12:23 pm CST Nov 25 (report 3.83): no difference; new and older series both pass both halves (out +6.8% / +6.6%
     a bet). No variant. research/band_splits.py + test. WAS: The band's money by series LIFE (3.69: it lives in short-lived series): bets of series whose first market opened within
     30 days of the bet against older series, both halves at 20,000, per bet and tail test. Known at the bar (series first
     open_ts). If new series carry the edge, a 'new series only' variant is pre-stated here. Backtest only.
-69. DONE 12:55 pm CST Nov 25 (report 3.84): edge grows with ladder width in both halves (1 bet: +2-3%, fails the tail;
+69. DONE 12:25 pm CST Nov 25 (report 3.84): edge grows with ladder width in both halves (1 bet: +2-3%, fails the tail;
     4+: +8-11%, passes) but bets-per-event is hindsight. Item 79. WAS: The band's rungs per event (3.70: one rung is worse than all): events with 1, 2-3 and 4+ band bets, per bet and the tail
     test on the event sum, both halves at 20,000. Does the edge grow with ladder width? A table; no new code beyond a groupby.
 70. calibrated_null.py for the 5-cent rule (nine, 45,000) and the fall rules, both nulls, both halves: which live rule clears the
     mid null out of sample? Also the band with independent draws per market as the narrow bound beside 3.71's wide one.
-71. DONE 1:00 pm CST Nov 25 (report 3.85): out-of-sample profit is all in 40 events with 4+ bets; 1-bet events lose -5.6%
+71. DONE 12:27 pm CST Nov 25 (report 3.85): out-of-sample profit is all in 40 events with 4+ bets; 1-bet events lose -5.6%
     a bet out. Not risk-averse. WAS: The 10-25c fall rule's per-bet against per-event mean (3.72: out of sample +5.2% a bet but event-weighted t 0.0): split
     its out-of-sample events by bets per event (1, 2-3, 4+) and show per-bet mean and event sum; is it one or two big
     ladders? A groupby on research\analyze_rule.bets_frame, no new code.
