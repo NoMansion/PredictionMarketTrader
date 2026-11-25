@@ -1188,7 +1188,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     (README: "the experiment's real product is the forecast log").
 64. PART DONE 9:50 am CST Nov 25 (report 3.79): Entertainment (closes to Nov 24): no verdict changes; the band at 20,000
     passes on the Sep 20+ markets alone (+5.8% a bet, 76 events); every fresh per-bet below selection; fall 10-25c weakest
-    (fresh slice fails, DD 14.3%). STILL OPEN: the 5-cent rule on the nine and the Climate band once their late bars land.
+    (fresh slice fails, DD 14.3%). Climate done (3.80). STILL OPEN: the 5-cent rule on the nine once their late bars land.
     THE REFRESHED HISTORY (see Background jobs: markets settled since Sep 21, 2026 are coming in), FIRST once
     Entertainment's late bars have landed: re-run the band, the fall rule (10-25c and 35-50c) and the 5-cent rule's
     Entertainment twin exactly as in reports 3.29 / 3.46 / 3.55 (same commands, same levels), and say which verdicts
@@ -1197,8 +1197,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     markets that settled after they were chosen; a rule that fails here is a result to put plainly to the user.
 65. Re-run research\edge_by_quarter.py for the three rules once the refreshed history has filled 2026Q4 for the nine and
     Climate (after item 64): the band's 2026Q3-Q4 sat below its in-sample mean (3.66); a third low quarter would be worth a line.
-66. The Climate band at 20,000 and 45,000 (3.67: at 5,000 it fails the tail test in both halves on today's data): per bet and
-    tail test in both halves. Does it hold anywhere, or is rule_climate_band's basis gone? A table; no account changes.
+66. DONE 10:00 am CST Nov 25 (report 3.80): Climate band fails both halves at 5,000 (fresh markets too); at 20,000 / 45,000
+    fails in sample, passes out of sample and on the Sep 20+ markets (+10.2% / +11.6% a bet). No account changes. Item 76.
 67. KXRT (Rotten Tomatoes ladders) in the band: the band's largest out-of-sample series earns below the band a bet (3.68:
     without it +7.97% vs +6.61%). RT against the rest per bet and tail test in BOTH halves at 20,000; if RT is below the rest
     in both, test the band without RT as a pre-stated variant (multiple testing: count it in item 50). Backtest only.
@@ -1225,3 +1225,5 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 75. PRE-STATED (3.78): the band at 20,000 skipping a STALE(3) bar (take the market's next non-stale band bar instead,
     research\stale_quotes.stale_flags). Passes if it passes the tail test in both halves AND its 1% replay beats the whole band
     out of sample (+37.8%/y) with a worst drawdown no deeper (7.0%). If it passes, a new paper account under a new name.
+76. PRE-STATED (3.80): the Climate band at 20,000 on markets closing Sep 20, 2026 or later ONLY, once that slice reaches 120+
+    events (60 at Nov 24): passes if the tail test passes on that slice. Fresh markets only; no new levels or windows.

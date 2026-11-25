@@ -2715,3 +2715,22 @@ Event tail test on that slice alone. 6 rules re-run, nothing new chosen.
   Not risk-averse on this record; it keeps trading on paper as a record only.
 - Two months is one season of Entertainment (awards, box office, charts); the fresh slices are 29-156 events. Still to
   do under item 64: the 5-cent rule on the nine (Politics and Economics late bars are landing now) and the Climate band.
+
+### 3.80 The Climate band at 5,000 / 20,000 / 45,000 on the refreshed history (10:00 am CST, November 25)
+
+Ideas queue item 66, and item 64's Climate part (Climate's late listings finished at 4:07 am Nov 25; closes to Nov 24).
+`analyze_rule.py --sample liquid --categories "Climate and Weather" --rule "NO where YES is at 5-35c" --side no --entry mk
+--min-cumvol N`; "Sep 20+" as in 3.79. 3 levels, stated in the queue.
+
+| Level | Bets (events) | Per bet | Tail test in / out | Replay 1% in / out a year | Worst DD in / out | Sep 20+: bets (events), per bet, tail |
+|---|---|---|---|---|---|---|
+| 5,000 | 2,203 (1,411) | +1.26% | **fails** (28.5 vs 26.5%) / **fails** (27.7 vs 27.4%) | +2.0% / +29.5% | 15.6% / 12.2% | 348 (194), +1.95%, fails |
+| 20,000 | 429 (314) | +5.91% | **fails** (26.7 vs 24.4%) / passes (15.6 vs 19.4%) | +1.5% / +27.6% | 5.1% / 3.0% | 85 (60), +10.15%, passes |
+| 45,000 | 193 (158) | +7.68% | **fails** (26.1 vs 21.3%) / passes (13.8 vs 18.8%) | +0.8% / +16.9% | 4.4% / 1.4% | 54 (41), +11.56%, passes |
+
+- **At 5,000 (rule_climate_band's level) the band still fails both halves** (as 3.67), fresh markets included.
+- **In busier Climate markets it is strong out of sample and on the fresh markets** (20,000: +10.2% a bet on 60 fresh
+  events, 6 losing) **but fails in sample at both levels**: the in-sample years earn +0.8-1.5% a year. A rule that passes
+  only out of sample does not meet the rules for judging a result. **No account changes.** Capacity at 20,000: median
+  $3,267 traded in the week before entry. Queue item 76 added: re-check once a third month of fresh Climate markets is in,
+  as a pre-stated test (20,000, the fresh slice alone), not a new search.
