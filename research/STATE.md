@@ -1211,7 +1211,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     a bet). No variant. research/band_splits.py + test. WAS: The band's money by series LIFE (3.69: it lives in short-lived series): bets of series whose first market opened within
     30 days of the bet against older series, both halves at 20,000, per bet and tail test. Known at the bar (series first
     open_ts). If new series carry the edge, a 'new series only' variant is pre-stated here. Backtest only.
-69. The band's rungs per event (3.70: one rung is worse than all): events with 1, 2-3 and 4+ band bets, per bet and the tail
+69. DONE 12:55 pm CST Nov 25 (report 3.84): edge grows with ladder width in both halves (1 bet: +2-3%, fails the tail;
+    4+: +8-11%, passes) but bets-per-event is hindsight. Item 79. WAS: The band's rungs per event (3.70: one rung is worse than all): events with 1, 2-3 and 4+ band bets, per bet and the tail
     test on the event sum, both halves at 20,000. Does the edge grow with ladder width? A table; no new code beyond a groupby.
 70. calibrated_null.py for the 5-cent rule (nine, 45,000) and the fall rules, both nulls, both halves: which live rule clears the
     mid null out of sample? Also the band with independent draws per market as the narrow bound beside 3.71's wide one.
@@ -1238,3 +1239,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 78. PRE-STATED (3.82): the ladder kink rule (nine, 45,000, resting) on markets closing Sep 20, 2026 or later, once Health,
     World, Commodities and Financials late bars have landed: passes only if the tail test passes on that slice AND at 20,000
     in the out-of-sample half. No new levels or thresholds.
+79. PRE-STATED (3.84): the band at 20,000 (resting) only on events listing 4+ markets at the bar (Features.ev_total if it
+    counts markets listed by the bar, else count markets with open_ts <= bar ts; check first, with a test). Passes if it
+    passes the tail test in both halves AND its 1% replay beats the whole band out of sample (+37.8%/y) with a worst
+    drawdown no deeper (7.0%). If it passes, a new paper account under a new name.

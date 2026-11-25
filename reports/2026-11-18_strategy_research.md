@@ -2790,3 +2790,22 @@ the bet's series had its first market open within 30 days before the bet (known 
 - **No difference.** New series do not carry the edge: both groups pass the tail test in both halves at about the same
   per-bet return (out of sample +6.8% against +6.6%). The pre-stated "new series only" variant is not taken up, and
   nothing changes. 3.69's "short-lived series" finding is about series that list few markets, not series that are new.
+
+### 3.84 The band by bets per event (12:55 pm CST, November 25)
+
+Ideas queue item 69. The band (Entertainment, 20,000+, resting; closes to Nov 24) split by how many band bets its event
+took. `research/band_splits.py --split per_event`. One split, pre-stated.
+
+| Bets in the event | Half | Bets (events) | Per bet | Event sum, mean | Losing events | Tail test |
+|---|---|---|---|---|---|---|
+| 1 | in | 258 (258) | +2.16% | +0.022 | 44 | **fails** (21.4 vs 18.8%) |
+| 1 | out | 134 (134) | +3.27% | +0.033 | 19 | **fails** (20.1 vs 16.9%) |
+| 2-3 | in | 334 (143) | +6.98% | +0.163 | 41 | passes (35.5 vs 40.9%) |
+| 2-3 | out | 221 (97) | +6.60% | +0.150 | 28 | passes (37.4 vs 40.1%) |
+| 4+ | in | 432 (73) | +11.27% | +0.667 | 21 | passes (38.7 vs 70.0%) |
+| 4+ | out | 385 (63) | +7.78% | +0.476 | 19 | passes (41.0 vs 53.0%) |
+
+- **The edge grows with ladder width in both halves**: events where only one rung entered the band earn +2-3% a bet and
+  fail the tail test; events with 4+ band rungs earn +8-11% a bet. Most of the band's profit is in wide ladders.
+- **Not a rule as it stands**: how many rungs will enter the band is known only afterwards. What is known at the bar is
+  how many rungs the event already lists and how many are already in the band. Queue item 79 pre-states that test.
