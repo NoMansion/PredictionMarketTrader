@@ -2809,3 +2809,24 @@ took. `research/band_splits.py --split per_event`. One split, pre-stated.
   fail the tail test; events with 4+ band rungs earn +8-11% a bet. Most of the band's profit is in wide ladders.
 - **Not a rule as it stands**: how many rungs will enter the band is known only afterwards. What is known at the bar is
   how many rungs the event already lists and how many are already in the band. Queue item 79 pre-states that test.
+
+### 3.85 The 10-25c fall rule by bets per event (1:00 pm CST, November 25)
+
+Ideas queue item 71 (3.72: +5.2% a bet out of sample but event-weighted t 0.0). Entertainment, NO where YES at 10-25c has
+fallen 3c+ in 7 days, 5,000+, resting (rule_ent_fall's level); closes to Nov 24. `research/band_splits.py --split per_event
+--rule "mid 10-25c, down 3c+ in 7d" --min-cumvol 5000`.
+
+| Bets in the event | Half | Bets (events) | Per bet | Event sum, mean | Losing events | Tail test |
+|---|---|---|---|---|---|---|
+| 1 | in | 300 (300) | +5.31% | +0.053 | 47 | passes (19.5 vs 19.9%) |
+| 1 | out | 137 (137) | **-5.60%** | -0.056 | 31 | **fails** (29.3 vs 18.0%) |
+| 2-3 | in | 328 (143) | +8.79% | +0.202 | 40 | passes |
+| 2-3 | out | 191 (83) | +4.85% | +0.112 | 19 | **fails** (31.8 vs 29.1%) |
+| 4+ | in | 219 (38) | +12.77% | +0.736 | 9 | passes |
+| 4+ | out | 251 (40) | +11.28% | +0.708 | 12 | passes (44.0 vs 66.5%) |
+
+- **Yes, it is the wide ladders.** Out of sample, the 137 single-bet events lose 5.6% a bet and the 2-3 bet events fail the
+  tail test; all of the rule's out-of-sample profit sits in 40 events with 4+ bets (251 bets). That is why the per-bet
+  mean is positive while the event-weighted t is 0. Together with 3.79 (fresh slice fails, 14.3% drawdown), the fall rule
+  is not risk-averse; rule_ent_fall keeps trading on paper as a record only. Item 79's at-the-bar ladder-width test covers
+  this rule too (added there).

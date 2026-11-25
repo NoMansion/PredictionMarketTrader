@@ -1216,7 +1216,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     test on the event sum, both halves at 20,000. Does the edge grow with ladder width? A table; no new code beyond a groupby.
 70. calibrated_null.py for the 5-cent rule (nine, 45,000) and the fall rules, both nulls, both halves: which live rule clears the
     mid null out of sample? Also the band with independent draws per market as the narrow bound beside 3.71's wide one.
-71. The 10-25c fall rule's per-bet against per-event mean (3.72: out of sample +5.2% a bet but event-weighted t 0.0): split
+71. DONE 1:00 pm CST Nov 25 (report 3.85): out-of-sample profit is all in 40 events with 4+ bets; 1-bet events lose -5.6%
+    a bet out. Not risk-averse. WAS: The 10-25c fall rule's per-bet against per-event mean (3.72: out of sample +5.2% a bet but event-weighted t 0.0): split
     its out-of-sample events by bets per event (1, 2-3, 4+) and show per-bet mean and event sum; is it one or two big
     ladders? A groupby on research\analyze_rule.bets_frame, no new code.
 72. PRE-STATED (3.73): the band at 20,000 with spread 2c+ at entry (a market's first bar in the band with spread >= 2c;
@@ -1231,7 +1232,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     a bet out of sample, loss rate on break-even): a failed echo kept as a forward record; does paper agree?
 75. PRE-STATED (3.78): the band at 20,000 skipping a STALE(3) bar (take the market's next non-stale band bar instead,
     research\stale_quotes.stale_flags). Passes if it passes the tail test in both halves AND its 1% replay beats the whole band
-    out of sample (+37.8%/y) with a worst drawdown no deeper (7.0%). If it passes, a new paper account under a new name.
+    out of sample (+37.8%/y) with a worst drawdown no deeper (7.0%). If it passes, a new paper account under a new name. Also the 10-25c fall rule (5,000) on
+    4+ market events, as a record (3.85).
 76. PRE-STATED (3.80): the Climate band at 20,000 on markets closing Sep 20, 2026 or later ONLY, once that slice reaches 120+
     events (60 at Nov 24): passes if the tail test passes on that slice. Fresh markets only; no new levels or windows.
 77. Forward, once rule_ent_band_20k has 30+ settled bets: its KXRT* bets against the rest (3.81: RT +2.7% a bet out of sample
@@ -1242,4 +1244,5 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 79. PRE-STATED (3.84): the band at 20,000 (resting) only on events listing 4+ markets at the bar (Features.ev_total if it
     counts markets listed by the bar, else count markets with open_ts <= bar ts; check first, with a test). Passes if it
     passes the tail test in both halves AND its 1% replay beats the whole band out of sample (+37.8%/y) with a worst
-    drawdown no deeper (7.0%). If it passes, a new paper account under a new name.
+    drawdown no deeper (7.0%). If it passes, a new paper account under a new name. Also the 10-25c fall rule (5,000) on
+    4+ market events, as a record (3.85).
