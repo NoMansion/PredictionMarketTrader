@@ -216,3 +216,24 @@ def test_ladder_kink_needs_both_neighbours_and_a_3c_bump():
     dn = np.array([0.44, 0.44, 0.50, np.nan, 0.43])       # the rung below: more likely
     # line 0.37 -> bump 3c: kink; line 0.39: no; missing neighbour: no; line 0.365: kink
     assert ladder_kink(mid, up, dn, 0.03).tolist() == [True, False, False, False, True]
+
+
+def test_combined_thin_keeps_about_the_rate_and_whole_bets():
+    from combined import thin
+    from exits import Result
+    n = 10000
+    res = Result(np.arange(n), np.linspace(-1, 1, n), np.arange(n), np.array(["close"] * n, dtype=object),
+                 np.ones(n), np.ones(n))
+    t = thin(res, 0.5, np.random.default_rng(0))
+    assert 4800 < t.rows.size < 5200
+    assert np.allclose(t.r, np.linspace(-1, 1, n)[t.rows])        # every field thinned with the same mask
+    assert thin(res, 1.0, np.random.default_rng(0)).rows.size == n
+
+
+def test_band_splits_groups():
+    import pandas as pd
+    from band_splits import life_group, per_event_group
+    b = pd.DataFrame({"event": ["a", "b", "b", "c", "c", "c", "c"], "r": [0.1] * 7,
+                      "series": ["S", "S", "T", "T", "T", "T", "T"], "ts": [40 * 86400] * 7})
+    assert per_event_group(b).tolist() == ["1 bet", "2-3 bets", "2-3 bets"] + ["4+ bets"] * 4
+    assert life_group(b, {"S": 0, "T": 20 * 86400}).tolist() == ["older series"] * 2 + ["new series (<=30d)"] * 5

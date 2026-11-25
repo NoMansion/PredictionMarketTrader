@@ -2773,3 +2773,20 @@ Liquid sample, closes to Nov 24 (the nine's Health, World, Commodities and Finan
   (KXGDP, KXPAYROLLS, KXAAAGASM: 61% of it). It is a 28c longshot-NO bet that loses 60% of the time: drawdowns of 12-16% at
   a 1% stake are not risk-averse. **No account.** Capacity at 45,000: median $40,900 traded in the week before entry.
 - Item 78 added: the nine at 45,000 re-checked as a pre-stated test once all nine categories' late bars have landed.
+
+### 3.83 The band by series life: new series against older ones (12:50 pm CST, November 25)
+
+Ideas queue item 68. The band (Entertainment, NO where YES is 5-35c, 20,000+, resting; closes to Nov 24) split by whether
+the bet's series had its first market open within 30 days before the bet (known at the bar). `research/band_splits.py
+--split life` (new, + a test). One split, pre-stated.
+
+| Group | Half | Bets (events) | Per bet | Losing events | Tail test | Median $ traded week before |
+|---|---|---|---|---|---|---|
+| new series (<=30 days) | in | 285 (159) | +6.19% | 39 | passes (30.8 vs 32.7%) | $4,130 |
+| new series | out | 111 (42) | +6.77% | 10 | passes (37.0 vs 39.4%) | $3,091 |
+| older series | in | 739 (337) | +8.11% | 72 | passes (25.4 vs 36.5%) | $2,045 |
+| older series | out | 629 (262) | +6.58% | 59 | passes (27.2 vs 33.8%) | $3,086 |
+
+- **No difference.** New series do not carry the edge: both groups pass the tail test in both halves at about the same
+  per-bet return (out of sample +6.8% against +6.6%). The pre-stated "new series only" variant is not taken up, and
+  nothing changes. 3.69's "short-lived series" finding is about series that list few markets, not series that are new.

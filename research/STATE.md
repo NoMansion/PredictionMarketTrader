@@ -1207,7 +1207,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     fails in sample, passes out of sample and on the Sep 20+ markets (+10.2% / +11.6% a bet). No account changes. Item 76.
 67. DONE 10:05 am CST Nov 25 (report 3.81): KXRT below the rest out of sample only (+2.7% vs +8.1%, fails there) but above
     in sample (+8.0% vs +7.5%): the pre-stated condition fails, no variant tested. Item 77 added.
-68. The band's money by series LIFE (3.69: it lives in short-lived series): bets of series whose first market opened within
+68. DONE 12:50 pm CST Nov 25 (report 3.83): no difference; new and older series both pass both halves (out +6.8% / +6.6%
+    a bet). No variant. research/band_splits.py + test. WAS: The band's money by series LIFE (3.69: it lives in short-lived series): bets of series whose first market opened within
     30 days of the bet against older series, both halves at 20,000, per bet and tail test. Known at the bar (series first
     open_ts). If new series carry the edge, a 'new series only' variant is pre-stated here. Backtest only.
 69. The band's rungs per event (3.70: one rung is worse than all): events with 1, 2-3 and 4+ band bets, per bet and the tail
