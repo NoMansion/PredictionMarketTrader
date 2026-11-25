@@ -43,6 +43,12 @@ usage, the same NOT-covered list). The download now includes Sports (`--with-spo
 
 ## CLAUDE USAGE BUDGET (the user, 11:40 pm CST 2026-11-22: "Aim for 75% usage per week")
 
+**DO NOT LIST CLAUDE COSTS FOR THE USER (the user, 4:25 am CST 2026-11-25: "There is no extra pay as you go so don't
+list the claude costs just stay under 75% for the week").** The plan has no pay-as-you-go: nothing is billed by the
+dollar, and hitting the limit only pauses the forecasts until the reset. The list-price dollars below stay as the
+internal measure for pacing; in anything written for the user, say usage only as a percent of the week, and only when
+it is near or over 75%. The aim stays under 75% a week.
+
 The weekly all-models limit resets Sundays at 4:00 pm CST. Measured 4:00 to 11:30 pm Nov 22 (cycles every 2 h,
 check-ins twice per 3 h by a Windows quirk): 4% of the week for about $34 at list price, so about 1% per $8.5
 (rough: the app shows whole percents). Of that, forecasts ~81% ($7 a cycle, 8 questions), check-ins ~14% ($0.6-1.4
