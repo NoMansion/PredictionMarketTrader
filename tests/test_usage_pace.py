@@ -74,6 +74,16 @@ def test_close_to_the_target_gives_one_item_and_over_it_none(tmp_path):
     assert up.TARGET_PCT - up.RESERVE_PCT < p2["projected_pct"] <= up.TARGET_PCT and p2["items"] == 1
 
 
+def test_the_spare_dollars_buy_items_at_the_measured_item_cost(tmp_path):
+    # $425 used (50%), $15 in the last 24 h over 117 h left: ends near 58.6%, about 9.4% (~$80) under the 68% line,
+    # spread over 39 check-ins: ~$2.05 each, so the standing item plus four more at $0.50
+    root = make_root(tmp_path, forecasts=[(T - 40 * 3600, 410.0), (T - 3600, 15.0)])
+    p = up.pace(root, NOW)
+    assert 1.9 < p["extra_usd_per_checkin"] < 2.2
+    assert p["items"] == min(up.MAX_ITEMS, 1 + int(p["extra_usd_per_checkin"] // up.ITEM_USD)) == 5
+    assert up.ITEM_USD <= 0.6 and up.MAX_ITEMS >= 5          # the measured cost, not the old $1.50 guess
+
+
 def test_main_prints_items_last(tmp_path, capsys, monkeypatch):
     root = make_root(tmp_path, forecasts=[(T - 3600, 5.0)])
     monkeypatch.setattr(sys, "argv", ["usage_pace.py", "--root", str(root)])

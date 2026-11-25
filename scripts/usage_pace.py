@@ -30,8 +30,11 @@ RESET_WEEKDAY, RESET_HOUR = 6, 16        # the weekly limit resets Sundays at 4:
 DOLLARS_PER_PCT = 8.5                    # list-price dollars per 1% of the week (measured, see above)
 TARGET_PCT = 75.0                        # the user, 2026-11-22
 RESERVE_PCT = 7.0                        # kept for the user's own sessions on either PC
-ITEM_USD = 1.5                           # one queue item inside a check-in (measured $0.6-1.4; $1.39 with a data fetch)
-MAX_ITEMS = 4                            # a check-in has 100 minutes (scripts/checkin.ps1)
+ITEM_USD = 0.5                           # one more queue item inside a check-in. Measured 2026-11-24/25 over seven runs:
+                                         # 1 item $0.63-1.39, 2 items $1.02-1.12, 3 items $1.71, so about $0.40 an
+                                         # extra item (was 1.5 until 4:10 am Nov 25, which held runs to 2 items)
+MAX_ITEMS = 8                            # a check-in has 100 minutes and an $8 cap (scripts/checkin.ps1), and starts no
+                                         # new item after 60 minutes
 CHECKIN_EVERY_H = 3.0
 
 

@@ -37,7 +37,7 @@ config.yaml: Claude's limit was hit), do health only.
 
 **MORE PER CHECK-IN (the user, 7:00 pm CST 2026-11-24: "Test as many things as you can. There is no time constraint
 and I'm leaving this running at all times now").** The one-item limit above is replaced: a check-in works as many
-queue items as `scripts\usage_pace.py` allows (its last line, "ITEMS n", 0 to 4), commits after each, and starts
+queue items as `scripts\usage_pace.py` allows (its last line, "ITEMS n", 0 to 8), commits after each, and starts
 no new item after 60 minutes. Everything else in this section stands (backtests and cheap code only, no more Claude
 usage, the same NOT-covered list). The download now includes Sports (`--with-sports`, family 16 of the backlog).
 
@@ -52,8 +52,10 @@ this PC, leaving room for the user's own sessions (the new PC shares the same li
 - Check-ins cannot see the plan's usage meter. Since 7:15 pm Nov 24 they read `scripts\usage_pace.py` instead: the
   week's list-price spend from the project's own logs (forecasts in data\pmt.db and data\rules\*.db, check-ins in
   data\checkin\*.json) at $8.50 a percent, projected to the reset from the last 24 hours, against 75% minus 7% kept
-  for the user's own sessions; the room left is spread over the check-ins still to come, at ~$1.50 an item, as
-  "ITEMS n" (1 to 4; 0 when the projection is over 75%). Calibrated 7:00 pm Nov 24: the app showed 16% of the week
+  for the user's own sessions; the room left is spread over the check-ins still to come, at ~$0.50 an item, as
+  "ITEMS n" (1 to 8; 0 when the projection is over 75%). The item cost was $1.50 until 4:10 am Nov 25, when the
+  user said yes to measuring it: seven runs cost $0.63-1.39 with 1 item, $1.02-1.12 with 2 and $1.71 with 3, about
+  $0.40 an extra item, so $1.50 held runs to 2 items with the week heading for 58%. Calibrated 7:00 pm Nov 24: the app showed 16% of the week
   with $140 logged (which also holds the user's own sessions), so $8.50 a percent errs on the side of caution.
   Re-calibrate here when a session sees the meter (change DOLLARS_PER_PCT in the script).
 - A check-in has 100 minutes (was 60) and a list-price cap of $8 a run (`--max-budget-usd`; scripts\checkin.ps1
@@ -775,6 +777,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 
 - 3:15 am CST Nov 25: queue item 49 (report 3.71): the band against a correctly-priced null: beats a fair price (1.7% of draws
   out of sample), beyond the half spread only 5.4%; calibrated_null.py + 1 test (523 pass); item 70 added.
+
+- 4:10 am CST Nov 25 (the user's session; the user said yes): scripts\usage_pace.py now prices an extra queue item at the
+  measured ~$0.50 (was $1.50) and allows up to 8 a check-in (was 4): ITEMS 2 -> 5 at 4:10 am, week heading for 58%.
+  The 60-minute rule, the 100-minute timeout and the $8 cap are unchanged. checkin_prompt.md "(0 to 8)"; 1 test added.
 
 ## How to run a round
 
