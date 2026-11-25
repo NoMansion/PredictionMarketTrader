@@ -770,10 +770,10 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   concentrated in a few series both halves; picking band series by in-sample record FAILS. series_concentration.py + 2 tests
   (521 pass); items 67, 68 added. Jobs ok, cycle running since 11:25 pm; main $1,011.99, 2 settled.
 
-- 3:30 am CST Nov 25: queue item 48 (report 3.70): one bet per event for the band FAILS (less a bet, tail fails out, deeper
+- 3:10 am CST Nov 25: queue item 48 (report 3.70): one bet per event for the band FAILS (less a bet, tail fails out, deeper
   drawdown); one_per_event.py + 1 test; item 69 added. Jobs ok (run_rules running since 3:00 am); main $1,011.87, 2 settled.
 
-- 3:45 am CST Nov 25: queue item 49 (report 3.71): the band against a correctly-priced null: beats a fair price (1.7% of draws
+- 3:15 am CST Nov 25: queue item 49 (report 3.71): the band against a correctly-priced null: beats a fair price (1.7% of draws
   out of sample), beyond the half spread only 5.4%; calibrated_null.py + 1 test (523 pass); item 70 added.
 
 ## How to run a round
@@ -1117,13 +1117,13 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     +4.97% a bet (tail FAIL) against +7.36% for the rest. Selection adds nothing. series_concentration.py --select + 1 test.
     Was: Series selection for the band: the Entertainment series with a positive in-sample band return (10+ events) against
     the rest, out of sample. Does picking series by their own history add anything (family 11 for the band only)?
-48. DONE 3:30 am CST Nov 25 (report 3.70): FAILS. Rung nearest 20c only: out +3.13% a bet (all rungs +6.61%), tail FAIL out,
+48. DONE 3:10 am CST Nov 25 (report 3.70): FAILS. Rung nearest 20c only: out +3.13% a bet (all rungs +6.61%), tail FAIL out,
     worst drawdown 9.0% vs 7.0% (deeper in both halves): extra rungs diversify within the event. one_per_event.py + 1 test.
     Was: One bet per event for the band (RT and streaming ladders give several correlated bets per event): keep only the
     rung with YES nearest 20c, against all rungs: per bet, tail test, and the 1% replay's drawdown. Correlated rungs
     may be what makes the drawdown; one per event may be the risk-averse version. If it passes both halves with a
     lower drawdown, add a paper account under a new name.
-49. DONE 3:45 am CST Nov 25 (report 3.71): the shuffle as written is degenerate; a correctly-priced null with events whole
+49. DONE 3:15 am CST Nov 25 (report 3.71): the shuffle as written is degenerate; a correctly-priced null with events whole
     instead: share of draws >= observed vs fair price 0.3% in / 1.7% out; vs mid 1.3% in / 5.4% out (suggestive, short of
     rule 4's bar). calibrated_null.py + 1 test. Was: Permutation check of the band at 20,000: shuffle outcomes between events within each price cent (5,000 draws,
     events kept whole) and give the share of draws with a per-bet return at least the observed, in each half. A

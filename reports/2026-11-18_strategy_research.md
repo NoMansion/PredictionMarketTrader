@@ -2473,7 +2473,7 @@ not positive) and thin ones (fewer than 10 in-sample events, including series ne
   short-lived series, which by construction have no history to select on. Family 11 (series selection) stays closed for
   the band. Variants tried here: 1 pre-stated (+1 side look).
 
-## 3.70 Ideas queue 48: one bet per event for the band (3:30 am CST, Nov 25)
+## 3.70 Ideas queue 48: one bet per event for the band (3:10 am CST, Nov 25)
 
 `research/one_per_event.py` (+1 test): Entertainment band (NO against YES at 5-35c), 20,000 contracts, resting entry,
 data to Nov 24 (6,685 markets, 1,727 events). Per event, only the rung whose YES mid is nearest 20c on the event's first
@@ -2493,7 +2493,7 @@ bet day (known at the bar); every other bet of the event dropped. Replay at 1% a
 - Side note: the all-rungs band's out-of-sample replay is now +43.5% a year (3.61 had +33.0%), with the refreshed
   history landing in Entertainment; item 64 is the proper re-test.
 
-## 3.71 Ideas queue 49: the band against a correctly-priced null (3:45 am CST, Nov 25)
+## 3.71 Ideas queue 49: the band against a correctly-priced null (3:15 am CST, Nov 25)
 
 `research/calibrated_null.py` (+1 test): Entertainment band, 20,000, resting entry, data to Nov 24. The queue's wording
 (shuffle outcomes within each price cent) cannot test anything: a shuffle inside a price cell keeps each cell's win count,
