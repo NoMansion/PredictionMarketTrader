@@ -155,6 +155,14 @@ branch on the stock trader's repository is no longer used. The cloud container's
   (download log: "candles (late listings): categories with work: [<it>]" not yet followed by "finished this pass"),
   its figures move between check-ins: give the last close date of the markets you used when you quote one. The
   download no longer finishes: an idle round waits an hour.
+- **IF C: RUNS SHORT, THE HISTORY MOVES TO D:** (the user, 7:50 pm CST Nov 24: "if the C drive fills up please switch
+  to using the D drive"; D: is a 1.9 TB drive with 1.7 TB free). Each check-in's health step: under 25 GB free on C:,
+  run `scripts\move_history.ps1` (stops only the download, moves kalshi_hist.db, kalshi_hourly.db and kalshi_events.db
+  to D:\PredictionMarketTrader\data, writes data\history_location.txt, restarts the download). Every research tool
+  finds them through research\data_paths.py. After a move, use that folder wherever a command names
+  data\kalshi_hourly.db. Under 10 GB even so, stop the download as before. Sizes at 7:50 pm Nov 24: history 2.7 GB;
+  expected about 5-6 GB once Sports and the two-month refresh are in (1-2 weeks of downloading), then roughly
+  150 MB a week (Sports most of it), so C:'s 260 GB is not at risk from this project alone.
 - **PAPER TRADING RUNS ON THE PC since 3:46 am CST, 2026-11-19** (the user: "Start, PC settings", then "can
   you use both settings or combine them to the best option"). The settings, fixed from this cycle on:
   the forecaster as in `config.yaml` (model opus, 3 runs, high effort, quiet window 5:15 to 6:20 pm): these
@@ -817,6 +825,9 @@ Forward-only (cannot be backtested):
   (Entertainment) is an order placed at a random moment; the backtest's like-for-like rate is 51% (its 69-80% was each
   market's FIRST qualifying day). Full trade records confirm the log; a trade-only fill model moves the band by 0.1 pt
   a bet. research/fill_audit.py, panel.set_fill("trade"), analyze_rule.py --fill; the logs' labels fixed. 511 pass.
+- 7:55 pm CST Nov 24 (same session; the user: "if the C drive fills up please switch to using the D drive"):
+  scripts\move_history.ps1 + research\data_paths.py (+5 tests); the check-in moves the history to D: under 25 GB
+  free on C:. Nothing moved now (C: 260 GB free). 516 pass.
 
 ## Next actions
 

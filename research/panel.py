@@ -22,7 +22,13 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
-DB = ROOT / "data" / "kalshi_hist.db"
+try:
+    from data_paths import hist_db
+except ImportError:                                 # imported from outside research/
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from data_paths import hist_db
+DB = hist_db()                                      # data\kalshi_hist.db, or wherever move_history.ps1 put it
 TAKER, MAKER = 0.07, 0.0175
 # In sample: markets closing before this date. Out of sample: from it. Fixed on 2026-11-18 from the calendar alone,
 # before any result was seen: Kalshi's volume is so concentrated in 2026 that an earlier date leaves almost

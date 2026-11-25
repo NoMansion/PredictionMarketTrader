@@ -26,8 +26,9 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT))
 
 from kalshi_download import candle_rows  # noqa: E402
+from data_paths import hourly_db  # noqa: E402
 
-HOURLY_DB = ROOT / "data" / "kalshi_hourly.db"
+HOURLY_DB = hourly_db()                 # data\kalshi_hourly.db, or wherever scripts\move_history.ps1 put it
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS candles_1h (ticker TEXT, ts INTEGER, bid REAL, ask REAL, bid_hi REAL, bid_lo REAL, ask_hi REAL,
     ask_lo REAL, px REAL, px_hi REAL, px_lo REAL, vol REAL, oi REAL, bid_op REAL, ask_op REAL, px_mean REAL,

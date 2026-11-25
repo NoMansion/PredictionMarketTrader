@@ -26,8 +26,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from src.kalshi_http import KalshiError, KalshiHTTP  # noqa: E402
+from data_paths import hist_db  # noqa: E402
 
 # In the order they are downloaded: the categories the paper bot trades first, the giant ones last. (Commodities
 # moved back on 2026-11-18: 264,000 markets, mostly daily price ranges the bot does not trade.)
@@ -396,7 +398,7 @@ def migrate(db):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", default=str(ROOT / "data" / "kalshi_hist.db"))
+    ap.add_argument("--db", default=None, help="default: data\\kalshi_hist.db, or where scripts\\move_history.ps1 moved it")
     ap.add_argument("--phase", default="all", choices=["all", "series", "markets", "recent", "candles"])
     ap.add_argument("--categories", default=",".join(c for c in CATEGORIES if c != "Sports"))
     ap.add_argument("--with-sports", action="store_true",
@@ -421,6 +423,7 @@ def main():
     ap.add_argument("--chunk", type=int, default=20000, help="--forever: markets per random-pass chunk (about 2.5 h)")
     ap.add_argument("--rounds", type=int, default=0, help="--forever: stop after this many rounds (0 = never; for tests)")
     args = ap.parse_args()
+    args.db = args.db or str(hist_db())
     cats = [c.strip() for c in args.categories.split(",") if c.strip()]
     if args.with_sports and "Sports" not in cats:
         cats.append("Sports")
