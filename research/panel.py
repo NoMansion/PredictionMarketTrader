@@ -77,8 +77,16 @@ def census_floor(db, category: str) -> float:
     return float(v or 0.0)
 
 
+def series_with_tags(db, tags: list[str]) -> list[str]:
+    """Series tickers whose comma-separated series.tags holds any of `tags` (case-insensitive, exact tag match)."""
+    want = {t.strip().lower() for t in tags if t.strip()}
+    return sorted(tk for tk, tg in db.execute("SELECT ticker, tags FROM series")
+                  if want & {x.strip().lower() for x in (tg or "").split(",")})
+
+
 def load(db_path: str | Path = DB, categories: list[str] | None = None, min_bars: int = 2,
-         sample: str = "random", min_volume: float = 1.0, min_cumvol: float | None = None) -> pd.DataFrame:
+         sample: str = "random", min_volume: float = 1.0, min_cumvol: float | None = None,
+         series_tags: list[str] | None = None) -> pd.DataFrame:
     """Three samples:
 
     sample="random" (the default) keeps, per category, only the markets drawn in the download's fixed shuffle:
@@ -101,6 +109,10 @@ def load(db_path: str | Path = DB, categories: list[str] | None = None, min_bars
     if categories:
         where += f" AND m.category IN ({','.join('?' * len(categories))})"
         args += categories
+    if series_tags:
+        keep = series_with_tags(db, series_tags)
+        where += f" AND m.series IN ({','.join('?' * len(keep)) or 'NULL'})"
+        args += keep
     floors: dict[str, float] = {}
     if sample == "liquid":
         cats = categories or [r[0] for r in db.execute("SELECT DISTINCT category FROM markets WHERE candles_done=1")]

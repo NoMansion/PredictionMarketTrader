@@ -1175,7 +1175,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     (`run_sweep.py --categories Sports`, both samples, `round_tables.py`), the calibration curve, the 5-cent rule and
     the band, mk and tk. Sports is its own sample: never pool it with the nine. Say how many bars a market has (game
     markets live a few days, like Crypto in 3.25, where daily bars were too coarse).
-57. Sports by sport: add a --series-tags option to research/panel.py load() and analyze_rule.py (series.tags holds
+57. DONE 6:45 pm CST Nov 25 (report 3.94): --series-tags added (+ test); no sport passes the 5-cent tail test (too few events); Tennis and Basketball YES 10-20c overpriced out of sample only -> item 84. WAS: Sports by sport: add a --series-tags option to research/panel.py load() and analyze_rule.py (series.tags holds
     Soccer, Basketball, Football, Baseball, Tennis, Golf, Hockey, ...; with a test), and run the calibration curve and
     the 5-cent rule per sport with 30+ events.
 58. Sports futures against game markets: split Sports by scheduled life (14+ days against shorter; season winners,
@@ -1274,3 +1274,6 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 83. PRE-STATED (3.93): Sports NO at YES 10-25c, resting (the r26 leads: +4% a bet out of sample, in-sample t under 2), on
     Sports markets closing after Nov 25, 2026 only, once that slice has 300+ events: passes only if the tail test passes
     there. No new levels or windows. Low priority (Sports refresh must bring them in).
+84. PRE-STATED (3.94): Sports NO where YES is 10-20c, resting, in Tennis and in Basketball separately (--series-tags),
+    on markets closing after Nov 25, 2026 only, once each has 60+ events there: passes only if the tail test passes on
+    that slice. Also Soccer 10-35c the same way. No new bands.

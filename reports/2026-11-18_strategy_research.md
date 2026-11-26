@@ -2991,3 +2991,22 @@ Crypto in 3.25); item 59 (hourly bars) is the follow-up.
   -7.6%/y, out +22.0%/y with DD 17.6-20.7%. **Fails the tail test both halves, both entries.**
 
 Verdict: Sports FAILS for every live rule on daily bars; no account. Variants tried: 2 rounds + 4 rule tests + 1 curve.
+
+## 3.94 Ideas queue 57: Sports by sport (6:45 pm CST, Nov 25)
+
+New: `--series-tags` in research/analyze_rule.py and research/calibration_curve.py (panel.load(series_tags=...),
+panel.series_with_tags: exact match on the comma-separated series.tags, case-insensitive; + a test). Random sample,
+data to Sep 25, 2026. Most sports have under 30 in-sample events: the halves are lopsided (Sports listings grew in 2026).
+
+- **5-cent rule per sport, resting / taker** (bets; mean a bet): Soccer 71 / 111 (+3.1% / +0.0%), Golf 63 / 97 (+1.1% /
+  +0.3%), Football 37 / 52 (+4.8% / +1.8%, no loser), Basketball 18 / 28, Baseball 15 / 36 (-9.6% / -4.0%), Tennis 7 / 10,
+  Esports and Hockey 1-2. **No sport passes the tail test in either half** (too few events to bound the loss rate:
+  Football's out-of-sample upper bound 10.5% resting against a break-even near 4.5%). Fails; no account.
+- **Calibration per sport, YES at 10-20c, out of sample** (events; resolved minus price): Tennis 53, -11.6 points (t -4.5;
+  in sample only 7 events), Basketball 37, -8.6 (t -2.3; in sample 68, -5.1, t -1.3), Soccer 173, -3.1 (t -1.3; in sample
+  -8.4, t -1.5; 20-35c also negative both halves), Baseball 154, +0.7, Football 80, -0.1. (t values of -8 to -30 on
+  1-10 events are degenerate: one outcome.)
+- Reading: Tennis and Basketball cheap-YES contracts look overpriced out of sample, Soccer a little in both halves, but
+  none is two-sided with enough events. A lead at most: item 84 pre-states the check on fresh markets.
+
+Variants tried: 8 sports x (2 entries of the 5-cent rule + 1 curve) = 24 runs.

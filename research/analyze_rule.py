@@ -157,6 +157,7 @@ def main() -> int:
     ap.add_argument("--entry", required=True, choices=["tk", "mk"])
     ap.add_argument("--db", default=str(panel.DB))
     ap.add_argument("--categories", default="")
+    ap.add_argument("--series-tags", default="", help="only series whose tags hold one of these (comma-separated, e.g. Soccer)")
     ap.add_argument("--sample", default="random", choices=["random", "liquid"])
     ap.add_argument("--min-cumvol", type=float, default=None)
     ap.add_argument("--max-cumvol", type=float, default=None,
@@ -167,7 +168,8 @@ def main() -> int:
     args = ap.parse_args()
     panel.set_fill(args.fill)
     cats = [c.strip() for c in args.categories.split(",") if c.strip()] or None
-    df = panel.load(args.db, cats, sample=args.sample, min_cumvol=args.min_cumvol)
+    df = panel.load(args.db, cats, sample=args.sample, min_cumvol=args.min_cumvol,
+                    series_tags=[t for t in args.series_tags.split(",") if t.strip()])
     print(panel.describe(df))
     if df.empty:
         return 1

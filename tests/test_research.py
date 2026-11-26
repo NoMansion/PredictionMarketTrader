@@ -237,3 +237,18 @@ def test_band_splits_groups():
                       "series": ["S", "S", "T", "T", "T", "T", "T"], "ts": [40 * 86400] * 7})
     assert per_event_group(b).tolist() == ["1 bet", "2-3 bets", "2-3 bets"] + ["4+ bets"] * 4
     assert life_group(b, {"S": 0, "T": 20 * 86400}).tolist() == ["older series"] * 2 + ["new series (<=30d)"] * 5
+
+
+def test_load_series_tags(tmp_path):
+    path = tmp_path / "tags.db"
+    make_db(path, n_events=40)
+    db = sqlite3.connect(str(path))
+    db.execute("UPDATE series SET tags='Soccer,Football' WHERE ticker='S'")
+    db.commit()
+    assert panel.series_with_tags(db, ["soccer"]) == ["S"]
+    assert panel.series_with_tags(db, ["Basketball"]) == []
+    assert panel.series_with_tags(db, ["Foot"]) == []          # exact tag, not a substring
+    db.close()
+    everything = panel.load(path, sample="all")
+    assert len(panel.load(path, sample="all", series_tags=["Football"])) == len(everything)
+    assert panel.load(path, sample="all", series_tags=["Basketball"]).empty
