@@ -809,6 +809,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   sample). Every other open item waits on settled paper bets or the Commodities/Financials late bars (Commodities in progress). Jobs ok; main $1,006.25, 2 settled.
 - 6:15 am CST Nov 26: ITEMS 4, nothing run: every open item still waits (Financials late bars in progress for 65/78; fresh
   slices for 76/82-84 too small; rule accounts at most 7 settled). Week ~30%, heading ~63%. Jobs ok; main $1,003.30, 2 settled.
+- 9:25 am CST Nov 26: queue item 21 (report 3.97), ITEMS 3: exclusive 1.05+ basket corner unchanged (13 / 59), FAILS, closed. Every other
+  open item still waits (Financials late bars in progress; rule accounts at most 7 settled). Jobs ok; main $1,004.68, 2 settled.
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
@@ -1023,7 +1025,7 @@ drawdown, capacity in dollars, and say how many variants were tried.
     3.36 changes. Item 29 added. Was: Finish the hourly fetch (`research/hourly_bars.py --sample liquid --min-cumvol 45000 --categories Entertainment`,
     same command, resumes), then replay the band's stop exits (exits.py stop_drop / stop_px) on the hourly bars in the
     last 48 h instead of the next daily open: does any verdict of 3.28 / 3.36 change? Needs an hourly option in exits.py.
-21. The exclusive 1.05+ basket corner (report 3.40: 13 in sample, 55 out of sample, +1.75%, worst -0.2%): re-run
+21. DONE 9:25 am CST Nov 26 (report 3.97): unchanged, 13 / 59 baskets, FAILS; closed (the in-sample half cannot grow). Was: The exclusive 1.05+ basket corner (report 3.40: 13 in sample, 55 out of sample, +1.75%, worst -0.2%): re-run
     `research/event_baskets.py` only once the download has added many more exclusive events; low priority.
 22. Forward, once rule_5c_busy has 30+ settled bets: split its settled bets by entry price (YES 0-3c against 3-5c) and
     compare with report 3.42 (3-5c +3.27% a bet, the 0-3c rest about +0.6%): the forward test of item 15, no new account.

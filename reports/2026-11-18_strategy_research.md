@@ -3047,3 +3047,13 @@ held to settlement. Pre-stated: the 5-cent rule and the r26 lead (NO at YES 10-2
   (+4% a bet, 3.93) does not carry into the hours before the game. Resting fills are adverse (filled orders lose most).
 - Capacity not measured (no verdict to size). Sports closed for the 5-cent rule and the band on both bar sizes; items 83/84
   stay as pre-stated forward checks only.
+
+## 3.97 Ideas queue 21: the exclusive 1.05+ basket corner, re-run (9:25 am CST, Nov 26)
+
+`research/event_baskets.py` (taker entry, fees, one basket per event; flags as fetched for 3.40, no new fetch) on today's
+download. Exclusive events: 1.00+ 439 / 705 baskets, -0.34% (t -1.3) / +0.67% (t +2.1); 1.02+ 124 / 339, -0.01% / +1.10%
+(t +2.3); 1.05+ 13 / 59 baskets (was 13 / 55), +0.16% / +1.64% (t 2.8), worst -0.2%; 1.10+ 0 / 2. Not exclusive and "all"
+still lose at every threshold. The download has added only 4 exclusive 1.05+ baskets since Nov 22, all out of sample; the
+in-sample half is still 13. Verdict: unchanged, FAILS (in sample far too few, locked-at-entry about zero). Item 21 closed:
+the corner cannot grow in sample, because its in-sample half holds closes before 2026-04-01, which the download already has.
+- Forward: rule accounts at most 7 settled bets each, main $1,004.68 with 2 settled: nothing to read yet.
