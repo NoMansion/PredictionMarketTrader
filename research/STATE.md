@@ -807,6 +807,8 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 7:00 pm CST Nov 25: Sports census landed; queue items 56, 57, 58 (reports 3.93-3.95), ITEMS 5: Sports fails for the 5-cent rule and the band (daily bars, ~4.9 a market; futures show the longshot bias but too few events); --series-tags and --min/--max-life-days added. New items 83, 84. Forward: rule accounts 0-7 settled each, too few to read; main $1,008.54, 2 settled. Next open: 59 (Sports hourly bars, a fetch).
 - 9:45 pm CST Nov 25: queue item 59 (report 3.96), ITEMS 7: Sports on hourly bars FAILS (5-cent rule ~break-even, 10-25c lead reverses out of
   sample). Every other open item waits on settled paper bets or the Commodities/Financials late bars (Commodities in progress). Jobs ok; main $1,006.25, 2 settled.
+- 6:15 am CST Nov 26: ITEMS 4, nothing run: every open item still waits (Financials late bars in progress for 65/78; fresh
+  slices for 76/82-84 too small; rule accounts at most 7 settled). Week ~30%, heading ~63%. Jobs ok; main $1,003.30, 2 settled.
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
