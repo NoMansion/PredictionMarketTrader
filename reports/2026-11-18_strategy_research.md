@@ -2968,3 +2968,26 @@ band bar. research/band_prestated.py 80; research/portfolio.simulate takes an op
   entrants earned more per bet in both halves (3.90), so this replay restates that result in account form; it is not
   new evidence. No account (the paper rule also cannot count a market's bars yet). Item 82 holds the check that would be
   new evidence: the late split on the next months of settled markets. Variants tried: 1 multiplier.
+
+## 3.93 Ideas queue 56: Sports, the first rounds (6:30 pm CST, Nov 25)
+
+The Sports census pass finished at 2:46 pm (8,523 markets, 8,188 events, closes Feb 10, 2025 to Sep 25, 2026; 6,095 out
+of sample). Its own sample, never pooled with the nine. **Bars: 42,012 daily bars, about 4.9 a market**, median holding
+time of a bet 1-2 days: most Sports markets are single games that live a few days, so daily bars are coarse here (as
+Crypto in 3.25); item 59 (hourly bars) is the follow-up.
+
+- **r26_random_sports**: 2,964 rules, **0 pass**, 10 leads, 62 reliably losing. Every lead is NO on YES at 10-25c,
+  resting, out of sample +4% a bet at t 2.0-2.3 with in-sample t under 2 (0.2-1.7). The losers are YES longshots: YES
+  at 0-50c loses 22-31% a bet out of sample (t -6 to -7), the favourite-longshot bias of the betting literature, but on
+  the NO side it is worth only +1 to +4% a bet after the spread.
+- **r26_liquid_sports**: 2,916 rules, all thin (the busy census gives 10-35 events a price band). Nothing to read.
+- **Calibration** (random, out of sample): YES at 10-20c and 20-35c resolves 3.0 and 3.7 points below its price
+  (t -2.2, -2.4 by event); in sample the 20-35c band shows nothing (+0.4). Smaller than the spread costs.
+- **5-cent rule** (NO at mid <= 5c, <= 30d, spread <= 5c): taker 374 bets, +0.06% a bet, replay out -0.7%/y; resting
+  241 bets, +1.9% a bet, replay out +7.1%/y, DD 2.1%. **Fails the tail test in both halves, both entries** (out of
+  sample upper bound 4.99% against break-even 4.01% resting). Capacity: median entry day 312-624 contracts, 40% of
+  entry days under 100.
+- **The band** (NO where YES is 5-35c): taker -1.7% a bet, replay out -5.2%/y; resting +1.0% a bet, replay in
+  -7.6%/y, out +22.0%/y with DD 17.6-20.7%. **Fails the tail test both halves, both entries.**
+
+Verdict: Sports FAILS for every live rule on daily bars; no account. Variants tried: 2 rounds + 4 rule tests + 1 curve.

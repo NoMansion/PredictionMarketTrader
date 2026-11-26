@@ -1170,7 +1170,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     days-to-close slice of the Climate band passes the tail test in either half; Climate 5-cent rule at 20,000 fails out.
 55. DONE 9:25 am CST Nov 25 (report 3.77): Politics band at 20,000 FAILS out of sample again (33.9 vs 30.8%); Politics
     5-cent rule passes both halves at 20,000 and 45,000 (+2.6% / +2.8% a bet) but is a subset of rule_5c_busy: no account.
-56. SPORTS, once its census has landed (data\kalshi_download.log: the Sports census "finished this pass" after
+56. DONE 6:30 pm CST Nov 25 (report 3.93): 0 pass in r26 random (10 weak NO 10-25c resting leads), liquid all thin; 5-cent rule and band FAIL the tail test (both entries); ~4.9 bars a market. WAS: SPORTS, once its census has landed (data\kalshi_download.log: the Sports census "finished this pass" after
     "categories with work: ['Sports']"; `research\panel.py` shows it): rounds r26_random_sports and r26_liquid_sports
     (`run_sweep.py --categories Sports`, both samples, `round_tables.py`), the calibration curve, the 5-cent rule and
     the band, mk and tk. Sports is its own sample: never pool it with the nine. Say how many bars a market has (game
@@ -1271,3 +1271,6 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     Nov 24, 2026 (markets settled after 3.90 was written): late entrants (5+ bars before their first band bar, 20,000,
     resting) must earn more a bet than the rest on that slice alone, with the tail test passing there. Only then is a
     late-entrant stake tilt worth coding into src/rules.py (a bar count from Kalshi candles). No new levels.
+83. PRE-STATED (3.93): Sports NO at YES 10-25c, resting (the r26 leads: +4% a bet out of sample, in-sample t under 2), on
+    Sports markets closing after Nov 25, 2026 only, once that slice has 300+ events: passes only if the tail test passes
+    there. No new levels or windows. Low priority (Sports refresh must bring them in).
