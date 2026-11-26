@@ -3025,3 +3025,25 @@ Futures: 257 markets, 240 events, ~56 bars a market. Games: 8,266 markets, 7,953
   bet, fails out of sample. **Games**: resting +0.7% a bet, taker -1.8%; fails both halves (DD 17-32%).
 - Verdict: FAILS. The bias is visible in Sports futures but too few events, and the out-of-sample losers are many.
   No account. Variants tried: 2 slices x (band mk, tk + 1 curve) = 6 runs.
+
+## 3.96 Ideas queue 59: Sports entries on hourly bars, last 48 hours (9:55 pm CST, Nov 25)
+
+Why: Sports games live a few days, so daily bars (~4.9 a market, 3.93) are coarse. New: `research/hourly_bars.py --rules all`
+(every market of the sample, in the download's shuffle order: no selection on hindsight) and `research/hourly_entry.py`
+(+ 2 tests, 536 pass). Fetched the last 48 hours of hourly bars for the first 2,000 Sports markets of the random sample
+(1,998 with bars, 1,979 events, closes Feb 10, 2025 to Sep 25, 2026). One bet per market at the first qualifying hourly
+bar; taker pays the next bar's open plus fee; resting NO bid at 1 - ask, filled only if a later bar (3) trades through;
+held to settlement. Pre-stated: the 5-cent rule and the r26 lead (NO at YES 10-25c), taker and resting: 4 variants.
+
+| rule | entry | in: bets / per bet / t | out: bets / per bet / t | tail test in / out |
+|---|---|---|---|---|
+| 5-cent | taker | 30 / +2.0% / 10.4 | 184 / +0.4% / 0.4 | fail (0 lost of 29, bound 9.8% vs 2.1%) / fail (3 of 184, 4.2% vs 2.0%) |
+| 5-cent | resting | 9 / +5.3% | 50 / +0.8% / 0.3 | fail / fail (2 of 50, 12.1% vs 4.7%) |
+| NO at YES 10-25c | taker | 181 / -4.1% / -1.3 | 536 / -6.9% / -3.6 | fail / fail |
+| NO at YES 10-25c | resting | 46 / +9.1% / 1.3 | 125 / -12.4% / -2.3 | fail / fail |
+
+- **FAILS.** The 5-cent rule is about break-even out of sample on hourly entries and fails the tail test both halves; the
+  r26 lead reverses: in a game's last two days NO at YES 10-25c LOSES out of sample (taker t -3.6), so the daily-bar lead
+  (+4% a bet, 3.93) does not carry into the hours before the game. Resting fills are adverse (filled orders lose most).
+- Capacity not measured (no verdict to size). Sports closed for the 5-cent rule and the band on both bar sizes; items 83/84
+  stay as pre-stated forward checks only.
