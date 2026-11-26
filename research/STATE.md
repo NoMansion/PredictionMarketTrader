@@ -804,6 +804,7 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   + tests (531 pass). Items 80-81 added. 3:55 pm: item 80 (3.92): a 2% stake on late entrants replays better in both
   halves but was chosen after 3.90: a lead; simulate stake column + test (532 pass); item 82. Jobs ok; main $1,008.54, 2 settled.
 
+- 7:00 pm CST Nov 25: Sports census landed; queue items 56, 57, 58 (reports 3.93-3.95), ITEMS 5: Sports fails for the 5-cent rule and the band (daily bars, ~4.9 a market; futures show the longshot bias but too few events); --series-tags and --min/--max-life-days added. New items 83, 84. Forward: rule accounts 0-7 settled each, too few to read; main $1,008.54, 2 settled. Next open: 59 (Sports hourly bars, a fetch).
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
