@@ -812,6 +812,7 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 9:25 am CST Nov 26: queue item 21 (report 3.97), ITEMS 3: exclusive 1.05+ basket corner unchanged (13 / 59), FAILS, closed. Every other
   open item still waits (Financials late bars in progress; rule accounts at most 7 settled). Jobs ok; main $1,004.68, 2 settled.
 - 12:15 pm CST Nov 26: ITEMS 5, nothing run: every open item still waits (Financials late bars in progress for 65/78; rule accounts at most 7 settled). Week ~33%, heading ~61%. Jobs ok; main $1,004.68, 2 settled.
+$python_line
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
