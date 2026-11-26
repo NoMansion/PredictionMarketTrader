@@ -3026,7 +3026,7 @@ Futures: 257 markets, 240 events, ~56 bars a market. Games: 8,266 markets, 7,953
 - Verdict: FAILS. The bias is visible in Sports futures but too few events, and the out-of-sample losers are many.
   No account. Variants tried: 2 slices x (band mk, tk + 1 curve) = 6 runs.
 
-## 3.96 Ideas queue 59: Sports entries on hourly bars, last 48 hours (9:55 pm CST, Nov 25)
+## 3.96 Ideas queue 59: Sports entries on hourly bars, last 48 hours (9:45 pm CST, Nov 25)
 
 Why: Sports games live a few days, so daily bars (~4.9 a market, 3.93) are coarse. New: `research/hourly_bars.py --rules all`
 (every market of the sample, in the download's shuffle order: no selection on hindsight) and `research/hourly_entry.py`

@@ -805,7 +805,7 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
   halves but was chosen after 3.90: a lead; simulate stake column + test (532 pass); item 82. Jobs ok; main $1,008.54, 2 settled.
 
 - 7:00 pm CST Nov 25: Sports census landed; queue items 56, 57, 58 (reports 3.93-3.95), ITEMS 5: Sports fails for the 5-cent rule and the band (daily bars, ~4.9 a market; futures show the longshot bias but too few events); --series-tags and --min/--max-life-days added. New items 83, 84. Forward: rule accounts 0-7 settled each, too few to read; main $1,008.54, 2 settled. Next open: 59 (Sports hourly bars, a fetch).
-- 9:55 pm CST Nov 25: queue item 59 (report 3.96), ITEMS 7: Sports on hourly bars FAILS (5-cent rule ~break-even, 10-25c lead reverses out of
+- 9:45 pm CST Nov 25: queue item 59 (report 3.96), ITEMS 7: Sports on hourly bars FAILS (5-cent rule ~break-even, 10-25c lead reverses out of
   sample). Every other open item waits on settled paper bets or the Commodities/Financials late bars (Commodities in progress). Jobs ok; main $1,006.25, 2 settled.
 ## How to run a round
 
@@ -1184,7 +1184,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 58. DONE 6:55 pm CST Nov 25 (report 3.95): --min/--max-life-days added (+ test); futures show the longshot bias both halves but the band fails out of sample (9 of 55 events lose); games flat. WAS: Sports futures against game markets: split Sports by scheduled life (14+ days against shorter; season winners,
     awards and season totals against single games): the favourite-longshot bias of the betting literature is strongest
     in futures. Calibration curve and the band in each.
-59. DONE 9:55 pm CST Nov 25 (report 3.96): FAILS. Hourly entries, last 48 h, 2,000 random Sports markets: 5-cent rule +0.4% a bet
+59. DONE 9:45 pm CST Nov 25 (report 3.96): FAILS. Hourly entries, last 48 h, 2,000 random Sports markets: 5-cent rule +0.4% a bet
     out (tail fails both halves); NO at YES 10-25c loses out (taker -6.9%, t -3.6). hourly_bars --rules all, hourly_entry.py + tests.
     WAS: Sports hourly bars (after 56, only if the game markets are too short for daily bars): research\hourly_bars.py on the
     busiest Sports game markets (--categories Sports --max-markets 2000), then the 5-cent rule on hourly entries in the
