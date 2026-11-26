@@ -84,6 +84,19 @@ def series_with_tags(db, tags: list[str]) -> list[str]:
                   if want & {x.strip().lower() for x in (tg or "").split(",")})
 
 
+def filter_life(df: pd.DataFrame, min_days: float | None = None, max_days: float | None = None) -> pd.DataFrame:
+    """Keep markets whose life, listing to close (close_ts - open_ts), is >= min_days and < max_days."""
+    if df.empty or (min_days is None and max_days is None):
+        return df
+    life = (df["close_ts"] - df["open_ts"]) / 86400.0
+    keep = pd.Series(True, index=df.index)
+    if min_days is not None:
+        keep &= life >= min_days
+    if max_days is not None:
+        keep &= life < max_days
+    return df[keep].copy()
+
+
 def load(db_path: str | Path = DB, categories: list[str] | None = None, min_bars: int = 2,
          sample: str = "random", min_volume: float = 1.0, min_cumvol: float | None = None,
          series_tags: list[str] | None = None) -> pd.DataFrame:

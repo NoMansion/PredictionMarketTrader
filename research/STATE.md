@@ -1178,7 +1178,7 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 57. DONE 6:45 pm CST Nov 25 (report 3.94): --series-tags added (+ test); no sport passes the 5-cent tail test (too few events); Tennis and Basketball YES 10-20c overpriced out of sample only -> item 84. WAS: Sports by sport: add a --series-tags option to research/panel.py load() and analyze_rule.py (series.tags holds
     Soccer, Basketball, Football, Baseball, Tennis, Golf, Hockey, ...; with a test), and run the calibration curve and
     the 5-cent rule per sport with 30+ events.
-58. Sports futures against game markets: split Sports by scheduled life (14+ days against shorter; season winners,
+58. DONE 6:55 pm CST Nov 25 (report 3.95): --min/--max-life-days added (+ test); futures show the longshot bias both halves but the band fails out of sample (9 of 55 events lose); games flat. WAS: Sports futures against game markets: split Sports by scheduled life (14+ days against shorter; season winners,
     awards and season totals against single games): the favourite-longshot bias of the betting literature is strongest
     in futures. Calibration curve and the band in each.
 59. Sports hourly bars (after 56, only if the game markets are too short for daily bars): research\hourly_bars.py on the

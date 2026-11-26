@@ -157,6 +157,8 @@ def main() -> int:
     ap.add_argument("--entry", required=True, choices=["tk", "mk"])
     ap.add_argument("--db", default=str(panel.DB))
     ap.add_argument("--categories", default="")
+    ap.add_argument("--min-life-days", type=float, default=None, help="only markets listed at least this long before close")
+    ap.add_argument("--max-life-days", type=float, default=None, help="only markets listed less than this long before close")
     ap.add_argument("--series-tags", default="", help="only series whose tags hold one of these (comma-separated, e.g. Soccer)")
     ap.add_argument("--sample", default="random", choices=["random", "liquid"])
     ap.add_argument("--min-cumvol", type=float, default=None)
@@ -170,6 +172,7 @@ def main() -> int:
     cats = [c.strip() for c in args.categories.split(",") if c.strip()] or None
     df = panel.load(args.db, cats, sample=args.sample, min_cumvol=args.min_cumvol,
                     series_tags=[t for t in args.series_tags.split(",") if t.strip()])
+    df = panel.filter_life(df, args.min_life_days, args.max_life_days)
     print(panel.describe(df))
     if df.empty:
         return 1

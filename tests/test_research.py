@@ -252,3 +252,13 @@ def test_load_series_tags(tmp_path):
     everything = panel.load(path, sample="all")
     assert len(panel.load(path, sample="all", series_tags=["Football"])) == len(everything)
     assert panel.load(path, sample="all", series_tags=["Basketball"]).empty
+
+
+def test_filter_life(tmp_path):
+    path = tmp_path / "life.db"
+    make_db(path, n_events=20)
+    df = panel.load(path, sample="all")                      # every market lives 13 days, listing to close
+    assert len(panel.filter_life(df, 13, None)) == len(df)
+    assert panel.filter_life(df, 14, None).empty
+    assert panel.filter_life(df, None, 13).empty
+    assert len(panel.filter_life(df, None, 14)) == len(df)

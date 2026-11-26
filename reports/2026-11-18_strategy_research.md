@@ -3010,3 +3010,18 @@ data to Sep 25, 2026. Most sports have under 30 in-sample events: the halves are
   none is two-sided with enough events. A lead at most: item 84 pre-states the check on fresh markets.
 
 Variants tried: 8 sports x (2 entries of the 5-cent rule + 1 curve) = 24 runs.
+
+## 3.95 Ideas queue 58: Sports futures against single games (6:55 pm CST, Nov 25)
+
+New: `--min-life-days` / `--max-life-days` in research/analyze_rule.py and research/calibration_curve.py
+(panel.filter_life: life = listing to close; + a test). Split at 14 days. Random sample, data to Sep 25, 2026.
+Futures: 257 markets, 240 events, ~56 bars a market. Games: 8,266 markets, 7,953 events, ~3.4 bars a market.
+
+- **Calibration, futures**: cheap YES is overpriced in both halves, the favourite-longshot bias: 5-10c -7.6 / -4.2 points
+  (in / out), 10-20c -13.2 / -8.7 (t out -2.5), 0-5c -3.5 / -1.0. Only 22-29 events a band a half. **Games**: flat
+  (10-35c out of sample -2.7 to -3.9 points, t -1.8 / -2.4; in sample +1.7 / -1.7).
+- **The band (NO where YES is 5-35c), futures**: resting 89 bets, +7.8% a bet; tail test passes in sample (30 events,
+  1 loser) but **fails out of sample** (55 events, 9 losers, 16%; upper bound 26.8%); replay out +0.9%/y. Taker +1.2% a
+  bet, fails out of sample. **Games**: resting +0.7% a bet, taker -1.8%; fails both halves (DD 17-32%).
+- Verdict: FAILS. The bias is visible in Sports futures but too few events, and the out-of-sample losers are many.
+  No account. Variants tried: 2 slices x (band mk, tk + 1 curve) = 6 runs.
