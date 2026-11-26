@@ -114,7 +114,9 @@ def rule_markets(hist_db, cats, sample, min_cumvol, specs) -> list[tuple]:
     f = Features(p)
     titles = titles_for(df, hist_db)
     tickers: list[str] = []
-    for spec in [s for s in specs.split(";") if s.strip()]:
+    if specs.strip().lower() == "all":              # every market of the sample (item 59), in the download's shuffle
+        tickers = list(dict.fromkeys(df["ticker"].to_numpy()))
+    for spec in [s for s in specs.split(";") if s.strip() and s.strip().lower() != "all"]:
         name, side, entry = (x.strip() for x in spec.split("|"))
         _, mask = find_rule(f, titles, name, side, entry)
         rows = rule_rows(p, mask, side, entry)
@@ -125,6 +127,12 @@ def rule_markets(hist_db, cats, sample, min_cumvol, specs) -> list[tuple]:
         part = tickers[i:i + 500]
         q = f"SELECT ticker, series, open_ts, close_ts, src FROM markets WHERE ticker IN ({','.join('?' * len(part))})"
         info.update({r[0]: r for r in con.execute(q, part)})
+    if specs.strip().lower() == "all":
+        rnd = {}
+        for i in range(0, len(tickers), 500):
+            part = tickers[i:i + 500]
+            rnd.update(con.execute(f"SELECT ticker, rnd FROM markets WHERE ticker IN ({','.join('?' * len(part))})", part))
+        tickers.sort(key=lambda t: (rnd.get(t) is None, rnd.get(t) or 0, t))
     con.close()
     return [info[t] for t in tickers if t in info]
 
@@ -137,7 +145,7 @@ def main() -> int:
     ap.add_argument("--categories", default="Entertainment")
     ap.add_argument("--sample", default="liquid", choices=["random", "liquid"])
     ap.add_argument("--min-cumvol", type=float, default=None)
-    ap.add_argument("--rules", default="NO where YES is at 5-35c|no|mk", help="name|side|entry;...")
+    ap.add_argument("--rules", default="NO where YES is at 5-35c|no|mk", help="name|side|entry;... or 'all': every market of the sample, in shuffle order")
     ap.add_argument("--hours", type=float, default=48.0)
     ap.add_argument("--max-markets", type=int, default=400)
     ap.add_argument("--interval", type=float, default=1.0,
