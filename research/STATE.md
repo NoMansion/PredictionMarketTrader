@@ -1212,7 +1212,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     Nov 24): Brier score and log loss of Claude's median, the market mid at the forecast and the 0.3 blend, by event,
     with a paired bootstrap; the two forecast blocks (cloud, PC) apart. The experiment's main question
     (README: "the experiment's real product is the forecast log").
-64. PART DONE 9:50 am CST Nov 25 (report 3.79): Entertainment (closes to Nov 24): no verdict changes; the band at 20,000
+64. DONE 6:40 pm CST Nov 26 (reports 3.79, 3.98): the 5-cent rule on the nine LOSES on the Sep 20+ markets (-0.99% a bet resting,
+    5 losing events in 92, tail fails there); full sample still passes both halves. Was: PART DONE 9:50 am CST Nov 25 (report 3.79): Entertainment (closes to Nov 24): no verdict changes; the band at 20,000
     passes on the Sep 20+ markets alone (+5.8% a bet, 76 events); every fresh per-bet below selection; fall 10-25c weakest
     (fresh slice fails, DD 14.3%). Climate done (3.80). STILL OPEN: the 5-cent rule on the nine once their late bars land.
     THE REFRESHED HISTORY (see Background jobs: markets settled since Sep 21, 2026 are coming in), FIRST once

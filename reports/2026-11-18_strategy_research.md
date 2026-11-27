@@ -3057,3 +3057,23 @@ still lose at every threshold. The download has added only 4 exclusive 1.05+ bas
 in-sample half is still 13. Verdict: unchanged, FAILS (in sample far too few, locked-at-entry about zero). Item 21 closed:
 the corner cannot grow in sample, because its in-sample half holds closes before 2026-04-01, which the download already has.
 - Forward: rule accounts at most 7 settled bets each, main $1,004.68 with 2 settled: nothing to read yet.
+
+### 3.98 Ideas queue 64, last part: the 5-cent rule on the nine, refreshed history (6:40 pm CST, Nov 26)
+
+The nine categories' late listings finished at 5:02 pm Nov 26 (download log: "candles: finished this pass"); the sample now
+runs to markets closing **Nov 25, 2026**. Same command as before: `analyze_rule.py --sample liquid --min-cumvol 45000
+--categories <the nine> --rule "NO at mid <= 5c, <= 30d, spread <= 5c" --side no --entry mk` (and `tk`). "Sep 20+" = bets on
+markets that closed on or after Sep 20, 2026, none of which was in any backtest when the rule was picked. 2 runs, nothing new chosen.
+
+| Entry | All: bets (events), per bet, tail in / out | Replay 1% in / out a year, worst DD out | Sep 20+: bets (events), per bet, losing events, tail |
+|---|---|---|---|
+| resting | 1,324 (799), +1.75%, passes / passes (out 2.89% vs 5.36% break-even) | +1.1% / +13.8%, 2.6% | 136 (92), **-0.99%**, 5, does not pass (11.1% bound vs 4.2%) |
+| taker | 1,701 (975), +0.47%, fails (all: 3.68 vs 3.45%) | - | 198 (127), -1.28%, 5, does not pass |
+
+- **On the markets it had never seen, the 5-cent rule lost money**: -1.0% a bet resting, five losing events in 92 (KXAAAGASW
+  twice, KXNVDACEODATE, KXOPENSHARE, KXZACHARIAOUT). Out of sample before Sep 20 (Apr 1 - Sep 19) it made +2.5% a bet on 398.
+- The full sample still passes the tail test in both halves, because 92 fresh events are too few to move it; but this is the
+  first test of the rule on markets settled after it was chosen, and it failed. Five losers in 92 events is 5.4%, at the
+  break-even rate: one bad stretch, or the edge gone. Nothing changes on paper (rule_5c_busy keeps running as a record; its
+  forward bets are the next test). The combined account's 5-cent leg should be read with this in mind.
+- Item 64 is closed. Item 65 (edge by quarter) is now unblocked.
