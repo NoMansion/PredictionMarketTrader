@@ -1263,7 +1263,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     events (60 at Nov 24): passes if the tail test passes on that slice. Fresh markets only; no new levels or windows.
 77. Forward, once rule_ent_band_20k has 30+ settled bets: its KXRT* bets against the rest (3.81: RT +2.7% a bet out of sample
     against +8.1%). A split of settled paper bets; no new code.
-78. PRE-STATED (3.82): the ladder kink rule (nine, 45,000, resting) on markets closing Sep 20, 2026 or later, once Health,
+78. DONE 7:00 pm CST Nov 26 (report 3.100): FAILS both conditions; Sep 20+ markets -42% a bet at 45,000 (14 of 17 events lose),
+    20,000 fails out of sample. Closed. Was: PRE-STATED (3.82): the ladder kink rule (nine, 45,000, resting) on markets closing Sep 20, 2026 or later, once Health,
     World, Commodities and Financials late bars have landed: passes only if the tail test passes on that slice AND at 20,000
     in the out-of-sample half. No new levels or thresholds.
 79. DONE 3:38 pm CST Nov 25 (report 3.91): FAILS on drawdown (replay out +39.4%/y but DD 7.4% > 7.0%); ev_total is

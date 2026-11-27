@@ -3095,3 +3095,17 @@ listings finished 5:02 pm Nov 26). Pre-stated: "decaying" if every out-of-sample
   -2, but going the wrong way. The third low quarter that 3.66 asked about is the 5-cent rule's, not the band's.
 - The Entertainment band is unchanged (its data already ran to Nov 24). The Climate band's Q3 and Q4 are both above its thin
   in-sample mean. No account changes.
+
+### 3.100 Ideas queue 78: the ladder kink rule on fresh markets, pre-stated (7:00 pm CST, Nov 26)
+
+The pre-stated test of 3.82: the nine at 45,000 ("rung 3c+ above the line between its neighbours: buy NO on this rung",
+resting) passes only if the tail test passes on markets closing Sep 20, 2026 or later AND the nine at 20,000 passes in the
+out-of-sample half. All nine categories' late bars landed at 5:02 pm Nov 26 (closes to Nov 23-24). 1 test, no new levels.
+
+| Level | All: bets (events), per bet | Out of sample (Apr 1+): bets (events), per bet, tail | Sep 20+: bets (events), per bet, losing events, tail |
+|---|---|---|---|
+| nine, 45,000 | 287 (143), +36.9% | 108 (62), +35.6%, passes by a hair (74.6 vs 75.0%) | 28 (17), **-42.0%**, 14 of 17, fails (95.0 vs 68.5%) |
+| nine, 20,000 | 650 (289), +5.5% | 362 (175), +1.6%, **fails** (76.0 vs 70.9%) | 141 (70), **-45.9%**, 55 of 70, fails |
+
+- **FAILS both conditions, and plainly.** On the markets settled after the rule was written it lost 42-46% a bet: 14 of 17
+  events at 45,000 and 55 of 70 at 20,000 lost. Its earlier profit (a few macro ladders, 3.82) did not carry over. Closed; no account.
