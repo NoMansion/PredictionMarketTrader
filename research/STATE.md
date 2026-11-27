@@ -888,6 +888,7 @@ Forward-only (cannot be backtested):
   free on C:. Nothing moved now (C: 260 GB free). 516 pass.
 
 - 12:15 am CST Nov 27: ITEMS 7, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~37%, heading ~60%. Jobs ok (cycle running); main $1,003.81, 2 settled.
+- 3:15 am CST Nov 27: ITEMS 6, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~38%, heading ~61%. Jobs ok (cycle running); main $1,003.98, 2 settled.
 ## Next actions
 
 1. Each check-in: `python3 research/panel.py` (what landed), then for every category with a finished pass run
