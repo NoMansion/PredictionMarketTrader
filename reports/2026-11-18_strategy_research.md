@@ -3077,3 +3077,21 @@ markets that closed on or after Sep 20, 2026, none of which was in any backtest 
   break-even rate: one bad stretch, or the edge gone. Nothing changes on paper (rule_5c_busy keeps running as a record; its
   forward bets are the next test). The combined account's 5-cent leg should be read with this in mind.
 - Item 64 is closed. Item 65 (edge by quarter) is now unblocked.
+
+### 3.99 Ideas queue 65: edge by quarter on the refreshed history (6:50 pm CST, Nov 26)
+
+Same commands as 3.66 (`research/edge_by_quarter.py`, resting), now with 2026Q4 filled for the nine and Climate (late
+listings finished 5:02 pm Nov 26). Pre-stated: "decaying" if every out-of-sample quarter is below the in-sample mean AND t < -2.
+
+| rule | in-sample mean / bet | 2026Q2 | 2026Q3 | 2026Q4 | slope a quarter (t) | decaying |
+|---|---|---|---|---|---|---|
+| Ent band, 20,000 (to Nov 24) | +7.58% | +8.69% (240, 102 ev) | +5.57% (316, 141) | +5.69% (184, 59) | +0.29 pt (+0.59) | no |
+| 5-cent rule, nine, 45,000 (to Nov 25) | +1.83% | +3.65% (233, 130) | +1.16% (175, 116) | **-1.39%** (126, 85) | -0.11 pt (-1.01) | no |
+| Climate band, 5,000 (to Nov 24) | +0.71% | +1.24% (401, 262) | +2.55% (414, 263) | +1.52% (289, 155) | +0.01 pt (+0.04) | no |
+
+- No rule meets the pre-stated "decaying" test: each has an out-of-sample quarter above its in-sample mean.
+- **The 5-cent rule has two quarters below its in-sample mean in a row, and its 2026Q4 is negative** (-1.4% a bet, standard
+  error 2.2 points), matching 3.98. Its slope moved from -0.005 to -0.11 pt a quarter (t -0.06 to -1.01): still well short of
+  -2, but going the wrong way. The third low quarter that 3.66 asked about is the 5-cent rule's, not the band's.
+- The Entertainment band is unchanged (its data already ran to Nov 24). The Climate band's Q3 and Q4 are both above its thin
+  in-sample mean. No account changes.

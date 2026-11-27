@@ -1222,7 +1222,8 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
     change with about two more months out of sample. Then the same for the 5-cent rule on the nine and the Climate
     band once their categories have landed. Give the last close date used. This is the first test of the rules on
     markets that settled after they were chosen; a rule that fails here is a result to put plainly to the user.
-65. Re-run research\edge_by_quarter.py for the three rules once the refreshed history has filled 2026Q4 for the nine and
+65. DONE 6:50 pm CST Nov 26 (report 3.99): nothing 'decaying' by the pre-stated test; the 5-cent rule's 2026Q4 is -1.4% a bet
+    (Q3 +1.2%, both below its +1.8% mean; slope t -1.01); band and Climate band flat. Was: Re-run research\edge_by_quarter.py for the three rules once the refreshed history has filled 2026Q4 for the nine and
     Climate (after item 64): the band's 2026Q3-Q4 sat below its in-sample mean (3.66); a third low quarter would be worth a line.
 66. DONE 10:00 am CST Nov 25 (report 3.80): Climate band fails both halves at 5,000 (fresh markets too); at 20,000 / 45,000
     fails in sample, passes out of sample and on the Sep 20+ markets (+10.2% / +11.6% a bet). No account changes. Item 76.
@@ -1289,3 +1290,6 @@ spread <= 5c" on the nine at 45,000; "the Climate band" = the band rule on Clima
 84. PRE-STATED (3.94): Sports NO where YES is 10-20c, resting, in Tennis and in Basketball separately (--series-tags),
     on markets closing after Nov 25, 2026 only, once each has 60+ events there: passes only if the tail test passes on
     that slice. Also Soccer 10-35c the same way. No new bands.
+85. PRE-STATED (3.98, 3.99): the 5-cent rule on the nine at 45,000, resting, on markets closing Sep 20, 2026 or later ONLY,
+    once that slice has 200+ events (92 at Nov 25): passes only if the tail test passes there. If it fails, put the 5-cent
+    leg (rule_5c_busy, the combined account's leg) to the user as failed on fresh markets. No new levels or windows.
