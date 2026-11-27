@@ -814,6 +814,7 @@ terms do not allow redistributing its data. Commit code, aggregated results and 
 - 12:15 pm CST Nov 26: ITEMS 5, nothing run: every open item still waits (Financials late bars in progress for 65/78; rule accounts at most 7 settled). Week ~33%, heading ~61%. Jobs ok; main $1,004.68, 2 settled.
 - 3:15 pm CST Nov 26: ITEMS 5, nothing run: every open item still waits (Financials late bars in progress for 65/78; rule accounts at most 7 settled). Week ~34%, heading ~62%. Jobs ok; main $1,004.78, 2 settled.
 - 7:00 pm CST Nov 26: ITEMS 3; the nine's late bars finished 5:02 pm, so items 64, 65, 78 ran (reports 3.98-3.100): the 5-cent rule on the nine LOSES on Sep 20+ markets (-1.0% a bet, 92 events; full sample still passes), its 2026Q4 -1.4% a bet; the ladder kink rule fails on fresh markets (-42%). Item 85 added. Week ~35%, heading ~64%. Jobs ok; main $1,004.78, 2 settled.
+- 9:15 pm CST Nov 26: ITEMS 7, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~36%, heading ~60%. Jobs ok (cycle running); main $1,005.23, 2 settled.
 ## How to run a round
 
 SINCE NOV 22 the liquid sample's default level is 1 contract for every category whose random pass has finished
