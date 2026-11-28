@@ -896,6 +896,7 @@ Forward-only (cannot be backtested):
 - 6:15 pm CST Nov 27: ITEMS 8, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~43%, heading ~58%. Jobs ok (last cycle 5:13 pm ok); main $1,009.25, 2 settled.
 - 9:15 pm CST Nov 27: ITEMS 8, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~43%, heading ~55%. Jobs ok (last cycle 7:47 pm ok); main $1,010.84, 2 settled.
 - 12:15 am CST Nov 28: ITEMS 8, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~44%, heading ~55%. Jobs ok (last cycle 10:21 pm ok); main $1,009.50, 2 settled.
+- 3:15 am CST Nov 28: ITEMS 8, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~45%, heading ~56%. Jobs ok (last cycle 12:55 am ok); main $1,009.50, 2 settled.
 ## Next actions
 
 1. Each check-in: `python3 research/panel.py` (what landed), then for every category with a finished pass run
