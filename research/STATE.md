@@ -1,4 +1,4 @@
-# Research loop: state
+﻿# Research loop: state
 
 The user asked (2026-11-18, before going to bed) for strategy research to keep running: every strategy family
 that can be tested, and combinations of families, with settings varied. This file is what each check-in
@@ -121,7 +121,7 @@ session ran continues on the PC without waiting for the user. What that does and
    `analyze_rule.py` and `portfolio.py` use the real close.
 0c. **Lopsided bets get the tail test, not a t-statistic.** For anything bought above about 85c run
    `research/analyze_rule.py`: losing events against the break-even loss rate with an exact upper bound.
-1. **Costs in.** Taker entries pay the ask plus Kalshi's fee, 0.07 × p × (1 − p) per contract (some series carry
+1. **Costs in.** Taker entries pay the ask plus Kalshi's fee, 0.07 Ã— p Ã— (1 âˆ’ p) per contract (some series carry
    a different multiplier: `series.fee_multiplier`). Maker entries are counted only when a later bar shows the
    price trading through the order, and are reported separately from taker results.
 2. **Out of sample.** Choose settings on markets that closed before 2026-04-01; report the result on markets
@@ -895,6 +895,7 @@ Forward-only (cannot be backtested):
 - 3:15 pm CST Nov 27: ITEMS 8, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~41%, heading ~55%. Jobs ok (cycle running); main $1,005.57, 2 settled.
 - 6:15 pm CST Nov 27: ITEMS 8, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~43%, heading ~58%. Jobs ok (last cycle 5:13 pm ok); main $1,009.25, 2 settled.
 - 9:15 pm CST Nov 27: ITEMS 8, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~43%, heading ~55%. Jobs ok (last cycle 7:47 pm ok); main $1,010.84, 2 settled.
+- 12:15 am CST Nov 28: ITEMS 8, nothing run: every open item still waits (rule accounts at most 7 settled; Sports late bars in progress for 83/84; fresh slices for 76/82/85 too small). Week ~44%, heading ~55%. Jobs ok (last cycle 10:21 pm ok); main $1,009.50, 2 settled.
 ## Next actions
 
 1. Each check-in: `python3 research/panel.py` (what landed), then for every category with a finished pass run
