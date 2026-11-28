@@ -1,4 +1,4 @@
-﻿# Research loop: state
+# Research loop: state
 
 The user asked (2026-11-18, before going to bed) for strategy research to keep running: every strategy family
 that can be tested, and combinations of families, with settings varied. This file is what each check-in
@@ -121,7 +121,7 @@ session ran continues on the PC without waiting for the user. What that does and
    `analyze_rule.py` and `portfolio.py` use the real close.
 0c. **Lopsided bets get the tail test, not a t-statistic.** For anything bought above about 85c run
    `research/analyze_rule.py`: losing events against the break-even loss rate with an exact upper bound.
-1. **Costs in.** Taker entries pay the ask plus Kalshi's fee, 0.07 Ã— p Ã— (1 âˆ’ p) per contract (some series carry
+1. **Costs in.** Taker entries pay the ask plus Kalshi's fee, 0.07 × p × (1 − p) per contract (some series carry
    a different multiplier: `series.fee_multiplier`). Maker entries are counted only when a later bar shows the
    price trading through the order, and are reported separately from taker results.
 2. **Out of sample.** Choose settings on markets that closed before 2026-04-01; report the result on markets
